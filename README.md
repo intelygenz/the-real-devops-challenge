@@ -12,7 +12,7 @@ The app needs a mongodb database to be able to run it.
 This is a python *(flask)* application. To download it:
 
 ```bash
-$ git clone git@gitlab.com:intelygenz/the-real-devops-challenge.git
+$ git clone git@github.com:intelygenz/the-real-devops-challenge.git
 Cloning into 'the-real-devops-challenge'...
 remote: Enumerating objects: 3, done.
 remote: Counting objects: 100% (3/3), done.
@@ -193,11 +193,11 @@ curl localhost:8080/api/v1/restaurant/55f14313c7447c3da705224b | jq
 
 ## The challenge starts here
 
-You have to **fork** this repository to complete the following challenges in your own `gitlab` account. **Feel free to solve the challenge you want**.
+You have to **fork** this repository to complete the following challenges in your own `github` account. **Feel free to solve the challenge you want**.
 
 Once completted, don't forget to send back the soluction.
 
-If you have any doubt, don't hesitate to [open an issue](https://gitlab.com/intelygenz/the-real-devops-challenge/issues/new) to ask any question about any challenge.
+If you have any doubt, don't hesitate to [open an issue](https://github.com/intelygenz/the-real-devops-challenge/issues/new) to ask any question about any challenge.
 
 ### Challenge 1. The API returns a list instead of an object
 
