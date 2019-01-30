@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  mongo:
+    image: quay.io/alex_blazh/the-real-devops-challenge-mongo:4.0.5-xenial
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: restaurant
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: SUPER_SECRET_PASSWORD
+    ports: #for debuging only
+    - 27017:27017
+    # volumes:
+    #   - /mnt/data/mongo:/data/db
+
+  app:
+    image: quay.io/alex_blazh/the-real-devops-challenge-app:latest
+    restart: always
+    links:
+    - mongo
+    environment:
+    - MONGO_URI=mongodb://root:SUPER_SECRET_PASSWORD@mongo:27017/restaurant
+    ports:
+    - 8080:8080
