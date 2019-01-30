@@ -8,12 +8,12 @@ pipeline {
         }
         stage('Build') { 
             steps {
-                sh 'build_and_push.sh'
+                sh './build_and_push.sh'
             }
         }
         stage('Test') { 
             steps {
-                sh 'docker run -it -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox'
+                sh 'docker run -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox'
             }
         }
         stage('Deploy') { 

@@ -195,7 +195,7 @@ curl localhost:8080/api/v1/restaurant/55f14313c7447c3da705224b | jq
 
 You have to **fork** this repository to complete the following challenges in your own `github` account. **Feel free to solve the challenge you want**.
 
-Once completted, don't forget to send back the soluction.
+Once completted, don't forget to send back the solution.
 
 If you have any doubt, don't hesitate to [open an issue](https://github.com/intelygenz/the-real-devops-challenge/issues/new) to ask any question about any challenge.
 
