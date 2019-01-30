@@ -1,4 +1,4 @@
-FROM alpine:3.8 as build-image
+FROM alpine:3.8
 
 LABEL maintainer="oleg.blazhyievskyi@gmail.com"
 
