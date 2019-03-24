@@ -1,0 +1,32 @@
+version: '3'
+services:
+  centos_app:
+    container_name: centos-app
+    image: centos-app
+    restart: always
+    links:
+      - mongo_app
+    build:
+      context: .
+    environment:
+      - MONGO_URI=mongodb://root:example@mongo_app:27017/restaurant
+    ports:
+      - "8080:8080"
+    networks:
+      - net
+  mongo_app:
+    container_name: mongo-app
+    image: mongo-app
+    restart: always
+    build:
+      context: data
+    environment:
+      MONGO_INITDB_DATABASE: restaurant
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017:27017
+    networks:
+      - net
+networks:
+  net:
