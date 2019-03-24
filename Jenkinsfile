@@ -12,7 +12,7 @@ pipeline {
         
         stage('Build') { 
             steps {
-                sh '.\build.sh'
+                sh './build.sh'
             }
         }
         
@@ -24,7 +24,7 @@ pipeline {
 
         stage('Push') {
             steps {
-                sh '.\push.sh'
+                sh './push.sh'
             }
         }
 
