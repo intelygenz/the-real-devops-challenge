@@ -18,7 +18,7 @@ pipeline {
         
         stage('Test') { 
             steps {
-                sh 'docker run -it -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox'
+                sh './test.sh'
             }
         }
 
