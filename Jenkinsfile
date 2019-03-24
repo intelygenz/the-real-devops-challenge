@@ -30,7 +30,7 @@ pipeline {
 
         stage('Deploy') { 
             steps {
-                sh 'echo TODO"
+                sh 'echo TODO'
             }
         }
     }
