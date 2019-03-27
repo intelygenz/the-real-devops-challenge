@@ -1,5 +1,7 @@
 FROM python:3
 
+ENV MONGO_URI="mongodb://localhost:27017/restaurants"
+
 WORKDIR /pyapp
 
 COPY app.py /pyapp/app.py
