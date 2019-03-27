@@ -12,11 +12,20 @@ RUN echo "deb http://repo.mongodb.org/apt/ubuntu $(cat /etc/lsb-release | grep D
 # Update apt-get sources AND install MongoDB
 RUN apt-get update && apt-get install -y mongodb-org
 
+
+ENV MONGODB_NAME="restautant"
+ENV MONGODB_USER="m0ng0"
+ENV MONGODB_PASS="p455w0rd"
+
 # Create the MongoDB data directory
 RUN mkdir -p /data/db
+RUN mkdir -p /initial-data
+
+COPY data/restaurant.json /initial-data/restaurant.json
 
 # Expose port #27017 from the container to the host
 EXPOSE 27017
 
 # Set /usr/bin/mongod as the dockerized entry-point application
 ENTRYPOINT ["/usr/bin/mongod"]
+
