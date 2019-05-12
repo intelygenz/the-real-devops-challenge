@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  mongo:
+    image: intelygenz/mongo
+    restart: always
+    container_name: mongo
+    ports:
+       - 27017:27017
+    volumes:
+       - /data/db:/data/db
+
+  app:
+    image: intelygenz/app
+    restart: always
+    container_name: app
+    ports:
+        - 8080:8080
+    links:
+        - mongo
+    environment:
+        - MONGO_URI=mongodb://intelygenz:intelygenz2019@mongo:27017/restaurant
+    depends_on:
+        - mongo
