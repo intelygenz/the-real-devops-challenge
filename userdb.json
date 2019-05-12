@@ -1,0 +1,12 @@
+use restaurant;
+db.createUser(
+    {
+        user: "intelygenz",
+        pwd: "intelygenz2019",
+        roles:[ {
+            role: "userAdmin" , 
+            db: "restaurant"
+            }
+        ]
+    }
+)

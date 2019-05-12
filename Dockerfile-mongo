@@ -1,0 +1,18 @@
+FROM mongo:4.1
+
+LABEL maintainer "mrsystemfox@example.com"
+
+ENV PROJECT_DIR=/mongo
+
+WORKDIR $PROJECT_DIR
+
+COPY data/restaurant.json $PROJECT_DIR/restaurant.json
+COPY userdb.json $PROJECT_DIR
+
+EXPOSE 27017
+
+HEALTHCHECK CMD curl --fail localhost:27017 || exit
+
+VOLUME "/data/db"
+
+CMD ["/usr/bin/mongod"]
