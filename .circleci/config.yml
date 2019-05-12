@@ -3,10 +3,10 @@ jobs:
   build:
     working_directory: ~/the-real-devops-challenge
     docker:
-      - image: painless/tox
+      - image: centos
     steps:
       - checkout
-      - run: |
+      - run:
           name: Pakcage install
           command: | 
             sudo yum install -y epel-release python-pip python-devel && \
