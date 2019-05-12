@@ -1,0 +1,21 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/the-real-devops-challenge
+    docker:
+      - image: painless/tox
+    steps:
+      - checkout
+      - run: |
+          name: Pakcage install
+          command: | 
+            sudo yum install -y epel-release python-pip python-devel && \
+            sudo yum install -y https://centos7.iuscommunity.org/ius-release.rpm && \
+            sudo yum install -y python36u python36u-libs python36u-devel python36u-pip && \
+            sudo yum install -y python35u python35u-libs python35u-devel python35u-pip && \
+            sudo yum install -y python34u python34u-libs python34u-devel python34u-pip && \
+            sudo pip install tox
+      - run:
+          name: Test with tox
+          command: tox
+
