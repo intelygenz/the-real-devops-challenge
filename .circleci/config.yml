@@ -9,7 +9,9 @@ jobs:
       - run:
           name: Pakcage install
           command: | 
-            yum install -y epel-release python-pip python-devel && \
+            yum install -y epel-release && \
+            yum install python-pip && \
+            yum install python-devel && \
             yum install -y https://centos7.iuscommunity.org/ius-release.rpm && \
             yum install -y python36u python36u-libs python36u-devel python36u-pip && \
             yum install -y python35u python35u-libs python35u-devel python35u-pip && \
