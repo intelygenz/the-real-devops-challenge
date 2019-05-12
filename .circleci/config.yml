@@ -3,12 +3,19 @@ jobs:
   build:
     working_directory: ~/the-real-devops-challenge
     docker:
-      - image: python:3
+      - image: centos
     steps:
       - checkout
       - run:
           name: Pakcage install
           command: | 
+            yum install -y epel-release && \
+            yum install -y python-pip && \
+            yum install -y python-devel && \
+            yum install -y https://centos7.iuscommunity.org/ius-release.rpm && \
+            yum install -y python36u python36u-libs python36u-devel python36u-pip && \
+            yum install -y python35u python35u-libs python35u-devel python35u-pip && \
+            yum install -y python34u python34u-libs python34u-devel python34u-pip && \
             pip install tox
       - run:
           name: Test with tox
