@@ -6,19 +6,31 @@ services:
     restart: always
     container_name: mongo
     ports:
-       - 27017:27017
+       - "27017:27017"
+    environment:
+        MONGO_INITDB_DATABASE: restaurant
+        MONGO_INITDB_ROOT_USERNAME: intelygenz
+        MONGO_INITDB_ROOT_PASSWORD: intelygenz2019
     volumes:
        - /data/db:/data/db
+    networks:
+       - backend
 
   app:
     image: intelygenz/app
     restart: always
     container_name: app
     ports:
-        - 8080:8080
+        - "8080:8080"
     links:
         - mongo
     environment:
         - MONGO_URI=mongodb://intelygenz:intelygenz2019@mongo:27017/restaurant
     depends_on:
         - mongo
+    networks:
+        - backend
+networks:
+  backend:
+    driver: "bridge"
+       
