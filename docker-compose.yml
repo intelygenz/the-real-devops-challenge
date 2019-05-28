@@ -1,0 +1,21 @@
+version: "3.5"
+networks:
+  default:
+    name: trdc-net
+services:
+
+  trdc-mongo:
+    build: ./data
+    container_name: trdc-mongo
+    ports:
+      - 27017:27017
+
+  trdc-flask:
+    build: .
+    container_name: trdc-flask
+    ports:
+      - 8080:8080
+    environment:
+      - MONGO_URI=mongodb://mongo/devops_challenge
+    links:
+      - trdc-mongo:mongo
