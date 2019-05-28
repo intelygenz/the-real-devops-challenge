@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask
+  labels:
+    app: flask
+spec:
+  selector:
+    matchLabels:
+      app: flask
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec:
+      containers:
+      - name: flask
+        image: docker.io/carpioldc/trdc-flask
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        - name: MONGO_URI
+          value: mongodb://mongo/devops_challenge
+        ports:
+        - containerPort: 8080
