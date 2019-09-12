@@ -18,9 +18,14 @@ pipeline {
                 sh "tox"
              }
         }
-        stage('Build image'){
+        stage('Build app'){
             steps {
                 sh "docker build -t challengeapp ."
+            }
+        }
+        stage('Build db'){
+            steps {
+                sh "docker build -t challengemongo ./data/"
             }
         }
     }
