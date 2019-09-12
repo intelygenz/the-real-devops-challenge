@@ -1,0 +1,19 @@
+version: '3.7'
+services:
+  mongo:
+    build: ./data
+    ports:
+      - "27017:27017"
+    expose:
+      - "27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+  app:
+    build: ./
+    links:
+      - mongo
+    ports:
+      - "8080:8080"
+    environment:
+      MONGO_URI: mongodb://devops:devopspass@mongo:27017/challenge
