@@ -18,5 +18,10 @@ pipeline {
                 sh "tox"
              }
         }
+        stage('Build image'){
+            steps {
+                sh "docker build -t challengeapp ."
+            }
+        }
     }
 }
