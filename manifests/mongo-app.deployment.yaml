@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: restaurant-mongo #the name that resolve
+  labels:
+    app: restaurant-mongo
+spec:
+  ports:
+    - port: 27017
+  selector:
+    app: restaurant-mongo
+  clusterIP: None
+---
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1  
+kind: Deployment
+metadata:
+  labels:
+    app: restaurant-mongo
+  name: restaurant-mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: restaurant-mongo
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: restaurant-mongo
+    spec:
+      containers:
+      - image: jmateos/restaurant_mongo:latest
+        name: restaurant-mongo
+        env:                				# Should be on config map / secrets 
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: root
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: toor
+        - name: MONGO_INITDB_DATABASE
+          value: restaurant
+        - name: MONGO_APP_USERNAME
+          value: restaurant_user
+        - name: MONGO_APP_PASSWORD
+          value: restaurant_pass
+        ports:
+        - containerPort: 27017
+          name: mongo

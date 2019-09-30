@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: restaurant-app
+  labels:
+    app: restaurant-app
+spec:
+  ports:
+    - port: 8080
+  selector:
+    app: restaurant-app
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: restaurant-app
+  name: restaurant-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: restaurant-app
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: restaurant-app
+    spec:
+      containers:
+      - image: jmateos/restaurant_app:latest
+        name: restaurant-app
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: MONGO_URI
+          value: "mongodb://username:password@restaurant-mongo:27017/restaurant"
