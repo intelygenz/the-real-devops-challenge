@@ -1,0 +1,27 @@
+version: '2' # Sorry for old version, i'm using Ubuntu Xenial here :/
+   
+services:
+  
+  # bbdd
+  mongo:
+    build: data
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: restaurant
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: toor
+      MONGO_APP_USERNAME: app_user
+      MONGO_APP_PASSWORD: app_passwd
+    ports:
+      - "27017"
+
+  # container app
+  app:
+    build: .
+    restart: always
+    links: 
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://app_user:app_passwd@mongo:27017/restaurant
+    ports:
+      - 8081:8080 # I'm already running stuff on 8080
