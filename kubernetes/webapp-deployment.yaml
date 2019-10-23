@@ -45,7 +45,7 @@ spec:
         resources: {}
         livenessProbe:
           httpGet:
-            path: /
+            path: /api/v1/restaurant
             port: 8080
             scheme: HTTP
           initialDelaySeconds: 30
