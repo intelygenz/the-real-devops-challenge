@@ -2,36 +2,26 @@ version: '3.7'
 services:
   webapp:
     container_name: flask-app
-    build: ./
+    image: zeusal/flask-app:latest
     ports:
       - "8080:8080"
-    healthcheck:
-      test: /bin/sh nc -zv 127.0.0.1 8080 || exit 1
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
     links: 
       - mongodb
+    env_file: docker.env
     environment:
-      MONGO_URI: mongodb://app_usr:app_pwd@mongodb:27017/flask
+      MONGO_URI: mongodb://${APP_DB_USERNAME}:${APP_DB_PASSWORD}@mongodb:27017/${MONGO_INITDB_DATABASE}
     depends_on:
       - mongodb
   mongodb:
     container_name: flask-mongodb
-    build: ./data
+    image: zeusal/flask-mongodb:latest
     restart: always
     ports:
       - "27017:27017"
-    healthcheck:
-      test: /bin/sh echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet || exit 1
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
+    env_file: docker.env
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: pass
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       MONGO_INITDB_DATABASE: flask
-      APP_DB_USERNAME: app_usr
-      APP_DB_PASSWORD: app_pwd
+      APP_DB_USERNAME: ${APP_DB_USERNAME}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD}

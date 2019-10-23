@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app: mongodb
+  creationTimestamp: null
+  labels:
+    app: mongodb
+  name: mongodb
+spec:
+  selector:
+    matchLabels:
+      app: mongodb
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        app: mongodb
+      creationTimestamp: null
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - env:
+        - name: APP_DB_PASSWORD
+          valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: APP_DB_PASSWORD
+        - name: APP_DB_USERNAME
+          valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: APP_DB_USERNAME
+        - name: MONGO_INITDB_DATABASE
+          value: flask
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: MONGO_INITDB_ROOT_PASSWORD
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: MONGO_INITDB_ROOT_USERNAME
+        image: zeusal/flask-mongodb:latest
+        name: flask-mongodb
+        ports:
+        - containerPort: 27017
+          protocol: TCP
+        resources: {}
+        livenessProbe:
+          tcpSocket:
+            port: 27017
+          initialDelaySeconds: 30
+          timeoutSeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+      restartPolicy: Always
+status: {}

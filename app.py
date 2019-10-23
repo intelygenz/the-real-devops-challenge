@@ -17,7 +17,12 @@ mongo = PyMongo(app)
 @app.route("/api/v1/restaurant")
 def restaurants():
     restaurants = find_restaurants(mongo)
-    return jsonify(restaurants)
+    if len(restaurants) < 0:
+        code = 204
+    else:
+        code = 200
+        restaurants = "No restaurants found."
+    return jsonify(restaurants), code
 
 
 @app.route("/api/v1/restaurant/<id>")
