@@ -2,23 +2,23 @@ version: '3.7'
 services:
   webapp:
     container_name: flask-app
-    image: zeusal/flask-app:latest
+    build: ./
     ports:
       - "8080:8080"
     links: 
       - mongodb
-    env_file: docker.env
+    env_file: .env
     environment:
       MONGO_URI: mongodb://${APP_DB_USERNAME}:${APP_DB_PASSWORD}@mongodb:27017/${MONGO_INITDB_DATABASE}
     depends_on:
       - mongodb
   mongodb:
     container_name: flask-mongodb
-    image: zeusal/flask-mongodb:latest
+    build: ./data
     restart: always
     ports:
       - "27017:27017"
-    env_file: docker.env
+    env_file: .env
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}

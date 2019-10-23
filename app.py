@@ -19,9 +19,9 @@ def restaurants():
     restaurants = find_restaurants(mongo)
     if len(restaurants) < 0:
         code = 204
+        restaurants = "No restaurants found."
     else:
         code = 200
-        restaurants = "No restaurants found."
     return jsonify(restaurants), code
 
 
