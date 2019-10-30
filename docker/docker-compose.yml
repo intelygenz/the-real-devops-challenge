@@ -1,0 +1,26 @@
+version: '3'
+services:
+  app:
+    container_name: app
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile-app
+    network_mode: "host"
+    environment:
+      MONGO_URI: mongodb://root:root@127.0.0.1:27017/app
+      DEBUG: "True"
+    depends_on:
+      - mongo
+    command: python app.py
+    volumes: 
+      - "../:/workdir"
+  mongo:
+    container_name: mongo
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile-mongo
+    network_mode: "host"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: app

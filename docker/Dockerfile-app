@@ -1,0 +1,8 @@
+# docker build -t prueba . -f docker/Dockerfile-app
+# docker run --name python -u 1000 --rm -it -v $(pwd):/workdir prueba tox -e py36
+
+FROM python:3.6-alpine
+WORKDIR /workdir
+RUN pip install tox
+COPY . /workdir
+RUN pip install -r requirements.txt

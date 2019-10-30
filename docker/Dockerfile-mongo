@@ -1,0 +1,4 @@
+FROM mongo
+
+COPY ./data/restaurant.json /restaurant.json
+COPY ./docker/mongo-init.sh /docker-entrypoint-initdb.d/
