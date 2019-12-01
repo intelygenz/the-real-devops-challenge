@@ -174,7 +174,8 @@ pip-selfcheck.json
 # Ignore all local history of files
 .history
 
-### Secret files
+### Secret filesi
+#
 config/*passwd
 
 # End of https://www.gitignore.io/api/code,venv,linux,python,virtualenv,visualstudiocode

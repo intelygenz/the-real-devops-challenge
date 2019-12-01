@@ -1,0 +1,59 @@
+version: '3.6'
+services:
+
+  restaurants-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: restaurants-app
+    image: restaurants-app:0.1.0
+    restart: unless-stopped
+    environment:
+      #MONGO_URI: mongodb://flaskuser:flask123@mongodb:27017/restaurants-app
+      MONGODB_DATABASE: restaurants-app
+      MONGODB_USERNAME: app
+      MONGODB_PASSWORD_FILE: /run/secrets/mongo-user-passwd
+      MONGODB_HOSTNAME: mongodb
+      MONGODB_PORT: 27017
+    secrets:
+      - mongo-user-passwd      
+    depends_on:
+      - mongodb
+    networks:
+      - backend
+
+  mongodb:
+    image: mongo:4.0.8    
+    container_name: mongodb    
+    restart: unless-stopped    
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo-root-passwd
+      MONGO_INITDB_USERNAME: app
+      MONGO_INITDB_PASSWORD_FILE: /run/secrets/mongo-user-passwd
+      MONGO_INITDB_DATABASE: restaurants-app
+      MONGODB_DATA_DIR: /data/db
+      MONGO_DATASET: restaurant.json     
+    volumes:
+      - mongodbdata:/data/db 
+      - ./config/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
+      - ./data/restaurant.json:/config/restaurant.json  
+    secrets:
+      - mongo-root-passwd
+      - mongo-user-passwd
+    networks:
+      - backend 
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  mongodbdata:
+    driver: local
+
+secrets:
+  mongo-root-passwd:
+    file: config/mongo-root-passwd
+  mongo-user-passwd:
+    file: config/mongo-user-passwd  
