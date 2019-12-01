@@ -1,11 +1,11 @@
 version: 2.1
-  jobs:
-    build:
-      machine: # Specifies a machine image that uses
+jobs:
+  build1:
+    machine: # Specifies a machine image that uses
       # an Ubuntu version 14.04 image with Docker 17.06.1-ce
       # and docker-compose 1.14.0, follow CircleCI Discuss Announcements
       # for new image releases.
-        image: circleci/classic:201708-01
+      image: circleci/classic:201708-01
     steps:
       - checkout # check out the code in the project directory
       - run: echo "hello world" # run the `echo` command
