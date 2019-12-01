@@ -1,7 +1,9 @@
 Challenge 1:
 I fixed code in /home/ctrivinm/proyecto/the-real-devops-challenge/src/mongoflask.py
+also fix app.py to return 204 code if no match results.
 Challenge 2:
 I created pipeline which run python test
+https://circleci.com/gh/triviman/workflows/the-real-devops-challenge
 Challenge 3 & 4:
 I created docker folder with Dockerfiles
 I added to pipeline the builds of app container and mongodb container

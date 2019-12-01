@@ -26,9 +26,8 @@ def restaurant(id):
         restaurants = find_restaurants(mongo, id)
         if len(restaurants) > 0:
             return jsonify(restaurants[0])
-         else:
+        else:
             return '', 204
-
     except:
         return '', 204
 
