@@ -8,7 +8,7 @@ jobs:
       - run: docker run -it -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
   build:
     machine:
-      image: circleci/classic:201708-01
+      image: circleci/classic:201808-01
     steps:
       - checkout # check out the code in the project directory
       - run: echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username $DOCKER_REGISTRY_USERNAME --password-stdin
