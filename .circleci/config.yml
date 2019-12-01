@@ -1,11 +1,17 @@
 version: 2.1
 jobs:
-  build:
-    machine: # Specifies a machine image that uses
-      # an Ubuntu version 14.04 image with Docker 17.06.1-ce
-      # and docker-compose 1.14.0, follow CircleCI Discuss Announcements
-      # for new image releases.
+  test:
+    machine:
       image: circleci/classic:201708-01
     steps:
       - checkout # check out the code in the project directory
       - run: docker run -it -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
+  build:
+    machine:
+      image: circleci/classic:201708-01
+    steps:
+      - checkout # check out the code in the project directory
+     - run: |
+         echo "$REGISTRY_PASS" | docker login --username $REGISTRY_USER --password-stdin
+      - run: docker build -t triviman/mongodb-trdc:latest -f docker/mongodb/Dockerfile .
+      - run: docker push triviman/mongodb-trdc:latest
