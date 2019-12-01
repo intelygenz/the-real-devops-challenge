@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-trdc
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-trdc
+  template:
+    metadata:
+      labels:
+        app: mongodb-trdc
+    spec:
+      containers:
+      - name: mongodb-trdc
+        image: triviman/mongodb-trdc:latest
+        ports:
+        - containerPort: 27017
+        envFrom:
+        - configMapRef:
+            name: cm-mongodb-trdc

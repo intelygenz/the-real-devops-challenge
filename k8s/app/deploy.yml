@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-trdc
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-trdc
+  template:
+    metadata:
+      labels:
+        app: app-trdc
+    spec:
+      containers:
+      - name: app-trdc
+        image: triviman/app-trdc:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MONGO_URI
+          value: "mongodb://mongoadmin:mongopassword@mongodb-trdc-service:27017/main"
+        - name: DEBUG
+          value: "True"

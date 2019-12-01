@@ -1,0 +1,13 @@
+Challenge 1:
+I fixed code in /home/ctrivinm/proyecto/the-real-devops-challenge/src/mongoflask.py
+Challenge 2:
+I created pipeline which run python test
+Challenge 3 & 4:
+I created docker folder with Dockerfiles
+I added to pipeline the builds of app container and mongodb container
+Challenge 5:
+I added docker-compose file to run local docker-compose up
+Challenge 6:
+I added k8s folder with deployment, services and configmaps, this configuration is too simple because is necessary that works in microk8s, not ingress or hpa resources were added
+
+
