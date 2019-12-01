@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   test:
     machine:
-      image: circleci/classic:201708-01
+      image: circleci/classic:201808-01
     steps:
       - checkout # check out the code in the project directory
       - run: docker run -it -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
@@ -14,3 +14,14 @@ jobs:
       - run: echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username $DOCKER_REGISTRY_USERNAME --password-stdin
       - run: docker build -t triviman/mongodb-trdc:latest -f docker/mongodb/Dockerfile .
       - run: docker push triviman/mongodb-trdc:latest
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
