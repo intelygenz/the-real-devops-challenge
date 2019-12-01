@@ -1,0 +1,7 @@
+# Include 
+*
+!src
+!app.py
+!requirements*
+!data
+!run.sh
