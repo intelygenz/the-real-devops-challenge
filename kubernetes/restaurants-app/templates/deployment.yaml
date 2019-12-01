@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "restaurants-app.fullname" . }}
+  labels:
+{{ include "restaurants-app.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "restaurants-app.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "restaurants-app.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: MONGODB_DATABASE
+              value: {{ .Values.mongodb.mongoDatabase }}
+            - name: MONGODB_USERNAME
+              value: {{ .Values.mongodb.mongoUserUser }}
+            - name: MONGODB_PASSWORD_FILE
+              value: {{ include "restaurants-app.secretUserPath" . }}
+            - name: MONGODB_HOSTNAME
+              value: "{{ .Release.Name }}-mongodb"
+            - name: MONGODB_PORT
+              value: {{ .Values.mongodb.service.port | quote }}                                                                           
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.containerPort }}
+              port: {{ .Values.service.port }}
+              protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: root-user
+              mountPath: {{ .Values.mongodb.mongoUserPasswordFilePath }}  
+              readOnly: true 
+      volumes:
+        - name: root-user
+          secret:
+{{- if empty .Values.existingUserSecret }}       
+            secretName: {{ .Release.Name }}-mongodb-app
+{{- else }}
+            secretName: {{ .Values.existingUserSecret }}
+{{- end }}  

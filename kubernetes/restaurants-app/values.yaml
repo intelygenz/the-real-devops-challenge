@@ -1,0 +1,72 @@
+# Default values for restaurants-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: roxcarpio/restaurants-app
+  tag: 0.1.0
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 8080
+  containerPort: 8080
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+mongodb:
+  image:
+    repository: mongo
+    tag: 4.0.8
+
+  ## Mongo DB service configuration
+  service:
+    port: 27017
+
+  ## Mongo DB app user
+  mongoUserUser: app
+  ## Mongo DB app password
+  mongoUserPassword: ""
+  ## Mongo DB app password using existing secret
+  existingUserSecret: ""
+  existingUserKey: ""
+
+  ## Mount Path for the Mongo DB root password
+  mongoUserPasswordFilePath: /run/secrets/mongo-user-passwd
+
+  ## Mongo DB database
+  mongoDatabase: restaurants-app
+
+  ## Mongo DB data Persistent Volume Storage Class
+  persistence:
+    enabled: true
+    ## A manually managed Persistent Volume and Claim
+    ## If defined, PVC must be created manually before volume will be bound
+    ## The value is evaluated as a template, so, for example, the name can depend on .Release or .Chart
+    # existingClaim:
+
+    ## The path the volume will be mounted at, useful when using different
+    mountPath: /data/db
+
+    # storageClass: "-"
+    accessModes:
+      - ReadWriteOnce
+    size: 8Gi
+    annotations: {}
+    storageClassName: sas
