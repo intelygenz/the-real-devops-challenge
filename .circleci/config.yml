@@ -11,7 +11,6 @@ jobs:
       image: circleci/classic:201708-01
     steps:
       - checkout # check out the code in the project directory
-     - run: |
-         echo "$REGISTRY_PASS" | docker login --username $REGISTRY_USER --password-stdin
+      - run: echo "$DOCKER_REGISTRY_PASSWORD" | docker login --username $DOCKER_REGISTRY_USERNAME --password-stdin
       - run: docker build -t triviman/mongodb-trdc:latest -f docker/mongodb/Dockerfile .
       - run: docker push triviman/mongodb-trdc:latest
