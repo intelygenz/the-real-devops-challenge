@@ -1,3 +1,4 @@
-docker build -t mongot:v3 -f docker/mongodb/Dockerfile .
-docker run -d -e "MONGO_INITDB_ROOT_USERNAME=mongoadmin" -e "MONGO_INITDB_ROOT_PASSWORD=mongopassword" -e "MONGO_INITDB_DATABASE=main" -p 27017:27017 mongot:v3
+docker build -t mongodb-trdc:latest -f docker/mongodb/Dockerfile .
+docker run -d -e "MONGO_INITDB_ROOT_USERNAME=mongoadmin" -e "MONGO_INITDB_ROOT_PASSWORD=mongopassword" -e "MONGO_INITDB_DATABASE=main" -p 27017:27017 mongodb-trdc:latest
 export MONGO_URI=mongodb://mongoadmin:mongopassword@127.0.0.1:27017/main
+docker run -d -e"MONGO_URI=mongodb://mongoadmin:mongopassword@192.168.1.111:27017/main" -p 8080:8080 app-trdc:latest
