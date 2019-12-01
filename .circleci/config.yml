@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build1:
+  build:
     machine: # Specifies a machine image that uses
       # an Ubuntu version 14.04 image with Docker 17.06.1-ce
       # and docker-compose 1.14.0, follow CircleCI Discuss Announcements
