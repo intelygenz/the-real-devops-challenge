@@ -17,6 +17,7 @@ RUN pip install -r requirements.txt
 
 # Launch Java application
 # USER app:app
+RUN chmod +x run.sh
 EXPOSE 8080
 ENTRYPOINT ["sh","-c","./run.sh"]
 
