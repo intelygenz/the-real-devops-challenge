@@ -1,0 +1,63 @@
+image: python:3.8-alpine
+
+stages: 
+#  - test
+  - docker
+  - deploy
+
+#test_tox:
+#  stage: test
+#  image: painless/tox
+#  script:
+#    - tox
+
+#test_pytest:
+#  stage: test
+#  script:
+#    - pip install -r requirements_dev.txt
+#    - pytest    
+
+build_image:
+  stage: docker
+  image: docker:latest
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_IMAGE_NAME: roxcarpio/restaurants-app
+  services:
+    - docker:dind
+  script:
+    - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD"
+    - docker build . -t ${DOCKER_IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}
+    - docker push ${DOCKER_IMAGE_NAME}:${CI_COMMIT_SHORT_SHA}
+    
+deploy_dev:
+  stage: deploy  
+  image:
+    name: alpine/helm:2.15.2
+    entrypoint: ["/bin/sh", "-c"]    
+  variables:
+    K8S_NAMESPACE: app-dev
+    HELM_CHART_PATH: kubernetes/restaurants-app/
+    HELM_DEV_RELEASE_NAME: restaurants-app-dev
+  environment:
+    name: kubernetes
+  script:
+    # Upgrade the component:    
+    - helm upgrade
+      --reuse-values
+      --namespace=${K8S_NAMESPACE}
+      --kubeconfig=${K8S_CONFIG_FILE}
+      ${HELM_DEV_RELEASE_NAME} --set=image.tag=${CI_COMMIT_SHORT_SHA} ${HELM_CHART_PATH}
+#  after_script:
+#   - HELM_RELEASE_STATUS=`helm ls --namespace=${K8S_NAMESPACE} --kubeconfig=${K8S_CONFIG_FILE} | grep ${HELM_DEV_RELEASE_NAME} | awk {'print $8'}`
+#   - test $HELM_RELEASE_STATUS == 'DEPLOYED' && (UPGRADE SUCCESS!! Ready to Test; exit 0)
+#   - HELM_CURRENT_REVISION=`helm ls --namespace=${K8S_NAMESPACE} --kubeconfig=${K8S_CONFIG_FILE} | grep ${HELM_DEV_RELEASE_NAME} | awk {'print $2'}`
+#   - helm rollback
+#     --wait
+#     --timeout=60
+#     --kubeconfig=${K8S_CONFIG_FILE}
+#     ${HELM_DEV_RELEASE_NAME} $((HELM_CURRENT_REVISION-1))
+ #  - echo "UPGRADE FAILED. Please review the deployment" && exit 1
+   
