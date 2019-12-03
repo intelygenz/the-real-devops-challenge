@@ -208,6 +208,11 @@ As you can see, the API returns a list in the two exposed endpoints:
 
 We want to fix the second endpoint. Return a json object instead of a json array if there is a match or a http 204 status code if no match found.
 
+#### Solution:
+
+- app.py: Restaurant function updated to return a json object, if there is a match and a http 204 status code if there is not a match.
+- mongoflask.py: find_restaurants funcion updated to fix the bug
+
 ### Challenge 2. Test the application in any cicd system
 
 ![CICD](./assets/cicd.logo.jpg)
@@ -215,11 +220,26 @@ We want to fix the second endpoint. Return a json object instead of a json array
 As a good devops engineer, you know the advantages of running tasks in an automated way. There are some cicd systems that can be used to make it happen.
 Choose one, travis-ci, gitlab-ci, circleci... whatever you want. Give us a successful pipeline.
 
+#### Solution:
+I have decided to use gitlab-ci as CI Software.
+
+The pipeline consists in 3 main states:
+* Testing job: Tests are triggered.
+*	Docker image Build job: The docker image is created and pushed to DockerHub.
+*	Deployment job: Deployment of the new change in Kubernetes.
+
+In this case, the pipeline does Continuos Integration and Continuos Deployment, if in any case we would like to control the deployment and do Continuos Delivery, the last job should be changed to be triggered manually.
+
 ### Challenge 3. Dockerize the APP
 
 ![DockerPython](./assets/docker.python.png)
 
 What about containers? As this moment *(2018)*, containers are a standard in order to deploy applications *(cloud or in on-premise systems)*. So the challenge is to build the smaller image you can. Write a good Dockerfile :)
+
+#### Solution:
+* .dockerignore file added in order to include in the docker image only the needed files in the docker build process.
+* Dockerfile added. python:3.8-alpine docker image selected as docker base since it a lightweight and secure docker image.
+
 
 ### Challenge 4. Dockerize the database
 
@@ -229,12 +249,31 @@ We need to have a mongodb database to make this application run. So, we need a m
 
 The loaded mongodb collection must be named: `restaurant`. Do you have to write code or just write a Docker file?
 
+#### Solution:
+The best solution is to decouple configuration artifacts from image content to keep containerized applications portable. Therefore, I have used an official Mongo DB docker image and I have created a script for deploy it, which is triggered when the mongo db starts.
+
 ### Challenge 5. Docker Compose it
 
 ![Docker Compose](./assets/docker.compose.logo.png)
 
 Once you've got dockerized all the API components *(python app and database)*, you are ready to make a docker-compose file.
 **KISS**.
+
+#### Solution:
+
+##### How to install Restaurants App with docker-compose
+1. Create the password files in the config folder.
+   * mongo-root-passwd ( Mongo DB Password for accessing the root user to the database )
+   * mongo-user-passwd ( Mongo DB Password for accessing the Restaurant user to the database  )
+2. On the root folder ( the-real-devops-challenge ), run `docker-compose up -d `
+
+##### How to unistall Restaurants App with docker-compose
+1. On the root folder ( the-real-devops-challenge ), run:
+   ```
+   docker-compose stop
+   docker-compose rm
+   docker volume rm <mongo_db_volume_name>
+   ```
 
 ### Final Challenge. Deploy it on kubernetes
 
@@ -243,3 +282,7 @@ Once you've got dockerized all the API components *(python app and database)*, y
 If you are a container hero, an excellent devops... We want to see your expertise. Use a kubernetes system to deploy the `API`. We recommend you to use tools like [minikube](https://kubernetes.io/docs/setup/minikube/) or [microk8s](https://microk8s.io/).
 
 Write the deployment file *(yaml file)* used to deploy your `API` *(python app and mongodb)*.
+
+#### Solution:
+More information in the helm [README.md](kubernetes/restaurants-app/README.md) file in the `kubernetes/restaurants-app` folder.
+I have decided to use helm as deployment manager since it will help us to configure our application for deploying it in several environments.

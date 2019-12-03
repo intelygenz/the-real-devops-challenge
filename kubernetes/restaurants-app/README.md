@@ -1,6 +1,6 @@
 # Restaurants APP
 
-CHANGE
+Restaurants APP is a app for finding restaurants in a place and gibes the posibility to search for a specific restaurant to see its characteristics.
 
 ## TL;DR;
 
@@ -36,47 +36,7 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Configuration
 
-The following table lists the configurable parameters of the Restaurants APP chart and their default values.
-
-| Parameter                              | Description                                   | Default |
-|----------------------------------------|-----------------------------------------------|---------|
-| `replicaCount`                         | Number of CDS Data Adapter replicas to create |         |
-| `image.repository`                     | Restaurants APP Image name                    |         |
-| `image.tag `                           | Restaurants APP Image tag                     |         |
-| `image.pullPolicy`                     | Restaurants APP image pull policy             |         |
-| `imagePullSecrets `                    | Specify image pull secrets                    |         |
-| `nameOverride`                         |                                               |         |
-| `fullnameOverride`                     |                                               |         |
-| `service.type`                         |                                               |         |
-| `service.port`                         |                                               |         |
-| `service.containerPort`                |                                               |         |
-| `resources `                           |                                               |         |
-| `mongodb.service.type`                 |                                               |         |
-| `mongodb.service.targetPort`           |                                               |         |
-| `mongodb.service.port`                 |                                               |         |
-| `mongodb.mongoUser`                    |                                               |         |
-| `mongodb.mongoPassword`                |                                               |         |
-| `mongodb.existingSecret`               |                                               |         |
-| `mongodb.existingKey`                  |                                               |         |
-| `mongodb.mongoDatabase`                |                                               |         |
-| `mongodb.persistence.enabled`          |                                               |         |
-| `mongodb.persistence.existingClaim`    |                                               |         |
-| `mongodb.persistence.mountPath`        |                                               |         |
-| `mongodb.persistence.accessModes`      |                                               |         |
-| `mongodb.persistence.size`             |                                               |         |
-| `mongodb.persistence.annotations`      |                                               |         |
-| `mongodb.persistence.storageClassName` |                                               |         |
-|                                        |                                               |         |
-|                                        |                                               |         |
-|                                        |                                               |         |
-
-Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
-
-```console
-$ helm install --name my-release --namespace my-namespace \
-  --set image.tag=0.1,replicaCount=2 \
-    restaurants-app
-```
+A configuration file `value.yaml` sets the configuration for Restaurants APP and the Mongo DB. The meanings and defaults values of the parameters specific to a component are described in each components configuration values file.
 
 ## Image
 
@@ -93,4 +53,13 @@ If the `image` is a private registry, you need to [specify an image pull secret]
 helm install --set image.pullSecrets=SECRET_NAME restaurants-app
 ```
 
-# more info: https://github.com/helm/charts/tree/master/stable/postgresql
+## Password Generator
+
+This chart generates by default automatically the passwords for the restaurant app user and the root user in mongo db and creats its respective secrets in Kubernetes.
+
+If you want to use existing secrets for the passwords please update:
+* existingRootSecret
+* existingUserSecret
+
+in the values file.
+

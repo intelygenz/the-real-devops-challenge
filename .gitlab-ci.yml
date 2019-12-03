@@ -1,21 +1,21 @@
 image: python:3.8-alpine
 
 stages: 
-#  - test
+  - test
   - docker
   - deploy
 
-#test_tox:
-#  stage: test
-#  image: painless/tox
-#  script:
-#    - tox
+test_tox:
+  stage: test
+  image: painless/tox
+  script:
+    - tox
 
-#test_pytest:
-#  stage: test
-#  script:
-#    - pip install -r requirements_dev.txt
-#    - pytest    
+test_pytest:
+  stage: test
+  script:
+    - pip install -r requirements_dev.txt
+    - pytest    
 
 build_image:
   stage: docker
@@ -45,19 +45,9 @@ deploy_dev:
     name: kubernetes
   script:
     # Upgrade the component:    
-    - helm upgrade
+    - helm upgrade --install
       --reuse-values
       --namespace=${K8S_NAMESPACE}
       --kubeconfig=${K8S_CONFIG_FILE}
       ${HELM_DEV_RELEASE_NAME} --set=image.tag=${CI_COMMIT_SHORT_SHA} ${HELM_CHART_PATH}
-#  after_script:
-#   - HELM_RELEASE_STATUS=`helm ls --namespace=${K8S_NAMESPACE} --kubeconfig=${K8S_CONFIG_FILE} | grep ${HELM_DEV_RELEASE_NAME} | awk {'print $8'}`
-#   - test $HELM_RELEASE_STATUS == 'DEPLOYED' && (UPGRADE SUCCESS!! Ready to Test; exit 0)
-#   - HELM_CURRENT_REVISION=`helm ls --namespace=${K8S_NAMESPACE} --kubeconfig=${K8S_CONFIG_FILE} | grep ${HELM_DEV_RELEASE_NAME} | awk {'print $2'}`
-#   - helm rollback
-#     --wait
-#     --timeout=60
-#     --kubeconfig=${K8S_CONFIG_FILE}
-#     ${HELM_DEV_RELEASE_NAME} $((HELM_CURRENT_REVISION-1))
- #  - echo "UPGRADE FAILED. Please review the deployment" && exit 1
    
