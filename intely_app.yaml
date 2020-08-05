@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intely_app
+  labels:
+    app: intely_app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: intely_app
+  template:
+    metadata:
+      labels:
+        app: intely_app
+    spec:
+      containers:
+        - name: intely_app
+          image: jcstdio/intely_app
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: Always
