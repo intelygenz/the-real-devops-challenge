@@ -1,11 +1,12 @@
 For the challenge:
 
 
-#### Little note: it seems that a year not using docker and jenkins, 
-#### and 5 months of unemployment seems to take its toll on what it was my daily job,
-#### so, apologies if you find some big mistakes, I would be much more efficiently if I were working :D
+Little note: it seems that a year not using docker and jenkins, 
+and 5 months of unemployment seems to take its toll on what it was my daily job,
+so, apologies if you find some big mistakes, I would be much more efficiently if I were working :D
 
-# The challenge:
+
+The challenge:
 
 1. For this part I take the position 0 of the list returned, an object, for further development, I would return only the object from the function instead of a list.
 
@@ -29,5 +30,5 @@ For the challenge:
   - intely_app.yaml
   
   
-  
-#### Hope you are having a nice summer.
+
+Hope you are having a nice summer.
