@@ -1,0 +1,33 @@
+For the challenge:
+
+
+#### Little note: it seems that a year not using docker and jenkins, 
+#### and 5 months of unemployment seems to take its toll on what it was my daily job,
+#### so, apologies if you find some big mistakes, I would be much more efficiently if I were working :D
+
+# The challenge:
+
+1. For this part I take the position 0 of the list returned, an object, for further development, I would return only the object from the function instead of a list.
+
+2. I upload a very simple jenkins pipeline for build and test with tox
+
+3. I have build and deployed a docker container, modified from a debian. The Dockerfile is in the root folder, and the image is at jcstdio/intely_app.
+
+4. I have build deployed a modified version of the mongo image in a container. Can be find in jcstdio/intely_mongodb.
+
+5.  The docker-compose.yml can be find in the root folder.
+  - It deploys a container with the modified mongo image, 
+    - With the port mapped to 27017:27017
+    - And a volume for persistent data mapped at ./mongo/data:/data/db
+  - Deploy a second container with the intely_app image,
+    - With the port mapped to 8080:8080
+    - The dependency of the mongodb container
+    - And the environment variable MONGO_URI, to set the connection for the app to the mongodb.
+    
+6. I've added two yaml files to deploy on kubernetes 
+  - intely_mongo.yaml
+  - intely_app.yaml
+  
+  
+  
+#### Hope you are having a nice summer.
