@@ -1,0 +1,19 @@
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  script:
+    - export MONGODB_DATABASE=${MONGODB_DATABASE}
+    - export MONGODB_USERNAME=${MONGODB_USERNAME}
+    - export MONGODB_PASSWORD=${MONGODB_PASSWORD}
+    - export MONGODB_HOSTNAME=${MONGODB_HOSTNAME}
+
+    - pip install -r requirements.txt
+
+test:
+  stage: test
+  script:
+    - pip install tox
+    - tox
