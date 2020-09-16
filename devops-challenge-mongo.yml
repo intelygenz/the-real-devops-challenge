@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+spec:
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: jotabustosigz/devops-challenge-mongodb-auth:1.0
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: storage
+              mountPath: /data/db
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: mongo-volume
