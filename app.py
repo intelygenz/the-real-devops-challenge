@@ -8,11 +8,17 @@ from flask_pymongo import PyMongo
 from src.mongoflask  import MongoJSONEncoder, ObjectIdConverter, find_restaurants
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = environ.get("MONGO_URI")
+app.config["MONGO_URI"] = 'mongodb://' + environ.get('MONGODB_USERNAME') + ':' + environ.get('MONGODB_PASSWORD') + '@' + environ.get('MONGODB_HOSTNAME') + ':27017/' + environ.get('MONGODB_DATABASE')
 app.json_encoder = MongoJSONEncoder
 app.url_map.converters["objectid"] = ObjectIdConverter
 mongo = PyMongo(app)
 
+@app.route("/")
+def index():
+    return jsonify(
+        status=True,
+        message='Welcome to the Flask App of The Real Devops Challenge!'
+    )
 
 @app.route("/api/v1/restaurant")
 def restaurants():
