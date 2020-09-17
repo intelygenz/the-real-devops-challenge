@@ -1,13 +1,17 @@
-image: docker:latest
+stages:
+  - test
+  - build
 
 test:
+  stage: test
+  image: docker:latest
   tags:
     - gitlab-org-docker
   script:
     - docker run -it -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
 
-# build:
-#   tags:
-#     - gitlab-org-docker
-#   script:
-#    - docker-compose up -d
+build:
+  stage: build
+  image: tmaier/docker-compose:latest
+  script:
+    - docker-compose build
