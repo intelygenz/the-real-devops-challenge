@@ -2,15 +2,15 @@ stages:
   - test
   - build
 
-test:
-  stage: test
-  image: python:3.6.8-alpine3.9
-  tags:
-    - gitlab-org-docker
-  script:
-    - echo start-of-script
-    - pip install tox
-    - tox
+# test:
+#   stage: test
+#   image: python:3.6.8-alpine3.9
+#   tags:
+#     - gitlab-org-docker
+#   script:
+#     - echo start-of-script
+#     - pip install tox
+#     - tox
 
 build:
   stage: build
