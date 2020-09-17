@@ -1,19 +1,11 @@
-stages:
-  - build
-  - test
+image: python:3.6.8-alpine3.9
 
-build:
-  stage: build
-  script:
-    - export MONGODB_DATABASE=${MONGODB_DATABASE}
-    - export MONGODB_USERNAME=${MONGODB_USERNAME}
-    - export MONGODB_PASSWORD=${MONGODB_PASSWORD}
-    - export MONGODB_HOSTNAME=${MONGODB_HOSTNAME}
-
+before_script:
+    - pip install tox
     - pip install -r requirements.txt
 
 test:
-  stage: test
+  tags:
+    - gitlab-org-docker
   script:
-    - pip install tox
     - tox
