@@ -8,7 +8,7 @@ test:
   stage: test
   image: docker:latest
   tags:
-    - docker-in-docker-builder 
+    - gitlab-org-docker
   script:
     - echo start-of-script
     - docker run busybox:latest echo hello
@@ -17,5 +17,7 @@ test:
 build:
   stage: build
   image: tmaier/docker-compose:latest
+  tags:
+    - gitlab-org-docker
   script:
     - docker-compose build
