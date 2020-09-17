@@ -1,3 +1,5 @@
+image: alpine:latest
+
 stages:
   - test
   - build
@@ -8,6 +10,7 @@ test:
   tags:
     - gitlab-org-docker
   script:
+    - echo start-of-script
     - docker run busybox:latest echo hello
     - echo end-of-script
 
