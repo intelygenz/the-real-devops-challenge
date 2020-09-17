@@ -6,8 +6,8 @@ test:
   script:
     - docker run -it -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
 
-build:
-  tags:
-    - gitlab-org-docker
-  script:
-   - docker-compose up -d
+# build:
+#   tags:
+#     - gitlab-org-docker
+#   script:
+#    - docker-compose up -d
