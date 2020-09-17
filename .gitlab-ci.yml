@@ -8,7 +8,8 @@ test:
   tags:
     - gitlab-org-docker
   script:
-    - docker run -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
+    - docker run busybox:latest echo hello
+    - echo end-of-script
 
 build:
   stage: build
