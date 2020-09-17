@@ -16,6 +16,18 @@ spec:
           image: jotabustosigz/devops-challenge-mongodb-auth:1.0
           ports:
             - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: "mongodbuser"
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: "your_mongodb_root_password"
+            - name: MONGO_INITDB_DATABASE
+              value: "flaskdb"
+            - name: MONGODB_DATA_DIR
+              value: "/data/db"
+            - name: MONDODB_LOG_DIR
+              value: "/dev/null"
+          command: ["mongo", "--auth"]
           volumeMounts:
             - name: storage
               mountPath: /data/db

@@ -19,4 +19,13 @@ spec:
           image: jotabustosigz/devops-challenge-flask:1.0
           ports:
             - containerPort: 8080
+          env:
+            - name: MONGODB_DATABASE
+              value: "flaskdb"
+            - name: MONGODB_USERNAME
+              value: "flaskuser"
+            - name: MONGODB_PASSWORD
+              value: "your_mongodb_password"
+            - name: MONGODB_HOSTNAME
+              value: "mongodb"
           imagePullPolicy: Always
