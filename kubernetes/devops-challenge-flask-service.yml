@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+  labels: 
+    name: flask-service
+    app: devops-challenge
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  type: LoadBalancer
+  selector:
+    name: flask
+    app: devops-challenge
