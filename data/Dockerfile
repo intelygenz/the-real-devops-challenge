@@ -4,6 +4,8 @@ LABEL MAINTAINER="Jota Bustos"
 
 ADD restaurant.json /mongodata/restaurant.json
 
+ADD initdb.sh /mongodata/initdb.sh
+
 WORKDIR /mongodata
 
 EXPOSE 27017
