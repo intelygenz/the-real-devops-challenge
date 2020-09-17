@@ -1,4 +1,4 @@
-image: alpine:latest
+image: customregistry/docker-builder:latest
 
 stages:
   - test
@@ -8,7 +8,7 @@ test:
   stage: test
   image: docker:latest
   tags:
-    - gitlab-org-docker
+    - docker-in-docker-builder 
   script:
     - echo start-of-script
     - docker run busybox:latest echo hello
