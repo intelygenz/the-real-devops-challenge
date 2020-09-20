@@ -16,5 +16,6 @@ test:
 
 build:
   stage: build
+  image: tmaier/docker-compose:latest
   script:
     - docker-compose build
