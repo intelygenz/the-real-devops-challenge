@@ -1,3 +1,6 @@
+
+image: tmaier/docker-compose:latest
+
 stages:
   - test
   - build
