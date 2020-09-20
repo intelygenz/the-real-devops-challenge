@@ -7,7 +7,6 @@ stages:
 
 test:
   stage: test
-  image: docker:latest
   services:
     - name: docker:19.03.8-dind
 
@@ -15,10 +14,7 @@ test:
     - which docker
     - docker run -v $(pwd):/tmp/app -w /tmp/app painless/tox /bin/bash tox
 
-# build:
-#   stage: build
-#   image: tmaier/docker-compose:latest
-#   tags:
-#     - gitlab-org-docker
-#   script:
-#     - docker-compose build
+build:
+  stage: build
+  script:
+    - docker-compose build
