@@ -17,5 +17,7 @@ test:
 build:
   stage: build
   image: tmaier/docker-compose:latest
+  services:
+    - name: docker:19.03.8-dind
   script:
     - docker-compose build
