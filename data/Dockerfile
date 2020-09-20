@@ -4,7 +4,7 @@ LABEL MAINTAINER="Jota Bustos"
 
 ADD restaurant.json /mongodata/restaurant.json
 
-ADD initdb.sh /mongodata/initdb.sh
+ADD init-mongo.sh /docker-entrypoint-initdb.d/init-mongo.sh
 
 WORKDIR /mongodata
 
