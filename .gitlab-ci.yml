@@ -4,13 +4,9 @@ stages:
 
 test:
   stage: test
-  image: python:3.6.8-alpine3.9
-  tags:
-    - gitlab-org-docker
+  image: painless/tox
   script:
-    - echo start-of-script
-    - pip install tox
-    - tox
+    - docker run -it -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
 
 # build:
 #   stage: build
