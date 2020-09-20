@@ -6,6 +6,7 @@ test:
   stage: test
   image: painless/tox
   script:
+    - which docker
     - docker run -it -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
 
 # build:
