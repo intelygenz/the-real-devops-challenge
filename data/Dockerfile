@@ -21,6 +21,4 @@ RUN mongod --fork --logpath /var/log/mongodb/mongod && \
                 --collection restaurant --type json \
                 --file ./restaurant.json
 
-# ENTRYPOINT mongod --bind_ip_all
-
-CMD [ "mongod", "auth" ]
+CMD [ "mongod", "auth", "--sslMode", "disabled" ]
