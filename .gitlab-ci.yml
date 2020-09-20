@@ -8,6 +8,9 @@ stages:
 test:
   stage: test
   image: docker:latest
+  services:
+    - name: docker:19.03.8-dind
+
   script:
     - which docker
     - docker run -v $(pwd):/tmp/app -w /tmp/app painless/tox /bin/bash tox
