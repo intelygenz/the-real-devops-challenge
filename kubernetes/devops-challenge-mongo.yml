@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: mongodb
-      image: jotabustosigz/devops-challenge-mongodb-auth-v2:1.0
+      image: jotabustosigz/devops-challenge-mongodb:3.0
       ports:
         - containerPort: 27017
       env:

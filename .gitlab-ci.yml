@@ -1,16 +1,34 @@
-
-image: docker:latest
-
 stages:
   - test
   - build
 
+variables:
+  CI_REGISTRY_USER: 'registry.gitlab.com'
+  FLASK_IMAGE: 'devops-challenge-flask:latest'
+  MONGODB_IMAGE: 'devops-challenge-mongo:latest'
+
 test:
   stage: test
-  services:
-    - name: docker:19.03.8-dind
-
+  image: painless/tox
   script:
-    - which docker
-    - docker run -v $(pwd):/tmp/app -w /tmp/app painless/tox /bin/bash tox
+    - tox
 
+build-flask:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:19.03.12-dind
+  script:
+    - docker login $CI_REGISTRY
+    - docker build -t $CI_REGISTRY/$FLASK_IMAGE .
+    - docker push $CI_REGISTRY/$FLASK_IMAGE
+
+build-mongo:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:19.03.12-dind
+  script:
+    - docker login $CI_REGISTRY
+    - docker build -t $CI_REGISTRY/$MONGODB_IMAGE .
+    - docker push $CI_REGISTRY/$MONGODB_IMAGE

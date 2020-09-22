@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: flask
-      image: jotabustosigz/devops-challenge-flask:1.0
+      image: jotabustosigz/devops-challenge-flask:3.0
       ports:
         - containerPort: 8080
       env:
