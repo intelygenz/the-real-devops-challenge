@@ -4,8 +4,8 @@ stages:
 
 variables:
   CI_REGISTRY_USER: 'registry.gitlab.com'
-  FLASK_IMAGE: 'jose.bustos/the-real-devops-challenge/devops-challenge-flask:latest'
-  MONGODB_IMAGE: 'jose.bustos/the-real-devops-challenge/devops-challenge-mongo:latest'
+  FLASK_IMAGE: 'registry.gitlab.com/jose.bustos/the-real-devops-challenge/flaskapp'
+  MONGODB_IMAGE: 'registry.gitlab.com/jose.bustos/the-real-devops-challenge/mongodb'
 
 test:
   stage: test
@@ -21,7 +21,7 @@ build-flask:
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $FLASK_IMAGE .
-    - docker push $CI_REGISTRY/$FLASK_IMAGE
+    - docker push $FLASK_IMAGE
 
 build-mongo:
   stage: build
@@ -31,4 +31,4 @@ build-mongo:
   script:
     - docker login $CI_REGISTRY
     - docker build -t $MONGODB_IMAGE .
-    - docker push $CI_REGISTRY/$MONGODB_IMAGE
+    - docker push $MONGODB_IMAGE
