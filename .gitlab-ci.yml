@@ -29,6 +29,6 @@ build-mongo:
   services:
     - docker:19.03.12-dind
   script:
-    - docker login $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $MONGODB_IMAGE .
     - docker push $MONGODB_IMAGE
