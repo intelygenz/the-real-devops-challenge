@@ -2,6 +2,7 @@ from datetime import date, datetime
 
 import isodate as iso
 from bson import ObjectId
+from bson.errors import InvalidId
 from flask.json import JSONEncoder
 from werkzeug.routing import BaseConverter
 
@@ -26,5 +27,11 @@ class ObjectIdConverter(BaseConverter):
 def find_restaurants(mongo, _id=None):
     query = {}
     if _id:
-        query["_id"] = ObjectId(_id)
-    return list(mongo.db.restaurant.find(query))
+        try:
+            query["_id"] = ObjectId(_id)
+            return list(mongo.db.restaurant.find(query))
+        except (InvalidId, TypeError):
+            print('NOT VALID-------------------')
+            return []
+        
+
