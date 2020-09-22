@@ -4,8 +4,8 @@ stages:
 
 variables:
   CI_REGISTRY_USER: 'registry.gitlab.com'
-  FLASK_IMAGE: 'devops-challenge-flask:latest'
-  MONGODB_IMAGE: 'devops-challenge-mongo:latest'
+  FLASK_IMAGE: 'jose.bustos/the-real-devops-challenge/devops-challenge-flask:latest'
+  MONGODB_IMAGE: 'jose.bustos/the-real-devops-challenge/devops-challenge-mongo:latest'
 
 test:
   stage: test
