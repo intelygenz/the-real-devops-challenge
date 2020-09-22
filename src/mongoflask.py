@@ -30,7 +30,6 @@ def find_restaurants(mongo, _id=None):
         try:
             query["_id"] = ObjectId(_id)
         except (InvalidId, TypeError):
-            print('NOT VALID-------------------')
             return []
     return list(mongo.db.restaurant.find(query))
 
