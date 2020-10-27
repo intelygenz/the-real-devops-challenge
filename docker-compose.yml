@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  api:
+    container_name: api
+    image: registry.gitlab.com/tampakrap/intelygenz-the-real-devops-challenge/api
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    environment:
+      MONGO_URI: "mongodb://restaurant_user:restaurant_pwd@mongodb/restaurants"
+    depends_on:
+      - mongodb
+
+  mongodb:
+    container_name: mongodb
+    image: registry.gitlab.com/tampakrap/intelygenz-the-real-devops-challenge/mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo_root_user
+      MONGO_INITDB_ROOT_PASSWORD: mongo_root_pwd
+      MONGO_INITDB_DATABASE: restaurants
+      MONGO_RESTAURANT_USERNAME: restaurant_user
+      MONGO_RESTAURANT_PASSWORD: restaurant_pwd
