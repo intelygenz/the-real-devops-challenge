@@ -1,8 +1,25 @@
 stages:
   - test
+  - install
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
 
 test_tox:
   stage: test
   image: painless/tox
   script:
     - tox
+
+install_deps_api:
+  stage: install
+  image: tampakrap/venv:3.7
+  before_script:
+    - virtualenv .venv
+    - source .venv/bin/activate
+  script:
+    - pip install -r requirements.txt
+  cache:
+    paths:
+      - .cache/pip
+      - .venv/
