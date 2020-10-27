@@ -1,6 +1,7 @@
 stages:
   - test
   - install
+  - build
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -19,6 +20,20 @@ install_deps_api:
     - source .venv/bin/activate
   script:
     - pip install -r requirements.txt
+  cache:
+    paths:
+      - .cache/pip
+      - .venv/
+
+build_api:
+  stage: build
+  image: docker
+  services:
+    - docker:19.03.12-dind
+  script:
+    - docker build -t ${CI_REGISTRY_IMAGE}/api .
+    - docker login -u $REGISTRY_USER -p $REGISTRY_TOKEN $CI_REGISTRY
+    - docker push ${CI_REGISTRY_IMAGE}/api
   cache:
     paths:
       - .cache/pip
