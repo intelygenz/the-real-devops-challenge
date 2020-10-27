@@ -5,7 +5,7 @@ from bson.objectid import ObjectId
 from flask import Flask, jsonify
 from flask_pymongo import PyMongo
 
-from src.mongoflask  import MongoJSONEncoder, ObjectIdConverter, find_restaurants
+from src.mongoflask import MongoJSONEncoder, ObjectIdConverter, find_restaurants, find_restaurant
 
 app = Flask(__name__)
 app.config["MONGO_URI"] = environ.get("MONGO_URI")
@@ -22,7 +22,7 @@ def restaurants():
 
 @app.route("/api/v1/restaurant/<id>")
 def restaurant(id):
-    restaurant = find_restaurants(mongo, id)
+    restaurant = find_restaurant(mongo, id)
     if restaurant:
         return jsonify(restaurant)
     return '', 204
