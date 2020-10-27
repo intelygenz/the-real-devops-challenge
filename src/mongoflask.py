@@ -28,4 +28,4 @@ def find_restaurants(mongo):
 
 def find_restaurant(mongo, _id):
     query = {"_id": ObjectId(_id)}
-    return list(mongo.db.restaurant.find_one(query))
+    return mongo.db.restaurant.find_one(query)
