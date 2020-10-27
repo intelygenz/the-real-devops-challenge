@@ -1,0 +1,8 @@
+stages:
+  - test
+
+test_tox:
+  stage: test
+  image: painless/tox
+  script:
+    - tox
