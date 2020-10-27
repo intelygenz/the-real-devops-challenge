@@ -38,3 +38,13 @@ build_api:
     paths:
       - .cache/pip
       - .venv/
+
+build_mongodb:
+  stage: build
+  image: docker
+  services:
+    - docker:19.03.12-dind
+  script:
+    - docker build -t ${CI_REGISTRY_IMAGE}/mongodb -f data/Dockerfile .
+    - docker login -u $REGISTRY_USER -p $REGISTRY_TOKEN $CI_REGISTRY
+    - docker push ${CI_REGISTRY_IMAGE}/mongodb
