@@ -22,9 +22,9 @@ def restaurants():
 
 @app.route("/api/v1/restaurant/<id>")
 def restaurant(id):
-    restaurants = find_restaurants(mongo, id)
-    if restaurants:
-        return jsonify(restaurants)
+    restaurant = find_restaurants(mongo, id)
+    if restaurant:
+        return jsonify(restaurant)
     return '', 204
 
 if __name__ == "__main__":
