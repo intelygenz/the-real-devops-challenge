@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  namespace: restaurants
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: restaurants-mongodb
+        image: tampakrap/challenge-mongodb
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secrets
+              key: MONGO_INITDB_ROOT_USERNAME
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secrets
+              key: MONGO_INITDB_ROOT_PASSWORD
+        - name: MONGO_RESTAURANT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secrets
+              key: MONGO_RESTAURANT_USERNAME
+        - name: MONGO_RESTAURANT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secrets
+              key: MONGO_RESTAURANT_PASSWORD
+        - name: MONGO_RESTAURANT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secrets
+              key: MONGO_RESTAURANT_PASSWORD
+        - name: MONGO_INITDB_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: mongodb-configmap
+              key: MONGO_INITDB_DATABASE

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: restaurants
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - name: restaurants-api
+        image: tampakrap/restaurants-api:v1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MONGO_URI
+          valueFrom:
+            secretKeyRef:
+              name: api-secrets
+              key: MONGO_URI
