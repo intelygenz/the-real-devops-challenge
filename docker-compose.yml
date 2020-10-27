@@ -3,6 +3,10 @@ version: '3'
 services:
   api:
     container_name: api
+    #build:
+    #  context: .
+    #  dockerfile: docker-compose/api/Dockerfile
+    #image: restaurant-api
     image: registry.gitlab.com/tampakrap/intelygenz-the-real-devops-challenge/api
     restart: unless-stopped
     ports:
@@ -14,6 +18,10 @@ services:
 
   mongodb:
     container_name: mongodb
+    #build:
+    #  context: .
+    #  dockerfile: data/Dockerfile
+    #image: restaurant-mongodb
     image: registry.gitlab.com/tampakrap/intelygenz-the-real-devops-challenge/mongodb
     restart: unless-stopped
     environment:
