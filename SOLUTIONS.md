@@ -81,12 +81,33 @@ There's not much further improvement planned for this challenge, but I would lik
 
 Wish me luck!
 
+![Lucky](https://media.giphy.com/media/gIkevYxS0rD0gganyo/giphy.gif)
+
+Did it! I needed a lot of browsing and reading, but finally I manage to get an automated test running in a multicontainer runner (both app and db)
+
 ### TO-DO
 
 * [x] [Create the DB with a Python script](https://www.geeksforgeeks.org/create-a-database-in-mongodb-using-python/)
   * [mongoimport with Python](https://www.geeksforgeeks.org/how-to-import-json-file-in-mongodb-using-python/)
+* [ ] [Allow multi environment testing in tox](https://tox.readthedocs.io/en/latest/example/basic.html#a-simple-tox-ini-default-environments)
 
-![Lucky](https://media.giphy.com/media/gIkevYxS0rD0gganyo/giphy.gif)
+## THIRD CHALLENGE
+
+In this challenge, even though I've been asked to make the lightest, I'm using a CentOS 8 image as base image because [it is well known that light images such as alpine:latest](https://stackoverflow.com/questions/59186113/alpine-3-9-force-to-use-python-3-6) have quite particular configurations and bugs that can be source of security issues.
+
+My question here is, is it worth to use [specific python docker images?](https://pythonspeed.com/articles/base-image-python-docker-images/). Maybe in future iterations it would be, in order to achieve multi environment testing, by using a different images with their respective environment variables for that specific Python version
+https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+
+I spent some time in this challenge trying to achieve intra-container connection to the DB. [This lecture about container networking](https://pythonspeed.com/articles/docker-connection-refused/) was quite useful, but for the moment I have not been able to achieve it
+
+Anyway, I have followed as close as possible the Best Practices Docker guide and made my best to keep the image securized and also used the .dockerignore method to avoid copying useless files while building the image to the inferior layers
+
+### TO-DO
+
+* [ ] Enable multi environment Python versions
+* [ ] Achieve intra-container connection to the local Mongo DB process
+
+## FOURTH CHALLENGE
 
 
 ## FINAL CHALLENGE
