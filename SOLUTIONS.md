@@ -57,6 +57,7 @@ I had to solve a **problem with DB authentication**, which I'm not sure if takes
 * [x] The code can be refactored by simply calling the package methods [here](https://github.com/dcrosta/flask-pymongo/blob/master/flask_pymongo/helpers.py#L86) and [here](https://github.com/dcrosta/flask-pymongo/blob/master/flask_pymongo/helpers.py#L53)
 * [ ] Error handling for
   * [x] main
+  * [ ] DB connection with `mongo.cx.restaurant.command('ping')`
 
 * [ ] Create an init_db.sh file with the following content
       * use restaurants
@@ -69,6 +70,24 @@ I had to solve a **problem with DB authentication**, which I'm not sure if takes
   * Check that venv has been activated
   * Check for mongod status
     * Install mongo from an ansible role (only for first challenge!!)
+
+## SECOND CHALLENGE
+
+For the rest of the challenge I'm going to use Gitlab CI/CD, but for this challenge I'm going to take the risk and make my first contact with GitHub actions
+
+I'm going to make the test run in Github runners.
+
+There's not much further improvement planned for this challenge, but I would like to have feedback on how could I make more of this specific challenge.
+
+Wish me luck!
+
+### TO-DO
+
+* [x] [Create the DB with a Python script](https://www.geeksforgeeks.org/create-a-database-in-mongodb-using-python/)
+  * [mongoimport with Python](https://www.geeksforgeeks.org/how-to-import-json-file-in-mongodb-using-python/)
+
+![Lucky](https://media.giphy.com/media/gIkevYxS0rD0gganyo/giphy.gif)
+
 
 ## FINAL CHALLENGE
 
@@ -88,6 +107,8 @@ python
 ## REFERENCES
 
 * [Mongo DB - Ansible installation + tunning](https://medium.com/@_oleksii_/how-to-install-tune-mongodb-using-ansible-693a40495ca1)
+* [Github Actions](https://docs.github.com/en/actions/creating-actions/creating-a-composite-run-steps-action)
+* [Github Actions - Building and testing Python](https://docs.github.com/en/actions/guides/building-and-testing-python)
 
 ## AUTHORS
 
