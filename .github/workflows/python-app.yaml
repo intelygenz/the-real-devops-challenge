@@ -11,7 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python-version: [2.7, 3.4, 3.5, 3.6]
+        # python-version: [2.7, 3.4, 3.5, 3.6]
+        python-version: [3.6]
         toxenv: [db]
         mongodb-version: [4.2]
 
