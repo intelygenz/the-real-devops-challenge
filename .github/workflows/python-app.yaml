@@ -45,4 +45,4 @@ jobs:
         if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
 
     - name: Test with tox
-      run: tox
+      run: tox -e py36
