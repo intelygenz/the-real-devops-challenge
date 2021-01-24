@@ -4,7 +4,6 @@ from bson.objectid import ObjectId
 from mock import patch
 import src.mongoflask
 
-
 def mock_find_restaurant(mongo, id=None):
     data = [
         {"_id": ObjectId("55f14312c7447c3da7051b39"), "URL": "http://www.just-eat.co.uk/restaurants-1awok-pa7/menu", "address": "Unit 2 30 Greenock Road",
