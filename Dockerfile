@@ -32,7 +32,7 @@ RUN chmod 755 /deployments/app.py
 
 # Run container as non-root user
 RUN useradd --no-create-home --shell /bin/sh nroot
-USER nroot
+#USER nroot
 
 # Expose the microservice port
 EXPOSE 8080
