@@ -31,7 +31,6 @@ Enough chattering, let's start!
 
 ![Can we start please?](https://media.giphy.com/media/S8ToH7Zt8gZ4u2iClh/giphy.gif)
 
-
 ## FIRST CHALLENGE
 
 I am supposed to have a Mongo DB installation running on my localhost, shouldn't I? If so, please ask me to explain how to install it and configure the necessary stuff to have a working env var like this
@@ -109,6 +108,11 @@ Anyway, I have followed as close as possible the Best Practices Docker guide and
 
 ## FOURTH CHALLENGE
 
+Let's face it, building a Mongo DB Dockerfile is one of the most odious tasks out there.
+
+To complete this challenge I took [this issue](https://github.com/docker-library/mongo/issues/329) from the official Mongo DB repository image, added to our custom user "igz" and following the instructions of the challenge, I imported the data trying to simply write a Dockerfile
+
+This base image is totally weird!
 
 ## FINAL CHALLENGE
 
