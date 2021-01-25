@@ -1,17 +1,9 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: restaurant
-  labels:
-    app.kubernetes.io/name: restaurant
-    app.kubernetes.io/instance: restaurant
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
     app.kubernetes.io/name: restaurant-serviceaccount
-    app.kubernetes.io/instance: restaurant
   name: restaurant-serviceaccount
   namespace: restaurant
 ---
@@ -20,7 +12,6 @@ kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: restaurant-clusterrole
-    app.kubernetes.io/instance: ingress-nginx
   name: restaurant-clusterrole
 rules:
   - apiGroups:
@@ -70,7 +61,7 @@ rules:
     verbs:
       - update
   - apiGroups:
-      - networking.k8s.io 
+      - networking.k8s.io
     resources:
       - ingressclasses
     verbs:
@@ -83,7 +74,6 @@ kind: ClusterRoleBinding
 metadata:
   labels:
     app.kubernetes.io/name: restaurant-clusterrolebinding
-    app.kubernetes.io/instance: ingress-nginx
   name: restaurant-clusterrolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -92,12 +82,13 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: restaurant-serviceaccount
-    namespace: ingress-nginx
+    namespace: restaurant
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: restaurant-deployment
+  name: restaurant-deployment-api
+  namespace: restaurant
 spec:
   selector:
     matchLabels:
@@ -107,7 +98,7 @@ spec:
     rollingUpdate:
       maxUnavailable: 1
     type: RollingUpdate
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -115,15 +106,16 @@ spec:
     spec:
       containers:
       - name: python-api
-        image: aacecandev/python-api
+        image: aacecandev/python-api:kind
         imagePullPolicy: IfNotPresent
-        lifecycle:
-          preStop:
-            exec:
-              command:
-                - /wait-shutdown
+        env:
+          - name: MONGO_URI_DEV
+            valueFrom:
+              secretKeyRef:
+                name: restaurant-secrets
+                key: MONGO_URI_DEV
         ports:
-          - name: http
+          - name: api-port
             containerPort: 8080
             protocol: TCP
             hostPort: 8080
@@ -134,33 +126,56 @@ spec:
             limits:
               cpu: 200m
               memory: 200Mi
+      terminationGracePeriodSeconds: 0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restaurant-deployment-db
+  namespace: restaurant
+spec:
+  selector:
+    matchLabels:
+      app: restaurant-db
+  revisionHistoryLimit: 10
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: restaurant-db
+    spec:
+      containers:
       - name: db-api
-      image: aacecandev/db-api
-      imagePullPolicy: IfNotPresent
-      lifecycle:
-        preStop:
-          exec:
-            command:
-              - /wait-shutdown
-      ports:
-        - name: http
-          containerPort: 27017
-          protocol: TCP
-          hostPort: 27017
-      resources:
-          requests:
-            cpu: 100m
-            memory: 90Mi
-          limits:
-            cpu: 200m
-            memory: 200Mi
-    nodeSelector:
-        ingress-ready: 'true'
-        kubernetes.io/os: linux
-    tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/master
-        operator: Equal
-    serviceAccountName: restaurant-serviceaccount
-    terminationGracePeriodSeconds: 0
+        image: aacecandev/db-api:kind
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            value: root
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: restaurant-secrets
+                key: root_password
+          - name: MONGO_INITDB_DATABASE
+            value: restaurant
+          - name: MONGO_NON_ROOT_USERNAME
+            value: igz
+          - name: MONGO_NON_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: restaurant-secrets
+                key: api_password
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: mongo-port
+            containerPort: 27017
+            protocol: TCP
+            hostPort: 27017
+        resources:
+            requests:
+              cpu: 100m
+              memory: 90Mi
+            limits:
+              cpu: 200m
+              memory: 200Mi
+      terminationGracePeriodSeconds: 0
 
