@@ -10,3 +10,5 @@
 #
 !requirements*
 !src/
+!data/
+!files/custom-user.sh

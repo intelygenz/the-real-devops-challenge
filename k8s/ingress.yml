@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: restaurant-ingress
+spec:
+  rules:
+  - host: localhost
+    http:
+      paths:
+      - path: /api/v1/restaurant
+        backend:
+          serviceName: restaurant-service
+          servicePort: 80
