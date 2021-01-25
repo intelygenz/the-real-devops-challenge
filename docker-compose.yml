@@ -1,0 +1,31 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  mongodb:
+    build:
+      context: ./
+      dockerfile: Dockerfile-db
+    ports:
+      - 27017:27017
+    networks:
+      - app-network
+    container_name: mongodb
+    hostname: mongodb
+    # command: "mongo admin --host localhost -u root -p example --eval \"db.createUser({user: 'waiter', pwd: 'h3Ll0There!', roles: [{role: 'readWrite', db: 'restaurant'}]}); db.createUser({user: 'root', pwd: 'example', roles: [{role: 'userAdminAnyDatabase', db: 'admin'}]});\""
+    # entrypoint: /bin/bash
+
+networks:
+  app-network:
+    driver: bridge
+  default:
+    external:
+      name: mongo-network

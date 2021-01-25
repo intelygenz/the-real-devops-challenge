@@ -7,9 +7,13 @@ LABEL maintainer "Alejandro Aceituna Cano - IGZ Devops Team <devops@intelygenz.c
 # Environment variables
 ENV MONGO_URI_DEV="mongodb://mongodb:27017/restaurant" \
     FLASK_APP="/deployments/app.py"
+    ENV TZ=Europe/Madrid
 
 # Switch to ROOT user
 USER root
+
+#  Set the time zone
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install required packages, but skip the man pages
 RUN yum -y --setopt=tsflags=nodocs install \
