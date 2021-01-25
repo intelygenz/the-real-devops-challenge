@@ -1,18 +1,14 @@
 # THE REAL DEVOPS CHALLENGE - SOLUTIONS
 
-## TABLE OF CONTENTS
-
 ## MOTIVATION
 
 ~~I feel highly motivated to~~... **Just  kidding!**
 
-This PR proposal's is both to demonstrate IGZ Devops Team that **I'm the guy they're looking forward** and to address some improvement ideas to this old folk that @angelbarrera92 created 2 years ago.
+This PR proposal's is both to demonstrate IGZ Devops Team that **I'm the guy they're looking for** and to address some improvement ideas to this old folk that @angelbarrera92 created 2 years ago.
 
 I'm aware of IGZ's love for memes, so I will try to keep a *funny-formal* style while I explain what I'm doing and why I did it.
 
 So... allé voy!
-
-![Take my gil and shut up!](assets/ffvii.solutions.png)
 
 ## PREVIOUS CONSIDERATIONS
 
@@ -30,8 +26,6 @@ I would like to remark a few things before getting my hands dirty:
 
 Enough chattering, let's start!
 
-![Can we start please?](https://media.giphy.com/media/S8ToH7Zt8gZ4u2iClh/giphy.gif)
-
 ## FIRST CHALLENGE
 
 I am supposed to have a Mongo DB installation running on my localhost, shouldn't I? If so, please ask me to explain how to install it and configure the necessary stuff to have a working env var like this
@@ -45,8 +39,6 @@ I evaluated to use a containerized Mongo DB, but I opted out to install and conf
 I had to solve a **problem with DB authentication**, which I'm not sure if takes part on this challenge or is an outdated issue. I didn't opened an issue on GitHub just to not piss off the challenge, but you can find the logs [here](files/authentication_error)
 
 @angelbarrera92 made me sweat so hard to find out **how extract a list element...**
-
-![Sweating](https://media.giphy.com/media/l4FATJpd4LWgeruTK/giphy.gif)
 
 ### TO-DO
 
@@ -83,8 +75,6 @@ There's not much further improvement planned for this challenge, but I would lik
 
 Wish me luck!
 
-![Lucky](https://media.giphy.com/media/gIkevYxS0rD0gganyo/giphy.gif)
-
 Did it! I needed a lot of browsing and reading, but finally I manage to get an automated test running in a multicontainer runner (both app and db)
 
 I embraced the KISS principle and restricted testing only to a Python version for speed purposes.
@@ -92,8 +82,6 @@ I embraced the KISS principle and restricted testing only to a Python version fo
 To secure the pipeline, I used the envsubst CLI tool and replaced some super secret and commercial secrets with environment variables that I stored in a well-known security keeper provider like Micro$oft CI/CD tool.
 
 Don't worry, I feel safe, I'm in la Mutua Madrileña.
-
-![Mutua](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fd31dn7nfpuwjnm.cloudfront.net%2Fimages%2Fvaloraciones%2F0032%2F7060%2F48975155_281140899262038_2429432419732946944_n.jpg%3F1546211992&f=1&nofb=1)
 
 ### TO-DO
 
@@ -110,8 +98,6 @@ In this challenge, even though I've been asked to make the lightest, I'm using a
 My question here is, is it worth to use [specific python docker images?](https://pythonspeed.com/articles/base-image-python-docker-images/). Maybe in future iterations it would be, in order to achieve multi environment testing, by using a different images with their respective environment variables for that specific Python version
 
 I spent some time in this challenge trying to achieve intra-container connection to the DB. [This lecture about container networking](https://pythonspeed.com/articles/docker-connection-refused/) was quite useful. I was missunderstanding some Docker networking concepts and trying to make the API container communicate with a external database without having it in the same network. **Restlesness is a bad guy**.
-
-![Bad guy](https://media.giphy.com/media/d6fhQKPcBd5UQ/giphy.gif)
 
 Anyway, I have followed as close as possible the [Best Practices Docker guide](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) and made my best to keep the image securized and also used the .dockerignore method to avoid copying useless files while building the image to the inferior layers
 
@@ -132,24 +118,18 @@ To achieve automatization, I created a [bash script](files/mongo-import.sh) in w
 
 (I hate the close-source SW && DB containers...)
 
-![Hate](https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fi0.kym-cdn.com%2Fphotos%2Fimages%2Foriginal%2F000%2F251%2F664%2Fee9.jpg&f=1&nofb=1)
-
-
 ## FIFTH CHALLENGE
 
 This is the easiest part, I really loved and still love the simplicity that compose brings to the container world. 
 
 What did you just said? `podman-compose`?
 
-![Shut up](https://media.giphy.com/media/HFxsc1xXdUzcs/giphy.gif)
 
 ~~Even though I have some problems yet with the Mongo DB Dockerfile, I have done some testing without seeding the database and it works, so I'll be working in this part to make it fully functional~~
 
 There's not much needed to say here, I created my awesome compose yaml file and made it build the image image files (because you haven't built them yet to check if I'm a liar, don't you?)
 
 Given that images are auto provisioned there wasn't need to use volumes here, just creating the ~~fucking~~ network, opening the necessary ports and made dependency do the trick.
-
-![Rubik](https://media.giphy.com/media/vaKfVsu9zseBy/giphy.gif)
 
 ### TO-DO
 * [x] Give myself five
@@ -204,9 +184,6 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/mast
 
 This part is for sure the one I have to make the deeper refresh / keep learning, so I will not be writing complex files. Anyway, this thing is working!
 
-
-
-
 ### TO-DO
 
 * [ ] The DB should be a StatefulSet
@@ -214,8 +191,6 @@ This part is for sure the one I have to make the deeper refresh / keep learning,
 * [ ] Get the CKA
 
 So... I finished! How did I performed?
-
-![Performance](https://media.giphy.com/media/N57KpqDb0tlWE/giphy.gif)
 
 ## TO-DO, BUT I'M NOT DOING
 
