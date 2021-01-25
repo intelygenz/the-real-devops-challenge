@@ -1,0 +1,18 @@
+# Use  mongo:4.2 as base image
+FROM mongo:4.2
+
+# Maintainer of the Dockerfile
+LABEL maintainer "Alejandro Aceituna Cano - IGZ Devops Team <devops@intelygenz.com>"
+
+# Environment variables
+ENV MONGO_NON_ROOT_USERNAME igz \
+    MONGO_NON_ROOT_PASSWORD password \
+    MONGO_INITDB_DATABASE restaurant \
+    MONGO_INITDB_ROOT_USERNAME root \
+    MONGO_INITDB_ROOT_PASSWORD supersecret
+
+# Custom user creation
+COPY files/custom-user.sh /docker-entrypoint-initdb.d/
+
+# Database seeder
+RUN mongoimport --user igz --password password --db restaurant --collection restaurant --drop --file data/restaurant.json
