@@ -31,7 +31,6 @@ Enough chattering, let's start!
 
 ![Can we start please?](https://media.giphy.com/media/S8ToH7Zt8gZ4u2iClh/giphy.gif)
 
-
 ## FIRST CHALLENGE
 
 I am supposed to have a Mongo DB installation running on my localhost, shouldn't I? If so, please ask me to explain how to install it and configure the necessary stuff to have a working env var like this
@@ -109,16 +108,35 @@ Anyway, I have followed as close as possible the Best Practices Docker guide and
 
 ## FOURTH CHALLENGE
 
+Let's face it, building a Mongo DB Dockerfile is one of the most odious tasks out there.
+
+To complete this challenge I took [this issue](https://github.com/docker-library/mongo/issues/329) from the official Mongo DB repository image, added to our custom user "igz" and following the instructions of the challenge, I imported the data trying to simply write a Dockerfile
+
+This base image is totally weird!
+
+## FIFTH CHALLENGE
+
+This is the easiest part, even though I have some problems yet with the Mongo DB Dockerfile, I have done some testing without seeding the database and it works, so I'll be working in this part to make it fully functional
+
+(I hate the DB containers...)
 
 ## FINAL CHALLENGE
+
+**WIP**
+
+The code for this challenge will be kept in the [k8s folder]
+
+I'm deploying to kind in localhost using the following structure
 
 mongo
   deployment
   service - clusterIP
 python
   deployment
-  service - clusterIP / NodePort (sin ingress) / LB (no)
-  ingress /
+  service - clusterIP / NodePort (w/o ingress) / LB (no)
+  ingress
+
+This part is for sure the one I have to make the deeper refresh / keep learning, so I will not be writing complex files. **IMAGES HAVE NOT BEEN PUSHED YET TO MY DOCKER HUB ACCOUNT**
 
 ## TO-DO, BUT I'M NOT DOING
 
