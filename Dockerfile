@@ -17,7 +17,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install required packages, but skip the man pages
 RUN yum -y --setopt=tsflags=nodocs install \
-   python36
+   python36 gettext
 
 # Install Python libs
 COPY requirements.txt .
@@ -32,7 +32,7 @@ RUN chmod 755 /deployments/app.py
 
 # Run container as non-root user
 RUN useradd --no-create-home --shell /bin/sh nroot
-#USER nroot
+USER nroot
 
 # Expose the microservice port
 EXPOSE 8080

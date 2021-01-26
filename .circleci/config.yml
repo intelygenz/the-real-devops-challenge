@@ -1,6 +1,6 @@
 version: 2.1
 
-#### test
+##### test
 
 ############
 # Workflows
@@ -38,14 +38,16 @@ jobs:
     steps:
       - checkout
       - run: mkdir test-reports
-      - run: python3 --version
+      - run: yum install -y gettext
+      - run: envsubst < tox.ini.tpl > tox.ini
       - restore_cache:
           key: deps2-{{ checksum "requirements_dev.txt" }}
       - run:
           command: |
+            python3 -m pip install --upgrade pip
+            if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
             python3 -m venv .venv
             . .venv/bin/activate
-            pip install -r requirements_dev.txt
       - save_cache:
           key: deps2-{{ checksum "requirements_dev.txt" }}
           paths:
