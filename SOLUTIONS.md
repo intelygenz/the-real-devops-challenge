@@ -77,6 +77,12 @@ To secure the pipeline, I used the envsubst CLI tool and replaced some *commerci
 
 Don't worry, I feel safe, I'm in la Mutua Madrileña ;)
 
+### Update
+
+Last moments before closing the PR, I have learned too how to run the test in CircleCI.
+
+Thanks guys, now I have knowledge about 2 more CI/CD tools!
+
 ### Checklist
 
 * [ ] [Allow multi environment testing in tox](https://tox.readthedocs.io/en/latest/example/basic.html#a-simple-tox-ini-default-environments)
