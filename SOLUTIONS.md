@@ -9,3 +9,8 @@ To solve this challenge, i first change the query method to mongodb to obtain a 
 
 ### Challenge 2. Test the application in any cicd system
 To test the app, we use a python based docker image to test the app in the different tox environments that the app contains.
+
+### Challenge 3. Dockerize the APP
+
+To dockerize the APP as lighter as i can i use multi-staging Dockerfile to install dependencies in a build image and after that, copy only the necessary to deploy and launch te app in a smaller image.
+Also, we have to launch the docker container with *--network=host* flag because i have my mongodb database in another network, unreachable to docker network.
