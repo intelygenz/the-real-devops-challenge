@@ -5,7 +5,7 @@ FROM centos:centos8
 LABEL maintainer "Alejandro Aceituna Cano - IGZ Devops Team <devops@intelygenz.com>"
 
 # Environment variables
-ENV MONGO_URI_DEV="mongodb://mongodb:27017/restaurant" \
+ENV MONGO_URI="mongodb://igz:test@127.0.0.1:27017/restaurant" \
     FLASK_APP="/deployments/app.py"
     ENV TZ=Europe/Madrid
 

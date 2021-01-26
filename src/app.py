@@ -12,7 +12,7 @@ import json
 from mongoflask import MongoJSONEncoder, find_restaurants
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = environ.get("MONGO_URI_DEV")
+app.config["MONGO_URI"] = environ.get("MONGO_URI")
 app.json_encoder = MongoJSONEncoder
 app.url_map.converters["objectid"] = BSONObjectIdConverter
 mongo = PyMongo(app)

@@ -1,6 +1,6 @@
 version: 2.1
 
-### test
+#### test
 
 ############
 # Workflows
@@ -34,16 +34,17 @@ jobs:
             password: $DOCKERHUB_PASSWORD
         environment:
           FLASK_CONFIG: testing
-          MONGO_URI_DEV: $MONGO_URI_DEV
+          MONGO_URI_DEV: $MONGO_URI
     steps:
       - checkout
       - run: mkdir test-reports
+      - run: python3 --version
       - restore_cache:
           key: deps2-{{ checksum "requirements_dev.txt" }}
       - run:
           command: |
-            python -m venv .venv
-            . venv/bin/activate
+            python3 -m venv .venv
+            . .venv/bin/activate
             pip install -r requirements_dev.txt
       - save_cache:
           key: deps2-{{ checksum "requirements_dev.txt" }}
@@ -51,7 +52,7 @@ jobs:
             - '.venv'
       - run:
           command: |
-            . venv/bin/activate
+            . .venv/bin/activate
             tox -e py36
       - store_artifacts:
           path: tests/
