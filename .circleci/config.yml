@@ -23,15 +23,18 @@ jobs:
             password: $DOCKERHUB_PASSWORD
         environment:
           FLASK_CONFIG: testing
-          MONGO_URI_DEV: mongodb://igz:password@127.0.0.1:27017/restaurant
+          MONGO_URI_DEV: $MONGO_URI_DEV
       - image: aacecandev/db-api:kind
+        auth:
+            username: aacecandev
+            password: $DOCKERHUB_PASSWORD
         environment:
           MONGO_NON_ROOT_ROLE: $MONGO_NON_ROOT_ROLE
-          MONGO_NON_ROOT_USERNAME: igz
-          MONGO_NON_ROOT_PASSWORD: test
-          MONGO_INITDB_ROOT_USERNAME: root
-          MONGO_INITDB_ROOT_PASSWORD: example
-          MONGO_INITDB_DATABASE: restaurant
+          MONGO_NON_ROOT_USERNAME: $MONGO_NON_ROOT_USERNAME
+          MONGO_NON_ROOT_PASSWORD: $MONGO_NON_ROOT_PASSWORD
+          MONGO_INITDB_ROOT_USERNAME: $MONGO_INITDB_ROOT_USERNAME
+          MONGO_INITDB_ROOT_PASSWORD: $MONGO_INITDB_ROOT_PASSWORD
+          MONGO_INITDB_DATABASE: $MONGO_INITDB_DATABASE
     steps:
       - checkout
       - run: mkdir test-reports
