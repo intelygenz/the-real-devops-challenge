@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  labels:
+    app: mongodb
+    tier: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        args:
+        - mongod
+        env:
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: MONGO_PASS
+              name: mongo-env
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: abg
+        image: mongo
+        ports:
+        - containerPort: 27017
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mongo-seed
+    tier: mongodb
+  name: mongo-seed
+spec:
+  selector:
+    matchLabels:
+      app: mongo-seed
+  template:
+    metadata:
+      labels:
+        app: mongo-seed
+    spec:
+      containers:
+      - env:
+        - name: MONGO_PASS
+          valueFrom:
+            secretKeyRef:
+              key: MONGO_PASS
+              name: mongo-env
+        image: gcr.io/sandbox-abg/mongodb-seed-dt:v1
+        name: mongo-seed
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-service
+  labels:
+    app: mongodb
+spec:
+  selector:
+    app: mongodb
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017

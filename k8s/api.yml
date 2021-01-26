@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: api
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - env:
+        - name: MONGO_PASS
+          valueFrom:
+            secretKeyRef:
+              key: MONGO_PASS
+              name: mongo-env
+        - name: MONGO_URI
+          value: mongodb://abg:$(MONGO_PASS)@mongo-service:27017/admin
+        image: gcr.io/sandbox-abg/api-restaurant:v0
+        name: api
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: api
+  name: api
+spec:
+  ports:
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: api

@@ -1,0 +1,5 @@
+---
+resources:
+- env-secrets.yml
+- database.yml
+- api.yml
