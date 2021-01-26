@@ -4,7 +4,7 @@ stages:
 test:
   image: ubuntu:latest
   services:
-    - docker:dind
+    - docker:19.03.0-dind
   stage: test
   variables:
     MONGO_NON_ROOT_ROLE: $MONGO_NON_ROOT_ROLE
