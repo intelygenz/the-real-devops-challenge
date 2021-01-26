@@ -2,7 +2,7 @@ stages:
   - test
 
 test:
-  image: docker:latest
+  image: ubuntu:latest
   services:
     - docker:dind
   stage: test
