@@ -14,3 +14,7 @@ To test the app, we use a python based docker image to test the app in the diffe
 
 To dockerize the APP as lighter as i can i use multi-staging Dockerfile to install dependencies in a build image and after that, copy only the necessary to deploy and launch te app in a smaller image.
 Also, we have to launch the docker container with *--network=host* flag because i have my mongodb database in another network, unreachable to docker network.
+
+### Challenge 4. Dockerize the database
+
+I couldn't find a way to seed the database on the same Dockerfile, so I had to do a plain Dockerfile with mongodb database and environment configuration, but, i didn't use that actually because i used compose to deploy the mongodb.
