@@ -27,9 +27,3 @@ test:
   script:
     - . .venv/bin/activate
     - tox -e py36
-  tags:
-    - aacecan
-    - aws-prod
-    - docker
-    - private
-
