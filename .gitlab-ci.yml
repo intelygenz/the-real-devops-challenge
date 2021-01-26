@@ -4,7 +4,7 @@ stages:
 test:
   image: ubuntu:latest
   services:
-    - docker:19.03.0-dind
+    - docker:19.03.1-dind
   stage: test
   variables:
     MONGO_NON_ROOT_ROLE: $MONGO_NON_ROOT_ROLE
@@ -29,8 +29,7 @@ test:
     - python get-pip.py
     - python -m pip install --upgrade pip
     - if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
-    - docker-compose -f docker-compose.yml build --no-cache
-    - docker-compose -f docker-compose.yml up -d
+    - docker-compose -f docker-compose-gitlab.yml up -d
   script:
     - python -m venv .venv
     - . .venv/bin/activate
