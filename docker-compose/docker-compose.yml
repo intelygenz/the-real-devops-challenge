@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  mongodb:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=abg
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASS}
+    ports:
+      - "27017:27017"
+    command: mongod
+
+  mongo-seed:
+    build: 
+      context: ./import-worker
+      args:
+        MONGO_PASS: ${MONGO_PASS} # from .env file
+    env_file:
+      - .env
+    links:
+      - mongodb
+
+  api:
+    build: ./api
+    environment:
+      - MONGO_URI=mongodb://abg:${MONGO_PASS}@mongodb:27017/admin
+    volumes:
+      - "./api/myapp:/opt/myapp"
+    ports:
+      - "8080:8080"
+    links:
+      - mongodb
