@@ -6,3 +6,6 @@ Here you will found the solutions proposed by **Alejandro Bejarano Gómez** to t
 
 ### Challenge 1. The API returns a list instead of an object
 To solve this challenge, i first change the query method to mongodb to obtain a single object instead a list. After that i was facing an http 500 error when i tried with an ID that didn't appears at database. To solve this, i catch the error to transform it in a *null* value and return http 204 when the query was null.
+
+### Challenge 2. Test the application in any cicd system
+To test the app, we use a python based docker image to test the app in the different tox environments that the app contains.
