@@ -13,12 +13,19 @@ test:
     MONGO_INITDB_ROOT_USERNAME: $MONGO_INITDB_ROOT_USERNAME
     MONGO_INITDB_ROOT_PASSWORD: $MONGO_INITDB_ROOT_PASSWORD
     MONGO_INITDB_DATABASE: $MONGO_INITDB_DATABASE
-    MONGO_URI_DEV: $MONGO_URI
+    DEBIAN_FRONTEND: noninteractive
   before_script:
-    - apt-get install -y python3-pip
-    - python3 -m pip install --upgrade pip
+    - apt-get update
+    - apt-get install -yq software-properties-common python3-software-properties wget
+    - add-apt-repository -y ppa:deadsnakes/ppa
+    - apt-get update
+    - apt-get -yq install python3.6
+    - update-alternatives --install /usr/bin/python python /usr/bin/python3.6 1
+    - wget https://bootstrap.pypa.io/get-pip.py
+    - python get-pip.py
+    - python -m pip install --upgrade pip
     - if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
-    - python3 -m venv .venv
+    - python -m venv .venv
     - . .venv/bin/activate
     - pip install docker-compose
     - docker image prune -f
