@@ -1,0 +1,35 @@
+stages:
+  - test
+
+test:
+  image: docker:latest
+  services:
+    - docker:dind
+  stage: test
+  variables:
+    MONGO_NON_ROOT_ROLE: $MONGO_NON_ROOT_ROLE
+    MONGO_NON_ROOT_USERNAME: $MONGO_NON_ROOT_USERNAME
+    MONGO_NON_ROOT_PASSWORD: $MONGO_NON_ROOT_PASSWORD
+    MONGO_INITDB_ROOT_USERNAME: $MONGO_INITDB_ROOT_USERNAME
+    MONGO_INITDB_ROOT_PASSWORD: $MONGO_INITDB_ROOT_PASSWORD
+    MONGO_INITDB_DATABASE: $MONGO_INITDB_DATABASE
+    MONGO_URI_DEV: $MONGO_URI
+  before_script:
+    - sudo apt-get install -y python3-pip
+    - python3 -m pip install --upgrade pip
+    - if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
+    - python3 -m venv .venv
+    - . .venv/bin/activate
+    - sudo pip install docker-compose
+    - sudo docker image prune -f
+    - sudo docker-compose -f docker-compose-gitlab.yml build --no-cache
+    - sudo docker-compose -f docker-compose.yml up -d
+  script:
+    - . .venv/bin/activate
+    - tox -e py36
+  tags:
+    - aacecan
+    - aws-prod
+    - docker
+    - private
+
