@@ -1,0 +1,57 @@
+version: 2.1
+
+### test
+
+############
+# Workflows
+############
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+
+##################
+# Job Definitions
+##################
+jobs:
+  build:
+    docker:
+      - image: aacecandev/db-api:kind
+        auth:
+            username: aacecandev
+            password: $DOCKERHUB_PASSWORD
+        environment:
+          FLASK_CONFIG: testing
+          MONGO_URI_DEV: mongodb://igz:password@127.0.0.1:27017/restaurant
+      - image: aacecandev/db-api:kind
+        environment:
+          MONGO_NON_ROOT_ROLE: $MONGO_NON_ROOT_ROLE
+          MONGO_NON_ROOT_USERNAME: igz
+          MONGO_NON_ROOT_PASSWORD: test
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: example
+          MONGO_INITDB_DATABASE: restaurant
+    steps:
+      - checkout
+      - run: mkdir test-reports
+      - restore_cache:
+          key: deps2-{{ checksum "requirements_dev.txt" }}
+      - run:
+          command: |
+            python -m venv .venv
+            . venv/bin/activate
+            pip install -r requirements_dev.txt
+      - save_cache:
+          key: deps2-{{ checksum "requirements_dev.txt" }}
+          paths:
+            - '.venv'
+      - run:
+          command: |
+            . venv/bin/activate
+            tox -e py36
+      - store_artifacts:
+          path: tests/
+          destination: tr1
+      - store_test_results:
+          path: tests/
