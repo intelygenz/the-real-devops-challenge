@@ -26,8 +26,7 @@ test:
     - python -m pip install --upgrade pip
     - if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
     - pip install docker-compose
-    - docker image prune -f
-    - docker-compose -f docker-compose-gitlab.yml build --no-cache
+    - docker-compose -f docker-compose.yml build --no-cache
     - docker-compose -f docker-compose.yml up -d
   script:
     - python -m venv .venv
