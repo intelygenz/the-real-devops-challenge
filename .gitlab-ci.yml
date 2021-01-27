@@ -2,9 +2,7 @@ stages:
   - test
 
 test:
-  image: ubuntu:latest
-  services:
-    - docker:19.03.1-dind
+  image: docker:dind
   stage: test
   variables:
     MONGO_NON_ROOT_ROLE: $MONGO_NON_ROOT_ROLE
@@ -13,24 +11,23 @@ test:
     MONGO_INITDB_ROOT_USERNAME: $MONGO_INITDB_ROOT_USERNAME
     MONGO_INITDB_ROOT_PASSWORD: $MONGO_INITDB_ROOT_PASSWORD
     MONGO_INITDB_DATABASE: $MONGO_INITDB_DATABASE
-    DEBIAN_FRONTEND: noninteractive
   before_script:
-    - apt-get update
-    - apt-get install -yq software-properties-common python3-software-properties wget apt-transport-https ca-certificates curl
-    - add-apt-repository -y ppa:deadsnakes/ppa
-    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-    - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
-    - apt-get update
-    - apt-get -yq install python3.6 docker-ce
-    - curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    - chmod +x /usr/local/bin/docker-compose
-    - update-alternatives --install /usr/bin/python python /usr/bin/python3.6 1
-    - wget https://bootstrap.pypa.io/get-pip.py
+    - apk update
+    - apk add --no-cache --virtual .build-deps gettext docker-compose gcc libc-dev linux-headers make openssl readline-dev tcl-dev tk tk-dev expat-dev openssl-dev zlib-dev ncurses-dev bzip2-dev gdbm-dev sqlite-dev libffi-dev
+    - wget https://www.python.org/ftp/python/3.6.12/Python-3.6.12.tgz
+    - tar -xzvf Python-3.6.12.tgz
+    - cd Python-3.6.12/
+    - ./configure
+    - make
+    - make install
+    - cp python /usr/local/bin
+    - wget https://bootstrap.pypa.io/get-pip.py 
     - python get-pip.py
     - python -m pip install --upgrade pip
-    - if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
-    - docker-compose -f docker-compose-gitlab.yml up -d
+    - envsubst < tox.ini.tpl > tox.ini
+    - docker-compose -f docker-compose.yml up -d
   script:
+    - if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
     - python -m venv .venv
     - . .venv/bin/activate
     - tox -e py36
