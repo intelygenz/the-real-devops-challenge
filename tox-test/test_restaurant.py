@@ -1,8 +1,15 @@
+import os
+import sys
+
 from unittest import TestCase
 
 from bson.objectid import ObjectId
 from mock import patch
+
 import src.mongoflask
+
+cur_path=os.path.abspath(os.path.dirname(__file__))
+sys.path.insert(0, cur_path+"/..")
 
 def mock_find_restaurant(mongo, id=None):
     data = [

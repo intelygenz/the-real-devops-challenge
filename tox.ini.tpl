@@ -1,6 +1,8 @@
 [tox]
 envlist = py36
 skipsdist=True
+skip_missing_interpreters=true
+changedir={toxinidir}/tox-test
 
 [testenv]
 deps = -rrequirements_dev.txt
