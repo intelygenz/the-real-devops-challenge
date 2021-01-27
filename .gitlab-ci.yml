@@ -25,6 +25,7 @@ test:
     - wget https://bootstrap.pypa.io/get-pip.py 
     - python get-pip.py
     - python -m pip install --upgrade pip
+    - cd -
     - envsubst < tox.ini.tpl > tox.ini
     - docker-compose -f docker-compose.yml up -d
   script:
