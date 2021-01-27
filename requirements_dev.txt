@@ -1,4 +1,5 @@
 -r requirements.txt
 pytest
 mock
-tox
+docker 
+lovely-pytest-docker
