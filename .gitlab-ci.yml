@@ -12,6 +12,7 @@ test:
     MONGO_INITDB_ROOT_PASSWORD: $MONGO_INITDB_ROOT_PASSWORD
     MONGO_INITDB_DATABASE: $MONGO_INITDB_DATABASE
   before_script:
+    - ls -l
     - apk update
     - apk add --no-cache --virtual .build-deps gettext docker-compose gcc libc-dev linux-headers make openssl readline-dev tcl-dev tk tk-dev expat-dev openssl-dev zlib-dev ncurses-dev bzip2-dev gdbm-dev sqlite-dev libffi-dev
     - wget https://www.python.org/ftp/python/3.6.12/Python-3.6.12.tgz
