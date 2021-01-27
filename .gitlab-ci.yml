@@ -15,7 +15,6 @@ test:
     MONGO_INITDB_DATABASE: $MONGO_INITDB_DATABASE
     MONGO_URI: $MONGO_URI
   before_script:
-    - ls -l
     - apk update
     - apk add --no-cache --virtual .build-deps gettext docker-compose gcc libc-dev linux-headers make openssl readline-dev tcl-dev tk tk-dev expat-dev openssl-dev zlib-dev ncurses-dev bzip2-dev gdbm-dev sqlite-dev libffi-dev
     - wget https://www.python.org/ftp/python/3.6.12/Python-3.6.12.tgz
@@ -29,9 +28,8 @@ test:
     - python get-pip.py
     - python -m pip install --upgrade pip
     - cd -
-    - ls -l
     - envsubst < tox.ini.tpl > tox.ini
-    - docker-compose -f docker-compose.yml up -d
+    - docker-compose -f docker-compose-gitlab.yml up -d
   script:
     - if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
     - python -m venv .venv
