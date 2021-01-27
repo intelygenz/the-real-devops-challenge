@@ -2,13 +2,6 @@
 # Created by https://www.gitignore.io/api/code,venv,linux,python,virtualenv,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=code,venv,linux,python,virtualenv,visualstudiocode
 
-### Code ###
-# Visual Studio Code - https://code.visualstudio.com/
-.settings/
-.vscode/
-tsconfig.json
-jsconfig.json
-
 ### Linux ###
 *~
 
@@ -41,8 +34,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
 parts/
 sdist/
 var/
@@ -114,8 +105,11 @@ celerybeat-schedule
 *.sage.py
 
 # Environments
+
+# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
 .env
 .venv
+.venv/
 env/
 venv/
 ENV/
@@ -140,9 +134,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-### Python Patch ###
-.venv/
-
 ### Python.VirtualEnv Stack ###
 # Virtualenv
 # http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
@@ -155,23 +146,14 @@ dmypy.json
 pyvenv.cfg
 pip-selfcheck.json
 
-### venv ###
-# Virtualenv
-# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
-
-### VirtualEnv ###
-# Virtualenv
-# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
-
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
-### VisualStudioCode Patch ###
+.settings/
+tsconfig.json
+jsconfig.json
 # Ignore all local history of files
 .history
-
-# End of https://www.gitignore.io/api/code,venv,linux,python,virtualenv,visualstudiocode

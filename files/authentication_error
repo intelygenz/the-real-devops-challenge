@@ -1,0 +1,78 @@
+~/work/igz/the-real-devops-challenge feature/challenge1*
+.venv λ python app.py
+ * Serving Flask app "app" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+[2021-01-24 14:34:14,387] ERROR in app: Exception on /api/v1/restaurant/55f14313c7447c3da705224b [GET]
+Traceback (most recent call last):
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/pool.py", line 1278, in _get_socket
+    sock_info = self.sockets.popleft()
+IndexError: pop from an empty deque
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib/python3.9/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib/python3.9/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib/python3.9/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib/python3.9/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib/python3.9/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib/python3.9/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/alejandro/work/igz/the-real-devops-challenge/app.py", line 25, in restaurant
+    restaurants = find_restaurants(mongo, id)
+  File "/home/alejandro/work/igz/the-real-devops-challenge/src/mongoflask.py", line 30, in find_restaurants
+    return list(mongo.db.restaurant.find(query))
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/cursor.py", line 1207, in next
+    if len(self.__data) or self._refresh():
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/cursor.py", line 1124, in _refresh
+    self.__send_message(q)
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/cursor.py", line 999, in __send_message
+    response = client._run_operation_with_response(
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/mongo_client.py", line 1368, in _run_operation_with_response
+    return self._retryable_read(
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/mongo_client.py", line 1464, in _retryable_read
+    with self._slaveok_for_server(read_pref, server, session,
+  File "/usr/lib64/python3.9/contextlib.py", line 117, in __enter__
+    return next(self.gen)
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/mongo_client.py", line 1309, in _slaveok_for_server
+    with self._get_socket(server, session, exhaust=exhaust) as sock_info:
+  File "/usr/lib64/python3.9/contextlib.py", line 117, in __enter__
+    return next(self.gen)
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/mongo_client.py", line 1246, in _get_socket
+    with server.get_socket(
+  File "/usr/lib64/python3.9/contextlib.py", line 117, in __enter__
+    return next(self.gen)
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/pool.py", line 1231, in get_socket
+    sock_info = self._get_socket(all_credentials)
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/pool.py", line 1281, in _get_socket
+    sock_info = self.connect(all_credentials)
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/pool.py", line 1197, in connect
+    sock_info.check_auth(all_credentials)
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/pool.py", line 793, in check_auth
+    self.authenticate(credentials)
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/pool.py", line 810, in authenticate
+    auth.authenticate(credentials, self)
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/auth.py", line 673, in authenticate
+    auth_func(credentials, sock_info)
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/auth.py", line 591, in _authenticate_default
+    return _authenticate_scram(credentials, sock_info, 'SCRAM-SHA-1')
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/auth.py", line 295, in _authenticate_scram
+    res = sock_info.command(source, cmd)
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/pool.py", line 683, in command
+    return command(self, dbname, spec, slave_ok,
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/network.py", line 159, in command
+    helpers._check_command_response(
+  File "/home/alejandro/work/igz/the-real-devops-challenge/.venv/lib64/python3.9/site-packages/pymongo/helpers.py", line 160, in _check_command_response
+    raise OperationFailure(errmsg, code, response, max_wire_version)
+pymongo.errors.OperationFailure: Authentication failed., full error: {'ok': 0.0, 'errmsg': 'Authentication failed.', 'code': 18, 'codeName': 'AuthenticationFailed'}
+127.0.0.1 - - [24/Jan/2021 14:34:14] "GET /api/v1/restaurant/55f14313c7447c3da705224b HTTP/1.1" 500 -
+

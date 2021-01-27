@@ -1,0 +1,59 @@
+stages:
+  - test
+
+test:
+  image: docker:latest
+  services:
+    - docker:dind
+  stage: test
+  variables:
+    MONGO_NON_ROOT_ROLE: $MONGO_NON_ROOT_ROLE
+    MONGO_NON_ROOT_USERNAME: $MONGO_NON_ROOT_USERNAME
+    MONGO_NON_ROOT_PASSWORD: $MONGO_NON_ROOT_PASSWORD
+    MONGO_INITDB_ROOT_USERNAME: $MONGO_INITDB_ROOT_USERNAME
+    MONGO_INITDB_ROOT_PASSWORD: $MONGO_INITDB_ROOT_PASSWORD
+    MONGO_INITDB_DATABASE: $MONGO_INITDB_DATABASE
+    MONGO_URI: $MONGO_URI
+  before_script:
+    - apk update
+    - apk add --no-cache --virtual .build-deps gettext docker-compose gcc libc-dev linux-headers make openssl readline-dev tcl-dev tk tk-dev expat-dev openssl-dev zlib-dev ncurses-dev bzip2-dev gdbm-dev sqlite-dev libffi-dev
+    - wget https://www.python.org/ftp/python/3.6.12/Python-3.6.12.tgz
+    - tar -xzvf Python-3.6.12.tgz
+    - cd Python-3.6.12/
+    - ./configure
+    - make
+    - make install
+    - cp python /usr/local/bin
+    - wget https://bootstrap.pypa.io/get-pip.py 
+    - python get-pip.py
+    - python -m pip install --upgrade pip
+    - python -m pip install tox
+    - cd -
+    - envsubst < tox.ini.tpl > tox.ini
+    - docker-compose -f docker-compose-gitlab.yml up -d
+  script:
+    - tox -e py36
+
+container-tests:
+  stage: test
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - apk update
+    - apk add --no-cache --virtual .build-deps gettext docker-compose gcc libc-dev linux-headers make openssl readline-dev tcl-dev tk tk-dev expat-dev openssl-dev zlib-dev ncurses-dev bzip2-dev gdbm-dev sqlite-dev libffi-dev
+    - wget https://www.python.org/ftp/python/3.6.12/Python-3.6.12.tgz
+    - tar -xzvf Python-3.6.12.tgz
+    - cd Python-3.6.12/
+    - ./configure
+    - make
+    - make install
+    - cp python /usr/local/bin
+    - wget https://bootstrap.pypa.io/get-pip.py 
+    - python get-pip.py
+    - python -m pip install --upgrade pip
+    - pip install pytest docker lovely-pytest-docker
+    - cd -
+  script:
+    - pytest -s tests/test_docker.py
+

@@ -1,0 +1,32 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app.kubernetes.io/name: restaurant-service
+  name: restaurant-service
+  namespace: restaurant
+spec:
+  type: ClusterIP
+  selector:
+    app: restaurant-app
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app.kubernetes.io/name: restaurant-db-service
+  name: restaurant-db-service
+  namespace: restaurant
+spec:
+  type: ClusterIP
+  selector:
+    app: restaurant-db
+  ports:
+  - protocol: TCP
+    port: 27017
+    targetPort: 27017

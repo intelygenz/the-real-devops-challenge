@@ -1,0 +1,63 @@
+version: 2.1
+
+##### test
+
+############
+# Workflows
+############
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+
+##################
+# Job Definitions
+##################
+jobs:
+  build:
+    docker:
+      - image: aacecandev/db-api:kind
+        auth:
+            username: aacecandev
+            password: $DOCKERHUB_PASSWORD
+        environment:
+          MONGO_NON_ROOT_ROLE: $MONGO_NON_ROOT_ROLE
+          MONGO_NON_ROOT_USERNAME: $MONGO_NON_ROOT_USERNAME
+          MONGO_NON_ROOT_PASSWORD: $MONGO_NON_ROOT_PASSWORD
+          MONGO_INITDB_ROOT_USERNAME: $MONGO_INITDB_ROOT_USERNAME
+          MONGO_INITDB_ROOT_PASSWORD: $MONGO_INITDB_ROOT_PASSWORD
+          MONGO_INITDB_DATABASE: $MONGO_INITDB_DATABASE
+      - image: aacecandev/python-api:kind
+        auth:
+            username: aacecandev
+            password: $DOCKERHUB_PASSWORD
+        environment:
+          FLASK_CONFIG: testing
+          MONGO_URI_DEV: $MONGO_URI
+    steps:
+      - checkout
+      - run: mkdir test-reports
+      - run: yum install -y gettext
+      - run: envsubst < tox.ini.tpl > tox.ini
+      - restore_cache:
+          key: deps2-{{ checksum "requirements_dev.txt" }}
+      - run:
+          command: |
+            python3 -m pip install --upgrade pip
+            if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
+            python3 -m venv .venv
+            . .venv/bin/activate
+      - save_cache:
+          key: deps2-{{ checksum "requirements_dev.txt" }}
+          paths:
+            - '.venv'
+      - run:
+          command: |
+            . .venv/bin/activate
+            tox -e py36
+      - store_artifacts:
+          path: tests/
+          destination: tr1
+      - store_test_results:
+          path: tests/

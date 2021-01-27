@@ -2,9 +2,9 @@ from datetime import date, datetime
 
 import isodate as iso
 from bson import ObjectId
+from bson.errors import InvalidId
+from flask import abort
 from flask.json import JSONEncoder
-from werkzeug.routing import BaseConverter
-
 
 class MongoJSONEncoder(JSONEncoder):
     def default(self, o):
@@ -15,16 +15,9 @@ class MongoJSONEncoder(JSONEncoder):
         else:
             return super().default(o)
 
-
-class ObjectIdConverter(BaseConverter):
-    def to_python(self, value):
-        return ObjectId(value)
-
-    def to_url(self, value):
-        return str(value)
-
 def find_restaurants(mongo, _id=None):
     query = {}
     if _id:
-        query["_id"] = ObjectId(id)
+        query["_id"] = ObjectId(_id)
+        print(query)
     return list(mongo.db.restaurant.find(query))
