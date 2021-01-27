@@ -2,7 +2,9 @@ stages:
   - test
 
 test:
-  image: docker:dind
+  image: docker:latest
+  services:
+    - docker:dind
   stage: test
   variables:
     MONGO_NON_ROOT_ROLE: $MONGO_NON_ROOT_ROLE
@@ -11,6 +13,7 @@ test:
     MONGO_INITDB_ROOT_USERNAME: $MONGO_INITDB_ROOT_USERNAME
     MONGO_INITDB_ROOT_PASSWORD: $MONGO_INITDB_ROOT_PASSWORD
     MONGO_INITDB_DATABASE: $MONGO_INITDB_DATABASE
+    MONGO_URI: $MONGO_URI
   before_script:
     - ls -l
     - apk update
@@ -26,6 +29,7 @@ test:
     - python get-pip.py
     - python -m pip install --upgrade pip
     - cd -
+    - ls -l
     - envsubst < tox.ini.tpl > tox.ini
     - docker-compose -f docker-compose.yml up -d
   script:
