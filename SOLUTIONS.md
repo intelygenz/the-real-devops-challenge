@@ -263,3 +263,65 @@ This is due to the fact that there is no mongo database running. As we can see, 
       "type_of_food": "Curry"
     }
 ```
+
+<p>&nbsp;</p>
+
+## Challenge 5. Docker Compose it
+
+* The following [docker-compose.yaml](https://github.com/husker-du/the-real-devops-challenge/blob/master/docker-compose.yaml) file orchestrates the containers of the mongodb database and the restaurant api.
+
+```yaml
+    version: '3.8'
+
+    services:
+      mongodb:
+        image: mongo:4.4.3
+        container_name: mongodb
+        hostname: mongodb
+        environment:
+          MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+          MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+          MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+          MONGO_INITDB_USERNAME: ${MONGO_INITDB_USERNAME}
+          MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD}
+        ports:
+          - ${MONGO_PORT}:27017
+        volumes:
+          - ./mongo/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
+          - ./mongo/data/restaurant.json:/docker-entrypoint-initdb.d/restaurant.json:ro
+          - mongo-volume:/data/db
+        restart: unless-stopped
+
+      restaurantapi:
+        build:
+          context: .
+          dockerfile: ./restaurantapi/Dockerfile
+        container_name: restaurantapi
+        hostname: restaurantapi
+        environment:
+          MONGO_URI: ${MONGO_URI}
+        ports:
+          - ${API_PORT}:8080
+        restart: unless-stopped
+        depends_on:
+          - mongodb
+
+    volumes:
+      mongo-volume:
+```
+
+* The environment variables are set in a [.env](https://github.com/husker-du/the-real-devops-challenge/blob/master/.env.example) file:
+
+```properties
+    # MongoDB
+    MONGO_INITDB_ROOT_USERNAME = root
+    MONGO_INITDB_ROOT_PASSWORD = root
+    MONGO_INITDB_DATABASE = restaurantdb
+    MONGO_INITDB_USERNAME = foodie
+    MONGO_INITDB_PASSWORD = foodie
+    MONGO_PORT = 27017
+
+    # Flask API server
+    API_PORT = 8008
+    MONGO_URI = mongodb://${MONGO_INITDB_USERNAME}:${MONGO_INITDB_PASSWORD}@mongodb:27017/${MONGO_INITDB_DATABASE}?authSource=admin
+```
