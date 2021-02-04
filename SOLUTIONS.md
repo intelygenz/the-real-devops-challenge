@@ -325,3 +325,234 @@ This is due to the fact that there is no mongo database running. As we can see, 
     API_PORT = 8008
     MONGO_URI = mongodb://${MONGO_INITDB_USERNAME}:${MONGO_INITDB_PASSWORD}@mongodb:27017/${MONGO_INITDB_DATABASE}?authSource=admin
 ```
+
+<p>&nbsp;</p>
+
+## Final Challenge. Deploy it on kubernetes
+
+* I'm not going to use neither `minikube` nor `microk8s` to run our restaurant service on kubernetes. I'll use an EKS kubernetes cluster provided by AWS which is a more realistic situation. This cluster will be generated using the `eksctl` command (which creation is out of the scope of this document), but there are many other methods to build a kubernetes cluster using `terraform`, `ansible`, `vagrant`, etc.
+
+* First of all, the `ctomas65/restaurantapi` image must be pushed to a remote repository (in my case, to the `docker.io` hub) so that the kubernetes pods that runs the restaurant API containers could pull this image:
+
+```
+    $ docker tag ctomas65/restaurantapi:latest ctomas65/restaurantapi:v1
+    $ docker push ctomas65/restaurantapi:v1
+    $ docker push ctomas65/restaurantapi:latest
+```
+
+* The following picture depicts the architecture of the kubernetes deployment solution:
+
+![Kubernetes Solution](assets/kubernetes_solution.png)
+
+* Previously to the creation of the kubernetes resources, we must provide the configuration to the application containers by creating several **ConfigMap** and **Secret** resources:
+```
+    $ kubectl create configmap mongodb-config \
+          --from-env-file=config_files/mongodb/.env
+
+    $ kubectl create configmap mongodb-init \
+          --from-file=config_files/mongodb/mongo-init.sh \
+          --from-file=restaurant.json
+
+    $ kubectl create secret generic mongodb-secrets \
+          --from-literal=MONGO_INITDB_ROOT_PASSWORD='root' \
+          --from-literal=MONGO_INITDB_PASSWORD='foodie'
+
+    $ kubectl create configmap restapi-config \
+          --from-env-file=config_files/restapi/.env
+
+    $ kubectl create secret generic restapi-secrets \
+          --from-literal=MONGO_URI='mongodb://foodie:foodie@mongodb-svc:27017/restaurantdb?authSource=admin'
+```
+
+* A **StorageClass** must be created to dinamically provide persistent volumes. This is defined in the [kube-storageclass.yaml](https://github.com/husker-du/the-real-devops-challenge/blob/master/kubernetes/kube-storageclass.yaml) manifest:
+
+```yaml
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: standard
+      labels:
+        app: restaurant
+    provisioner: kubernetes.io/aws-ebs
+    parameters:
+      type: gp2
+      fstype: ext4
+      zone: eu-west-2b
+    reclaimPolicy: Delete
+    allowVolumeExpansion: true
+    mountOptions:
+      - debug
+    volumeBindingMode: Immediate
+```
+
+* In the manifest file [kube-mongodb.yaml](https://github.com/husker-du/the-real-devops-challenge/blob/master/kubernetes/kube-mongodb.yaml)
+
+```yaml
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: mongodb-svc
+      labels:
+        app: restaurant
+    spec:
+      ports:
+        - port: 27017
+      selector:
+        app: restaurant
+        tier: mongodb
+      clusterIP: None
+
+    ---
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: mongodb-pvc
+      labels:
+        app: restaurant
+    spec:
+      storageClassName: standard
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+
+    ---
+    apiVersion: v1
+    kind: ReplicationController
+    metadata:
+      name: mongodb-rc
+      labels:
+        app: restaurant
+    spec:
+      replicas: 1
+      selector:
+          app: restaurant
+          tier: mongodb
+      template:
+        metadata:
+          name: mongodb
+          labels:
+            app: restaurant
+            tier: mongodb
+        spec:                                                     
+          containers:
+            - name: mongodb
+              image: mongo:4.4.3
+              envFrom:
+                - configMapRef:
+                    name: mongodb-config
+                - secretRef:
+                    name: mongodb-secrets
+              ports:
+                - containerPort: 27017
+                  name: mongodb
+              volumeMounts:
+                - name: mongodb-persistent
+                  mountPath: /data/db
+                - name: initdb
+                  mountPath: /docker-entrypoint-initdb.d
+                  readOnly: true
+          volumes:
+            - name: mongodb-persistent
+              persistentVolumeClaim:
+                claimName: mongodb-pvc
+            - name: initdb
+              configMap:
+                name: mongodb-init
+```
+
+* The declarative file [kube-restapi.yaml](https://github.com/husker-du/the-real-devops-challenge/blob/master/kubernetes/kube-restapi.yaml) describes the components to be created for the restaurant API flask server:
+
+```yaml
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: restapi-svc
+      labels:
+        app: restaurant
+    spec:
+      type: LoadBalancer
+      ports:
+        - port: 8008
+          targetPort: 8080
+      selector:
+        app: restaurant
+        tier: flaskapi
+
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata: 
+      name: restapi-deploy
+      labels:
+        app: restaurant
+    spec:
+      replicas: 3
+      minReadySeconds: 10
+      strategy:
+        type: RollingUpdate
+        rollingUpdate: 
+          maxSurge: 1
+          maxUnavailable: 0
+      selector:
+        matchLabels:
+          app: restaurant
+          tier: flaskapi
+      template:
+        metadata:
+          name: restapi
+          labels:
+            app: restaurant
+            tier: flaskapi
+        spec:
+          containers:
+            - name: restaurantapi
+              image: ctomas65/restaurantapi:v1
+              envFrom:
+                - configMapRef:
+                    name: restapi-config
+                - secretRef:
+                    name: restapi-secrets
+              ports:
+                - containerPort: 8080
+                  name: http
+```
+
+* In order to build this architeture, run this command in the `kubernetes` folder:
+
+```
+    $ kubectl apply -f kube-storageclass.yml -f kube-mongodb.yaml -f kube-restapi.yaml
+```
+
+* Just to get the external IP address provided by the LoadBalancer service:
+
+```
+  $ kubectl describe svc restapi-svc
+
+    ...
+    LoadBalancer Ingress:     a56d95789c7b840d899b6ed16423df3f-1282384288.eu-west-2.elb.amazonaws.com
+    Port:                     <unset>  8008/TCP
+    ...
+```
+
+* By hitting this external IP address on port **8008** to get the restaurant data from the mongo database:
+
+```
+    $ curl a56d95789c7b840d899b6ed16423df3f-1282384288.eu-west-2.elb.amazonaws.com:8008/api/v1/restaurant/55f14313c7447c3da705224b | jq
+
+      % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                    Dload  Upload   Total   Spent    Left  Speed
+    100   239  100   239    0     0   1106      0 --:--:-- --:--:-- --:--:--  1106
+    {
+      "URL": "http://www.just-eat.co.uk/restaurants-bayleaf-de75/menu",
+      "_id": "55f14313c7447c3da705224b",
+      "address": "39 Market Street",
+      "address line 2": "Heanor",
+      "name": "Bayleaf",
+      "outcode": "DE75",
+      "postcode": "7NR",
+      "rating": 5,
+      "type_of_food": "Curry"
+    }
+```

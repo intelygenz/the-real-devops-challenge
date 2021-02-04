@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: restapi-svc
+  labels:
+    app: restaurant
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8008
+      targetPort: 8080
+  selector:
+    app: restaurant
+    tier: flaskapi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: restapi-deploy
+  labels:
+    app: restaurant
+spec:
+  replicas: 3
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: 
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: restaurant
+      tier: flaskapi
+  template:
+    metadata:
+      name: restapi
+      labels:
+        app: restaurant
+        tier: flaskapi
+    spec:
+      containers:
+        - name: restaurantapi
+          image: ctomas65/restaurantapi:v1
+          envFrom:
+            - configMapRef:
+                name: restapi-config
+            - secretRef:
+                name: restapi-secrets
+          ports:
+            - containerPort: 8080
+              name: http
