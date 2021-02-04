@@ -1,0 +1,11 @@
+.dockerignore
+**/Dockerfile
+docker-compose.yaml
+.env
+.venv
+.tox
+tox.ini
+assets
+README.md
+htmlcov
+coverage
