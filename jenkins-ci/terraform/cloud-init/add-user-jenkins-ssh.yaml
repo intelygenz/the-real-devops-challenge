@@ -1,0 +1,116 @@
+#cloud-config
+
+# Add groups to the system
+# Adds the ubuntu group with members 'root', 'sys', 'sudo' and 'docker'
+# and the empty group jenkins.
+groups:
+  - ubuntu: [root,sys]
+  - jenkins
+
+# Add users to the system. Users are added after groups are added.
+users:
+  - default
+  - name: jenkins
+    gecos: jenkins
+    shell: /bin/bash
+    primary_group: jenkins
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: docker, sudo
+    lock_passwd: false
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQChKLGzL3Gur5VXCjD1uiP9cja2VivOQB2WVahcAEig9n0j/t4oorUHXz6c/19jwW3lG5owS3Oc1wMuFZRKvu1qUgij9dlps2sSiGCQQJTYgWhLoBnm0nrv2xp8Yc/Vq6znAvqXNGm6yCnWLC7X9vmR85FNTBDJzGRkalXBMky4gsYB9qU2faZz0JKlkOe8SY6Cn5GNrEVz9OtXX7L+aMgPa3MBemGSg8B0xHu1L/3NMqA01eFPxM1sjNpoPprOfS7pYt7Y5UGWjVd6f2bUa8R0DgGLKNdcWDSh+5ix2yS233xFFrsrWY665rtSpgR4M/QBvwNoTVXTeS+Qjh1+p3+p
+          
+# Valid Values:
+#   name: The user's login name
+#   gecos: The user name's real name, i.e. "Bob B. Smith"
+#   homedir: Optional. Set to the local path you want to use. Defaults to
+#           /home/<username>
+#   primary-group: define the primary group. Defaults to a new group created
+#           named after the user.
+#   groups:  Optional. Additional groups to add the user to. Defaults to none
+#   selinux-user:  Optional. The SELinux user for the user's login, such as
+#           "staff_u". When this is omitted the system will select the default
+#           SELinux user.
+#   lock_passwd: Defaults to true. Lock the password to disable password login
+#   inactive: Create the user as inactive
+#   passwd: The hash -- not the password itself -- of the password you want
+#           to use for this user. You can generate a safe hash via:
+#               mkpasswd --method=SHA-512 --rounds=4096
+#           (the above command would create from stdin an SHA-512 password hash
+#           with 4096 salt rounds)
+#
+#           Please note: while the use of a hashed password is better than
+#               plain text, the use of this feature is not ideal. Also,
+#               using a high number of salting rounds will help, but it should
+#               not be relied upon.
+#
+#               To highlight this risk, running John the Ripper against the
+#               example hash above, with a readily available wordlist, revealed
+#               the true password in 12 seconds on a i7-2620QM.
+#
+#               In other words, this feature is a potential security risk and is
+#               provided for your convenience only. If you do not fully trust the
+#               medium over which your cloud-config will be transmitted, then you
+#               should use SSH authentication only.
+#
+#               You have thus been warned.
+#   no-create-home: When set to true, do not create home directory.
+#   no-user-group: When set to true, do not create a group named after the user.
+#   no-log-init: When set to true, do not initialize lastlog and faillog database.
+#   ssh-import-id: Optional. Import SSH ids
+#   ssh-authorized-keys: Optional. [list] Add keys to user's authorized keys file
+#   sudo: Defaults to none. Set to the sudo string you want to use, i.e.
+#           ALL=(ALL) NOPASSWD:ALL. To add multiple rules, use the following
+#           format.
+#               sudo:
+#                   - ALL=(ALL) NOPASSWD:/bin/mysql
+#                   - ALL=(ALL) ALL
+#           Note: Please double check your syntax and make sure it is valid.
+#               cloud-init does not parse/check the syntax of the sudo
+#               directive.
+#   system: Create the user as a system user. This means no home directory.
+#
+
+write_files:
+  - path: /home/jenkins/.ssh/id_rsa
+    permissions: '0600'
+    #owner: jenkins:jenkins
+    content: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEogIBAAKCAQEAsh0GbMYh3sqo6vPz5PLEYguJ6Rwm5BY8GpsraRZxSeyT8UxM
+      U0ZZ1WaUB1X4ldOyxwhPuauzS7HWkUUkJozhZL1Qnn7ABEN0vBjZlZPKb4RhbLPC
+      9ueCgk+9dL1iU8nRPIjT0kwyVzzLYwbEb+vT8EP20V59HXAgyYkVEjW+ld5gOSxV
+      vmrXWyzsV9h9eRwvEgIuuLrnPalTkBbkNxCnUr8FT+nl0lkpycZTt4COOk7m0Xo0
+      BKMmmIC0bOfJm2W5tBZMdtLX0MRbjLR9FhxLJT12c2YSNAsQQiS2KdBBJwOmN1XZ
+      ejVbfweKboTBXdZqJQbP3j/1+/DmWPFxd8Oc3wIDAQABAoIBAHGgZKXl7FumLAbf
+      pJtNaI0n0U4+YG0n5iYPEa2T3KgNXgAU7ag+fDbQnuTjKpfimu2wVrQbXmGOzVSV
+      qE9TlsLep1zFfZf6tLD+pWhwBTgJWuGu+FTtMmwRlMqxutW7LVmR7Jf/dioDJblB
+      6vV/nBBuOzosLmMmUjRf2GpqkPAoAKLsEFT4A+70++BOzWx59EBPHzWgsjNhuZlI
+      DJ4rvgchmdtU4X5CMUhuXtncHa7jOpRH1NJSYo79Co2On4szN+Dnso+FGM4hVEst
+      N2Cl5e33C4+41yT/P39v/eXryebPiUTmDHQ11h8/LBSDdyaV8zyUerK4V939GOpa
+      vMv8kYkCgYEA7C1Q7rZIVTlctUigw4+XLSP4f7DBs4BRSRJxNbDUa74llG2Ra0wE
+      XMWeR+MRvY+pLltlTbEJcqYqsna5GVGPqsX2wuxR1+g9kmUuuNhHWPUNJnRY6odr
+      jaUeQlLNcvoJgSG/AWIsWZLSP7aSw4aXCXyFlXtxG/999EXqvt1JWrMCgYEAwRAb
+      uVHXpFkZYw7iBFYou/2IdxFUgSQbquD6XueQzCQgcVmVAA/szAU+CeGalF9gdzLE
+      oB5MNbw/QdDMxIUqB6F1arKeSl0VrwYqvliIbB43tko6Z8ciNeSgI8yqNJfEY8tW
+      uiaCJQHoFXrxm50uhyaa9jEkt9E589jlTrzU+yUCgYBgLCfbvPCBe8VLsNJ+L/eQ
+      kyg63wBRlvwCtHbTNTma0ig9Y8ymk6LnIDXO8iEkPt7WmLMMyv2c6RtT5tKDA9pr
+      4QcV4uOE9vYzqe43qSKMj+UV9qTKg/CBEm7a9RriKf06z0IXTyHeK9JfzXnAEwtn
+      +oPvFgA+NXDVyq7HoBahzwKBgAeryC443kSddbDF6p0Zf0zY6g8xFRZ8hMzpW4lh
+      0hMKbG+Ui6MQ/uusWaay3B2BHKgf0Eg8a/LGpAzNaxVz5ROgirXOmxOBV1c4+4HM
+      qr8BBF2t3Vw6QVW629IQU8L7NMZyUePbm9g0lzAjTm5MdIjSM94MXdUf7xmNSK80
+      OZIxAoGAXI5S3qsDgrb0RiMYShw/speDlCyKcyrkpQn59nXSvYm+XoTH+YVUSUjM
+      tqlPOO65sJXnptLkoDyNXnZOGbrFydZy/QGTU6uTbILmnTxz77u81vxn6Yc+MINp
+      oSgsmkFSRiXwjChVJafdwrFyr0fzfEPkuIlsaZ06MfNiQTuWtc4=
+      -----END RSA PRIVATE KEY----
+  - path: /home/jenkins/.ssh/id_rsa.pub
+    permissions: '0644'
+    #owner: jenkins:jenkins
+    content: |
+      ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCyHQZsxiHeyqjq8/Pk8sRiC4npHCbkFjwamytpFnFJ7JPxTExTRlnVZpQHVfiV07LHCE+5q7NLsdaRRSQmjOFkvVCefsAEQ3S8GNmVk8pvhGFss8L254KCT710vWJTydE8iNPSTDJXPMtjBsRv69PwQ/bRXn0dcCDJiRUSNb6V3mA5LFW+atdbLOxX2H15HC8SAi64uuc9qVOQFuQ3EKdSvwVP6eXSWSnJxlO3gI46TubRejQEoyaYgLRs58mbZbm0Fkx20tfQxFuMtH0WHEslPXZzZhI0CxBCJLYp0EEnA6Y3Vdl6NVt/B4puhMFd1molBs/eP/X78OZY8XF3w5zf jenkins@worker
+    
+runcmd:
+  - sudo mkdir -p /opt/jenkins
+  - sudo chmod -R 777 /opt/jenkins
+  - sudo chown -R jenkins:jenkins /opt/jenkins
+  - sudo chown -R jenkins:jenkins /home/jenkins/.ssh
