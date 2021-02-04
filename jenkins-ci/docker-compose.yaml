@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    hostname: jenkins
+    user: jenkins
+    working_dir: /var/jenkins_home
+    ports:
+      - ${JENKINS_JNLP_PORT}:50000
+      - ${JENKINS_WEB_PORT}:8080
+    volumes:
+      - ./volumes/jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - ci-network
+    restart: unless-stopped
+
+networks:
+  ci-network: {}
