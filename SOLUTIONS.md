@@ -9,7 +9,8 @@
 
 * If no identifier is provided, a list of all the restaurants stored in the database must be returned.
 
-* The new code for the `/api/v1/restaurant/<id>` endpoint is as follows:
+* The new code for the `find_restaurants` method is as follows:
+
 ```python
     @app.route("/api/v1/restaurant/<id>")
     def restaurant(id):
@@ -37,11 +38,13 @@
 * I'm going to use **Jenkins** as the CI/CD system to run the tests automatically when any change in the code is committed to the master branch. Jenkins is running in a docker and it delegates the build of the jobs of the pipelines to agent nodes. I've used Terraform to create AWS instances that can be used as worker nodes for the Jenkins master. Running `terraform init` and `terraform apply` in the [terraform](https://github.com/husker-du/the-real-devops-challenge/blob/master/jenkins-ci/terraform) directory should generate a specified number of jenkins worker nodes. To destroy the instances, run the command `terraform destroy`.
 
 * A **tox** docker container is used in order to run the tests, therefore no tox installation is needed.
+
 ```shell
     $ docker run -it -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
 ```
 
 * To check the **code coverage** of the tests, the `pytest-cov` package is used and html reports are generated in a `htmlcov` directory. For this reason, the `pytest-cov` is included in the [requirements_dev.txt](https://github.com/husker-du/the-real-devops-challenge/blob/master/requirements_dev.txt) file:
+
 ```
     -r requirements.txt
     pytest-cov
@@ -49,6 +52,7 @@
 ```
 
 * The coverage is run by setting the command `pytest --cov-report html --cov src.mongoflask tests/` in the [tox.ini](https://github.com/husker-du/the-real-devops-challenge/blob/master/tox.ini) file:
+
 ```
     [tox]
     envlist = py27,py34,py35,py36
@@ -140,15 +144,17 @@ The HTML publisher plugin is used to publish the coverage reports to the Jenkins
 ```
 
 * Execute the following command in the root directory of the project to build this dockerfile and generate a docker container image named `ctomas65/restaurantapi`:
+
 ```shell
     $ docker build -t ctomas65/restaurantapi -f restaurantapi/Dockerfile .
 ```
 
 * And for running the restaurant API in a docker container:
+
 ```shell
     $ export MONGO_URI=mongodb://foodie:foodie@localhost:27017/restaurantdb?authSource=admin
 
-    $ docker run --rm -d -e MONGO_URI=${MONGO_URI} -p 8080:8080 --name restaurantapi ctomas65/restaurantapi
+    $ docker run -d --rm -e MONGO_URI=${MONGO_URI} -p 8080:8080 --name restaurantapi ctomas65/restaurantapi
       * Serving Flask app "app" (lazy loading)
       * Environment: production
         WARNING: This is a development server. Do not use it in a production deployment.
@@ -158,19 +164,102 @@ The HTML publisher plugin is used to publish the coverage reports to the Jenkins
 ```
 
 * The API service is listening at port 8080 in the host, which redirects to port 8080 in the container. At this moment, if we try to hit the restaurant API, it will return the following error message:
-```
+
+```shell
     $ curl localhost:8080/api/v1/restaurant
-    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
-    <title>500 Internal Server Error</title>
-    <h1>Internal Server Error</h1>
-    <p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+      <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+      <title>500 Internal Server Error</title>
+      <h1>Internal Server Error</h1>
+      <p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
 
     $ docker logs restaurantapi
-    ...
-    pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused, Timeout: 30s, Topology Description: <TopologyDescription id: 60180edeb6f16da1b630279f, topology_type: Single, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [Errno 111] Connection refused')>]>
+      ...
+      pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused, Timeout: 30s, Topology Description: <TopologyDescription id: 60180edeb6f16da1b630279f, topology_type: Single, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [Errno 111] Connection refused')>]>
 ```
+
 This is due to the fact that there is no mongo database running. As we can see, the api docker container is working properly: it receives the request and tries to connect to the database, but no database is found. 
 
-* In the next section, a mongo database will be run using a mongodb docker container.
+* In the next challenge, a mongo database will be run using a mongodb docker container.
 
 <p>&nbsp;</p>
+
+## Challenge 4. Dockerize the database
+* No dockerfile is needed to run the mongo database in a container. A mongo image is available in the docker hub. We only have to configure mongo with our user and database and seed it with the restaurant data in the [restaurant.json](https://github.com/husker-du/the-real-devops-challenge/blob/master/mongo/data/restaurant.json) file.
+
+* The mongo container image provides the /docker-entrypoint-initdb.d/ path to deploy custom .js or .sh setup scripts that will be run once on database initialisation when there is nothing populated in the `/data/db` directory. An initialization script [mongo-init.sh](https://github.com/husker-du/the-real-devops-challenge/blob/master/mongo/mongo-init.sh) creates a user `foodie` for the `restaurantdb` database and seeds the data in the [restaurant.json](https://github.com/husker-du/the-real-devops-challenge/blob/master/mongo/data/restaurant.json) into the `restaurant` collection of the `restaurantdb` database by executing the `mongoimport` command as shown below:
+
+```bash
+    #!/bin/bash
+    set -e
+
+    echo "..... Create user for db [${MONGO_INITDB_DATABASE}]"
+    mongo <<EOF
+    use admin
+    db.createUser(
+      {
+        user: "${MONGO_INITDB_USERNAME}",
+        pwd: "${MONGO_INITDB_PASSWORD}",
+        roles: [
+          {
+            role: "readWrite",
+            db: "${MONGO_INITDB_DATABASE}"
+          }
+        ]
+      }
+    );
+    EOF
+
+    echo "..... Seed initial restaurants into db [${MONGO_INITDB_DATABASE}]"
+    mongoimport --username ${MONGO_INITDB_USERNAME} \
+        --password ${MONGO_INITDB_PASSWORD} \
+        --db ${MONGO_INITDB_DATABASE} \
+        --authenticationDatabase admin \
+        --collection restaurant \
+        --type json \
+        --file /docker-entrypoint-initdb.d/restaurant.json 
+```
+*  .js scripts will be run against `test` by default or `MONGO_INITDB_DATABASE` if defined in the environment.
+  
+* Taking into account all these considerations, a mongodb docker container is started up by executing this command:
+
+```shell
+    $ docker run -d --rm \
+        -e MONGO_INITDB_ROOT_USERNAME=root \
+        -e MONGO_INITDB_ROOT_PASSWORD=root \
+        -e MONGO_INITDB_DATABASE=restaurantdb \
+        -e MONGO_INITDB_USERNAME=foodie \
+        -e MONGO_INITDB_PASSWORD=foodie \
+        -p 27017:27017 \
+        -v $(pwd)/mongo/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro \
+        -v $(pwd)/mongo/data/restaurant.json:/docker-entrypoint-initdb.d/restaurant.json:ro \
+        -v /data/db \
+        --name mongodb mongo:4.4.3
+```
+
+* This command starts up a docker container from the `mongo:4.4.3` image, a name for the initial database and the username and password for the root user and this initial database is passed to the container through environment variables. The docker is listening on host port `27017` to the docker interal port `27017`. The initialisation script [mongo-init.sh](https://github.com/husker-du/the-real-devops-challenge/blob/master/mongo/mongo-init.sh) and the data file [restaurant.json](https://github.com/husker-du/the-real-devops-challenge/blob/master/mongo/data/restaurant.json) are bound to the `/docker-entrypoint-initdb.d` directory in the mongodb container. Persistent data in the mongodb container `/data/db` is managed by docker.
+
+* Having this mongodb docker container running, the restaurant api can be started and linked to the mongodb database container (by using the `--link mongodb` option) to access its data:
+
+```
+    $ docker run -d --rm -e MONGO_URI=${MONGO_URI} -p 8080:8080 --link mongodb --name restaurantapi ctomas65/restaurantapi
+```
+
+* Now, by hitting the restaurant API, we successfully get the restaurant data from the mongo database:
+
+```bash
+    $ curl localhost:8080/api/v1/restaurant/55f14313c7447c3da705224b | jq
+      % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                     Dload   Upload  Total   Spent    Left  Speed
+    100   239  100   239    0     0   8535      0 --:--:-- --:--:-- --:--:--  8535
+    {
+      "URL": "http://www.just-eat.co.uk/restaurants-bayleaf-de75/menu",
+      "_id": "55f14313c7447c3da705224b",
+      "address": "39 Market Street",
+      "address line 2": "Heanor",
+      "name": "Bayleaf",
+      "outcode": "DE75",
+      "postcode": "7NR",
+      "rating": 5,
+      "type_of_food": "Curry"
+    }
+```
