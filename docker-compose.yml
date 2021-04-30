@@ -1,3 +1,5 @@
+version: "3"
+
 services:
   mdb:
     container_name: intelygenz.mdb
