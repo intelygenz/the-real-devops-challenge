@@ -1,0 +1,33 @@
+services:
+  mdb:
+    container_name: intelygenz.mdb
+    image: mongo:latest
+    ports:
+      - 27017:27017
+
+  mdb_data:
+    image: mongo:latest
+    links:
+      - mdb
+    volumes:
+      - ./data:/var/tmp/data
+    command:
+      mongoimport --db restaurants --host mdb /var/tmp/data/restaurant.json
+
+  app_build:
+    image: intelygenz
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+
+  app:
+    depends_on:
+      - mdb
+    container_name: intelygenz.app
+    image: intelygenz:latest
+    ports:
+      - 8080:8080
+    links:
+      - mdb
+    environment:
+      MONGO_URI: mongodb://mdb:27017/restaurants
