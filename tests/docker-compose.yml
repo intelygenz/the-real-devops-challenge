@@ -1,0 +1,32 @@
+services:
+  test_mdb:
+    container_name: intelygenz-test.mdb
+    image: mongo:latest
+    ports:
+      - 27017:27017
+
+  test_mdb_data:
+    image: mongo:latest
+    links:
+      - test_mdb
+    volumes:
+      - ./data:/var/tmp/data
+    command:
+      mongoimport --host test_mdb /var/tmp/data/restaurant.json
+
+  ## uncomment to run Tox testing outside of CI
+  # tox:
+  #   depends_on:
+  #     - test_mdb
+  #     - test_mdb_data
+  #   container_name: intelygenz-test.tox
+  #   image: painless/tox
+  #   working_dir: /tmp/tox
+  #   volumes:
+  #     - ../:/tmp/tox
+  #   links:
+  #     - test_mdb
+  #   command:
+  #     /bin/bash tox
+  #   environment:
+  #     TEST_MONGO_URI: 'assigned within tox.ini'
