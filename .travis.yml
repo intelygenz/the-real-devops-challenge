@@ -8,4 +8,4 @@ before_install:
   - docker-compose -f tests/docker-compose.yml up -d
 
 script:
-  - /bin/bash tox
+  - docker logs -f intelygenz-test.tox
