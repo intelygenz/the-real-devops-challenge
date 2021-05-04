@@ -1,18 +1,18 @@
-# The real DevOps challenge Deployment
+# The Real DevOps Challenge Deployment
 
-These deployments assume scripts and commands are being ran on a localhost with [Docker installed and running](https://docs.docker.com/engine/install/) and []Minikube](https://v1-18.docs.kubernetes.io/docs/tasks/tools/install-minikube/) and [Kubectl](https://v1-18.docs.kubernetes.io/docs/tasks/tools/install-kubectl/) installed and accessible in your `$PATH`.
+These deployments assume scripts and commands are being ran on a localhost with [Docker installed and running](https://docs.docker.com/engine/install/) and [Minikube](https://v1-18.docs.kubernetes.io/docs/tasks/tools/install-minikube/) and [Kubectl](https://v1-18.docs.kubernetes.io/docs/tasks/tools/install-kubectl/) installed and accessible in your `$PATH`.
 
 Running Minikube on my local development laptop resulted in cgroups being wiped out, Docker going belly up, and requiring a reboot, so I ran my Minikube environment in an OpenStack compute instance and a fresh Ubuntu 20.04 image.
 
 Since the involved MongoDB data is already committed to a public repository, Mongo deployments do not assume security best practices and use the image's default admin user. This is for development and testing only and is *NOT* for production use.
 
-## Updates to project code
+## Updates to Project Code
 
 Some portions of this project required bug fixes or completion.
 
 * app.py now returns successful 200s or a 204 if a restaurant _id is not found.
 * src/mongoflask.py had an invalid call to `id` instead of `_id`.
-* tests/test_restaurant.py did not actually test anything within app.py, but only mocked some data and returned an array of that data. I realized this only after spending way too much time wondering why tests were successful even if I intentinally broke src/mongoflask.py. With the Docker unittest deployment a Mongo instance is now included with the original test data (3 docs) and tests/test_restaurant.py imported, so test_restaurant.py now makes direct calls to src.mongoflask.find_restaurant to validate the program's integrity. All three tests now check for the correct returned len(data) and type(data).
+* tests/test_restaurant.py did not actually test anything within app.py or src/mongoflask.py, but only mocked some data and returned an array of that data. I realized this only after spending way too much time wondering why tests were successful even if I intentinally broke src/mongoflask.py. With the Docker unittest deployment a Mongo instance is now included with the original test data (3 docs) and tests/test_restaurant.py imported, so test_restaurant.py now makes direct calls to src.mongoflask.find_restaurant to validate the program's integrity. All three tests now check for the correct returned len(data) and type(data).
 
 The deployment is split up between between two Docker Compose deployments involving:
 
@@ -23,13 +23,6 @@ The deployment is split up between between two Docker Compose deployments involv
 and a Minikube deployment with:
 
 * minikube/: directory containing K8S deployment stacks (described further below in the Minikube section)
-  ├── app-deployment.yaml
-  ├── app-service.yaml
-  ├── mdb-configmap-init.yaml
-  ├── mdb-deployment.yaml
-  ├── mdb-service.yaml
-  └── namespace.yaml
-
 * intelykube.sh: A Bash script to orchestrate the Minikube deployment (described further below in the Minikube section).
 
 
@@ -49,7 +42,7 @@ The test deployment can be cleaned up with:
 :$ docker-compose -f tests/docker-compose.yaml down -v
 ```
 
-Travis-CI runs docker-compose with `-d` to background the deployment and then monitors `docker logs -f intelygenz-test.tox` to tail the Tox's container logs. `docker logs -f` returns either `exit 0` or `exit 1` allowing Travis-CI to return a success or fail back to GitHub when finished.
+Travis-CI runs docker-compose with `-d` to background the deployment and then monitors `docker logs -f intelygenz-test.tox` to tail the Tox's container logs. `docker logs -f` returns either `exit 0` or `exit 1` allowing Travis-CI to return a success or failure back to GitHub when finished.
 
 
 ## Docker Compose Deployment
@@ -94,7 +87,7 @@ Deleted: sha256:967400474f30d5a15865e06d8c41c7f3c5d3176e6789aa9d52bf1e10d45dac3d
 
 ## Minikube Deployment
 
-A Bash script `intelykube.sh` orchestrates this Minikube to do the following:
+A Bash script `intelykube.sh` orchestrates this Minikube deployment to do the following:
 
 * start minikube
 * exports `minikube docker-env` variables
@@ -127,10 +120,10 @@ The script can also be sourced in Bash to gain use of the functions, for example
 
 ```
 :$ source ./intelykube.sh
-ubuntu@minikube:~/the-real-devops-challenge$ stop_app_port_forward
+:$ stop_app_port_forward
 Stopping PID: 1514697
-ubuntu@minikube:~/the-real-devops-challenge$ Terminated
-ubuntu@minikube:~/the-real-devops-challenge$ start_app_port_forward
+:$ Terminated
+:$ start_app_port_forward
 Waiting for pod to start...
 Port forwarding intelygenz-app-c6dd7bd98-7xlpq | 8080:8080 on localhost in the background.
  |_ Logging to => /home/ubuntu/the-real-devops-challenge/port-forward.log
@@ -138,4 +131,4 @@ Port forwarding intelygenz-app-c6dd7bd98-7xlpq | 8080:8080 on localhost in the b
   |_ Port-Forward running as PID: 1514983
 ```
 
-The deployment can be decommissioned with `intelygenz.sh down` which should stop the port forward, delete the app image, and  the 'intelygenz' namespace.
+The deployment can be decommissioned with `intelygenz.sh down` which stops the port forward, deletes the app image, and decommissions the 'intelygenz' namespace.
