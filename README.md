@@ -1,5 +1,7 @@
 # The real DevOps challenge
 
+[Docker/Minikube Deployment README](DEPLOYMENT.md)
+
 ![Intelygenz](./assets/intelygenz.logo.jpeg)
 
 This challenge was designed to look for your devops skills. This repository contains a simple python application. But it is not completed at all.
