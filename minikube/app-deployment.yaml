@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intelygenz-app
+  namespace: intelygenz
+  creationTimestamp: null
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: intelygenz
+      tier: app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: intelygenz
+        tier: app
+    spec:
+      containers:
+        - env:
+          - name: MONGO_URI
+            value: mongodb://mdb:27017/restaurants
+          image: intelygenz.app:latest
+          imagePullPolicy: Never
+          name: intelygenz-app
+          ports:
+            - containerPort: 8080
+          resources: {}
+      restartPolicy: Always
+status: {}
