@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: intelygenz
+  name: mongo-init
+data:
+  mongo-initdb.sh: |
+    #!/bin/bash
+    mongoimport --db restaurants /var/tmp/data/restaurant.json

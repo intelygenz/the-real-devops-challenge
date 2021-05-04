@@ -1,3 +1,8 @@
+# Docker/Minikube Deployment
+
+[Docker/Minikube Deployment README](DEPLOYMENT.md)
+
+
 # The real DevOps challenge
 
 ![Intelygenz](./assets/intelygenz.logo.jpeg)
