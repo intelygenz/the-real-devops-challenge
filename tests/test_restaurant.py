@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from bson.objectid import ObjectId
-from mock import patch
+from unittest.mock import patch
 import src.mongoflask
 
 
