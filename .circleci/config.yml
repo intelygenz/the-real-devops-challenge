@@ -1,0 +1,55 @@
+version: 2.1
+
+orbs:
+  # The python orb contains a set of prepackaged CircleCI configuration you can use repeatedly in your configuration files
+  # Orb commands and jobs help you with common scripting around a language/tool
+  # so you dont have to copy and paste it everywhere.
+  # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/python
+  python: circleci/python@1.2
+
+jobs:
+  build:
+    working_directory: ~/the-real-devops-challenge
+    docker:
+      - image: circleci/python:3.6.4  # primary container for the build job
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+        environment:
+          PIPENV_VENV_IN_PROJECT: true
+          DATABASE_URL: mongodb://localhost:27017/database
+      - image: python:3.5.2 
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD  
+      - image: mongo:4.4.6
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD
+    steps:
+      - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.6/site-packages
+      - run:
+          name: Installing virutalenv and tox ⚡️⚡️⚡️
+          command: |
+            sudo pip install virtualenv
+            sudo pip install tox
+      - run:
+          name: Uploading data to MongoDB
+          command: |
+            mongoimport --db database --collection restaurant --drop --file ~/data/restaurant.json
+      - run:
+          name: Workspace getting ready... 🎨
+          command: |
+            virtualenv -p python3 .venv
+            source .venv/bin/activate
+            pip install -r requirements.txt
+            mkdir test-results
+            export MONGO_URI=mongodb://localhost:27017/database
+      - run:
+          name: Launch tests 🔥🔥
+          command: |
+            docker run -it -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
+      - store_test_results: # Upload test results for display in Test Summary
+          path: test-results
