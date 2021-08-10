@@ -44,7 +44,7 @@ data = [
     },
 ]
 
-mongo.restaurants.restaurant.insert_many(data)
+mongo.restaurants.restaurant.insert_many(data, ordered=False)
 
 
 class TestRestaurant(TestCase):
