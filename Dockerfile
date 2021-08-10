@@ -11,11 +11,7 @@ WORKDIR /app
 
 COPY ./src/requirements.txt .
 
-RUN apt-get update && apt-get install --assume-yes --no-install-recommends \
-    curl=* \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* && \
-    pip install --no-cache-dir -r requirements.txt && \
+RUN pip install --no-cache-dir -r requirements.txt && \
         rm -rf requirements.txt
 
 COPY [ "./src/app.py", "./src/mongoflask.py", "./" ]
