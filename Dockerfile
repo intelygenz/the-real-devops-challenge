@@ -9,12 +9,12 @@ ENV FLASK_APP="/app/app.py"
 
 WORKDIR /app
 
-COPY src/requirements.txt .
+COPY ./src/requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt && \
         rm -rf requirements.txt
 
-COPY [ "src/app.py", "src/mongoflask.py", "./" ]
+COPY [ "./src/app.py", "./src/mongoflask.py", "./" ]
 
 RUN useradd --no-create-home --shell /bin/sh nroot
 
