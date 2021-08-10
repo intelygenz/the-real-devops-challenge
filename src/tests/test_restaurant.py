@@ -3,7 +3,7 @@ from unittest import TestCase
 from os import environ
 from bson.objectid import ObjectId
 import mongoflask
-from pymongo import MongoClient
+from pymongo import MongoClient, errors
 
 
 mongo = MongoClient(environ.get("MONGO_URI"))
@@ -46,7 +46,7 @@ data = [
 
 try:
     mongo.db.restaurant.insert_many(data, ordered=False)
-except pymongo.errors.BulkWriteError as e:
+except errors.BulkWriteError:
     pass
 
 
