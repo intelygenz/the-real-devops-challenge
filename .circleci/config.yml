@@ -52,3 +52,4 @@ workflows:
   test-and-build: 
     jobs:
       - test
+      - build-compose
