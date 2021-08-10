@@ -45,9 +45,8 @@ jobs:
             set -x
             ls -lRa
             docker-compose build
-            docker-compose up -d
-            docker run --network app \
-              appropriate/curl http://app:8080/api/v1/restaurant
+            docker-compose up -d -p 8080:8080
+            curl http://localhost:8080/api/v1/restaurant
 
 
 workflows:
