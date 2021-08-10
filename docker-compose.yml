@@ -38,5 +38,5 @@ services:
     container_name: mongodbseed
 
 networks:
-  app-network:
+  app:
     driver: bridge
