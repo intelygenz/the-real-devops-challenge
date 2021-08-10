@@ -36,7 +36,8 @@ jobs:
   build-compose:
     executor: builder
     steps:
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 20.10.6
       - checkout
       - run:
           name: Run compose
