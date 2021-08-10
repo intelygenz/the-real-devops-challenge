@@ -11,6 +11,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: create test results folder
+          command: mkdir test_results
+      - run:
           name: Run tests
           command: tox -p auto .
       - run:
