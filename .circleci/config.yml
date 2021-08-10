@@ -11,8 +11,8 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-        keys:
-          - tox-{{ checksum 'src/requirements_dev.txt' }}-{{ checksum 'src/requirements.txt' }}
+          keys:
+            - tox-{{ checksum 'src/requirements_dev.txt' }}-{{ checksum 'src/requirements.txt' }}
       - run:
           name: Run tests
           command: tox -p auto .
