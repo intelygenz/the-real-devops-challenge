@@ -1,9 +1,9 @@
 from datetime import date, datetime
 
+from typing import List
 import isodate as iso
 from bson import ObjectId
 from flask.json import JSONEncoder
-from werkzeug.routing import BaseConverter
 
 
 class MongoJSONEncoder(JSONEncoder):
@@ -16,15 +16,8 @@ class MongoJSONEncoder(JSONEncoder):
             return super().default(o)
 
 
-class ObjectIdConverter(BaseConverter):
-    def to_python(self, value):
-        return ObjectId(value)
-
-    def to_url(self, value):
-        return str(value)
-
-def find_restaurants(mongo, _id=None):
+def find_restaurants(mongo, _id=None) -> List:
     query = {}
     if _id:
-        query["_id"] = ObjectId(id)
+        query["_id"] = _id
     return list(mongo.db.restaurant.find(query))
