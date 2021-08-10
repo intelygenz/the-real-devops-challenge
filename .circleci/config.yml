@@ -10,9 +10,9 @@ jobs:
       - image: mongo:4.4.8
     steps:
       - checkout
-      - run:
-          name: create test results folder
-          command: mkdir test_results
+      - restore_cache:
+        keys:
+          - tox-{{ checksum 'src/requirements_dev.txt' }}-{{ checksum 'src/requirements.txt' }}
       - run:
           name: Run tests
           command: tox -p auto .
@@ -22,6 +22,11 @@ jobs:
       - run:
           name: Send coverage
           command: codecov
+      - save_cache:
+          key: tox-{{ checksum 'src/requirements_dev.txt' }}-{{ checksum 'src/requirements.txt' }}
+          paths:
+            - ~/project/.tox
+
 
 workflows:
   test-and-build: 
