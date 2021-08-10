@@ -37,10 +37,12 @@ jobs:
     executor: builder
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Run compose
           command: |
             set -x
+            docker-compose build
             docker-compose up -d
             curl -s "http://localhost:8080/api/v1/restaurant"
              
