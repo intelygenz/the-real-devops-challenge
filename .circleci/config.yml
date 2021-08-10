@@ -11,14 +11,14 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Run flake8
-          command: tox -e flake8 -p auto .
-      - run:
           name: Run tests
-          command: tox -e py{35,36,37,38} -p auto .
+          command: tox -p auto .
+      - run:
+          name: Install codecov
+          command: pip install codecov
       - run:
           name: Send coverage
-          command: tox -e coverage -p auto .
+          command: codecov
 
 workflows:
   test-and-build: 
