@@ -1,9 +1,5 @@
 version: 2.1
 
-workflows:
-  sample: 
-    jobs:
-      - test
 
 jobs:
   test:  
@@ -14,3 +10,8 @@ jobs:
       - run:
           name: Run tests
           command: tox -p auto .
+
+workflows:
+  test-and-build: 
+    jobs:
+      - test
