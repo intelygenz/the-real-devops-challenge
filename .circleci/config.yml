@@ -4,7 +4,12 @@ version: 2.1
 jobs:
   test:  
     docker:
+      - image: mongo:4.4.8
+        environment:
+          MONGO_INITDB_DATABASE: "restaurants"
       - image: painless/tox 
+        environment: 
+          MONGO_URI: "mongodb://localhost:27017/restaurants"
     steps:
       - checkout
       - run:
