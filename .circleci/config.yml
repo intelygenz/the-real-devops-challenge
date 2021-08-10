@@ -1,13 +1,19 @@
 version: 2.1
 
-
-jobs:
-  test:  
+executors:
+  builder:
+    docker:
+      - image: circleci/python
+  tester:
     docker:
       - image: painless/tox 
         environment: 
           MONGO_URI: "mongodb://localhost:27017/"
       - image: mongo:4.4.8
+
+jobs:
+  test:  
+    executor: tester
     steps:
       - checkout
       - restore_cache:
@@ -26,6 +32,20 @@ jobs:
           key: tox-{{ checksum "src/requirements_dev.txt" }}-{{ checksum "src/requirements.txt" }}
           paths:
             - ~/project/.tox
+
+  build-compose:
+    executor: builder
+    steps:
+      - checkout
+      - run:
+          name: Run compose
+          command: |
+            set -x
+            docker-compose up -d -p 8080:8080
+            curl -s "http://localhost:8080/api/v1/restaurant"
+             
+
+
 
 
 workflows:

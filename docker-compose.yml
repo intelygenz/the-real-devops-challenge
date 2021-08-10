@@ -1,0 +1,42 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+    container_name: app
+    ports:
+      - 8080:8080
+    depends_on:
+      - mongodb
+    env_file:
+      - app.env
+    networks:
+      - app
+
+  mongodb:
+    build:
+      context: ./
+      dockerfile: Dockerfile-mongo
+    ports:
+      - 27017:27017
+    networks:
+      - app
+    container_name: mongodb
+    env_file:
+      - mongo.env
+
+  mongodbseed:
+    build:
+      context: ./
+      dockerfile: Dockerfile-mongoseed
+    networks:
+      - app
+    depends_on:
+      - mongodb
+    env_file:
+      - mongoseed.env
+    container_name: mongodbseed
+
+networks:
+  app-network:
+    driver: bridge
