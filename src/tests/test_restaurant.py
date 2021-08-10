@@ -19,7 +19,7 @@ data = [
         "postcode": "5JN",
         "rating": 5,
         "type_of_food": "Chinese"
-     },
+    },
     {
         "_id": ObjectId("55f14312c7447c3da7051b38"),
         "URL": "http://www.just-eat.co.uk/restaurants-168chinese-ls18/menu",
@@ -44,7 +44,10 @@ data = [
     },
 ]
 
-mongo.restaurants.restaurant.insert_many(data, ordered=False)
+try:
+    mongo.db.restaurant.insert_many(data, ordered=False)
+except pymongo.errors.BulkWriteError as e:
+    pass
 
 
 class TestRestaurant(TestCase):

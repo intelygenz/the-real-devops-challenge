@@ -6,15 +6,19 @@ jobs:
     docker:
       - image: painless/tox 
         environment: 
-          MONGO_URI: "mongodb://localhost:27017/restaurants"
+          MONGO_URI: "mongodb://localhost:27017/"
       - image: mongo:4.4.8
-        environment:
-          MONGO_INITDB_DATABASE: "restaurants"
     steps:
       - checkout
       - run:
+          name: Run flake8
+          command: tox -e flake8 -p auto .
+      - run:
           name: Run tests
-          command: tox -p auto .
+          command: tox -e py{35,36,37,38} -p auto .
+      - run:
+          name: Send coverage
+          command: tox -e coverage -p auto .
 
 workflows:
   test-and-build: 
