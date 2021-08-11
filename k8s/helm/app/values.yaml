@@ -40,7 +40,7 @@ ingress:
         - path: /api/v1/restaurant/*
           backend:
             serviceName: restaurant
-            servicePort: 8080
+            servicePort: http
 env: []
 
 env_secrets: 
