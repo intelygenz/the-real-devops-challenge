@@ -1,24 +1,19 @@
-version: 2.1
-
 kaniko: &kaniko
     docker:
       - image: gcr.io/kaniko-project/executor:v1.6.0-debug
     parameters:
       image_name:
         type: string
-        default: "test"
-      version:
-        type: string
-        default: "0.0.0"
+        default: test
       cache_subdir:
         type: string
-        default: "test"
+        default: test
       dockerfile:
         type: string
-        default: "Dockerfile"
+        default: Dockerfile
       registry:
         type: string
-        default: "docker.io"
+        default: docker.io
 
 build_container: &build
     steps:
@@ -29,14 +24,25 @@ build_container: &build
       - run:
           name: kaniko build
           command: |
+            TAG=0.0.$CIRCLE_BUILD_NUM
             mkdir -p docker_cache/
-            /kaniko/executor --cache-copy-layers --cache=true --cache-dir="docker_cache/<< parameters.cache_subdir >>" --dockerfile="<< parameters.dockerfile >>" "<< parameters.registry >>/<< parameters.image_name >>:<< paramaters.version >>"
+            AUTH=$(echo -n ${DOCKER_USERNAME}:${DOCKER_PASSWORD} | base64)
+            cat \<< EOF > /kaniko/.docker/config.json
+            {
+                "auths": {
+                    "https://index.docker.io/v1/": {
+                        "auth": "${AUTH}"
+                    }
+                }
+            }
+            EOF
+            /kaniko/executor --cache-copy-layers --cache=true --cache-dir="docker_cache/<< parameters.cache_subdir >>" --dockerfile="<< parameters.dockerfile >>" "<< parameters.registry >>/<< parameters.image_name >>:$TAG"
       - save_cache:
           key: kaniko-<< parameters.dockerfile >>
           paths:
             - ~/project/docker_cache
 
-
+version: 2.1
 executors:
   builder:
     docker:
@@ -88,9 +94,11 @@ jobs:
   build-app: 
     <<: *kaniko
     <<: *build
+
   build-mongo: 
     <<: *kaniko
     <<: *build
+
   build-mongoseed: 
     <<: *kaniko
     <<: *build
@@ -102,18 +110,14 @@ workflows:
       - test
       - build-compose
       - build-app:
-          dockerfile: "Dockerfile"
-          cache_subdir: "app"
-          image_name: "blopezp007/app"
-          version: "0.0.1"
+          dockerfile: Dockerfile
+          cache_subdir: app
+          image_name: ${DOCKER_USERNAME}/app
       - build-mongo:
-          dockerfile: "Dockerfile-mongo"
-          cache_subdir: "mongo"
-          image_name: "blopezp007/mongo"
-          version: "0.0.1"
+          dockerfile: Dockerfile-mongo
+          cache_subdir: mongo
+          image_name: ${DOCKER_USERNAME}/mongo
       - build-mongoseed:
-          dockerfile: "Dockerfile-mongoseed"
-          cache_subdir: "mongoseed"
-          image_name: "blopezp007/mongoseed"
-          version: "0.0.1"
-
+          dockerfile: Dockerfile-mongoseed
+          cache_subdir: mongoseed
+          image_name: ${DOCKER_USERNAME}/mongoseed
