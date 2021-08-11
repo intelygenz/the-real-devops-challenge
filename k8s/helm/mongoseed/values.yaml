@@ -1,7 +1,9 @@
 image:
   repository: blopezp007/mongoseed
-  pullPolicy: IfNotPresent
-  tag: "0.0.127"
+  pullPolicy: Always
+  tag: "1.0.0"
+
+restartPolicy: "OnFailure"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -33,11 +35,11 @@ env:
   - name: MONGO_DATABASE
     value: restaurant
   - name: MONGO_USERNAME
-    value: mongo
+    value: mongodmin
   - name: MONGO_HOST
     value: mongo
 
 env_secrets: 
   - env: MONGO_PASSWORD
     secret_name: mongo
-    secret_key: MONGO_PASSWORD
+    secret_key: MONGO_INITDB_ROOT_PASSWORD
