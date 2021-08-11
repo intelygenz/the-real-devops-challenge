@@ -37,7 +37,7 @@ build_container: &build
                 }
             }
             EOF
-            docker run -it -v $(pwd):/kaniko/.docker/config.json -v $(pwd):/build gcr.io/kaniko-project/executor:v1.6.0-debug --cache-copy-layers --cache=true --context=/build --cache-dir="docker_cache/<< parameters.cache_subdir >>" --dockerfile="<< parameters.dockerfile >>" --destination "<< parameters.registry >>/<< parameters.image_name >>:$TAG"
+            docker run -it -v $(pwd)/config.json:/kaniko/.docker/config.json -v $(pwd):/build gcr.io/kaniko-project/executor:v1.6.0-debug --cache-copy-layers --cache=true --context=/build --cache-dir="docker_cache/<< parameters.cache_subdir >>" --dockerfile=<< parameters.dockerfile >> --destination "<< parameters.registry >>/<< parameters.image_name >>:$TAG"
       - save_cache:
           key: kaniko-<< parameters.dockerfile >>
           paths:
@@ -111,14 +111,14 @@ workflows:
       - test
       - build-compose
       - build-app:
-          dockerfile: Dockerfile
-          cache_subdir: app
-          image_name: ${DOCKER_USERNAME}/app
+          dockerfile: "Dockerfile"
+          cache_subdir: "app"
+          image_name: "${DOCKER_USERNAME}/app"
       - build-mongo:
-          dockerfile: Dockerfile-mongo
-          cache_subdir: mongo
-          image_name: ${DOCKER_USERNAME}/mongo
+          dockerfile: "Dockerfile-mongo"
+          cache_subdir: "mongo"
+          image_name: "${DOCKER_USERNAME}/mongo"
       - build-mongoseed:
-          dockerfile: Dockerfile-mongoseed
-          cache_subdir: mongoseed
-          image_name: ${DOCKER_USERNAME}/mongoseed
+          dockerfile: "Dockerfile-mongoseed"
+          cache_subdir: "mongoseed"
+          image_name: "${DOCKER_USERNAME}/mongoseed"
