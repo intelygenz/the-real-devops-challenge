@@ -1,0 +1,18 @@
+releases:
+  - name: mongo
+    namespace: db
+    createNamespace: true
+    chart: mongo
+    values:
+      - values-mongo.yaml
+  - name: mongoseed
+    namespace: db
+    chart: mongoseed
+    values:
+      - values-mongoseed.yaml
+  - name: app
+    namespace: restaurant
+    createNamespace: true
+    chart: app
+    values:
+      - values-app.yaml

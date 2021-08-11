@@ -1,0 +1,3 @@
+secrets:
+  MONGO_INITDB_ROOT_PASSWORD: "secret"
+  MONGO_PASSWORD: "secret123"

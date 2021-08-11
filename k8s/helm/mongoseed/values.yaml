@@ -1,0 +1,43 @@
+image:
+  repository: blopezp007/mongoseed
+  pullPolicy: IfNotPresent
+  tag: "0.0.127"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: "default"
+
+podAnnotations: {}
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+env:
+  - name: MONGO_DATABASE
+    value: restaurant
+  - name: MONGO_USERNAME
+    value: mongo
+  - name: MONGO_HOST
+    value: mongo
+
+env_secrets: 
+  - env: MONGO_PASSWORD
+    secret_name: mongo
+    secret_key: MONGO_PASSWORD
