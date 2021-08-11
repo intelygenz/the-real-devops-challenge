@@ -3,16 +3,16 @@ kaniko: &kaniko
     parameters:
       image_name:
         type: string
-        default: test
+        default: "test"
       cache_subdir:
         type: string
-        default: test
+        default: "cache"
       dockerfile:
         type: string
-        default: Dockerfile
+        default: "Dockerfile"
       registry:
         type: string
-        default: docker.io
+        default: "docker.io"
 
 build_container: &build
     steps:
@@ -25,8 +25,8 @@ build_container: &build
       - run:
           name: kaniko build
           command: |
+            mkdir cache
             TAG=0.0.$CIRCLE_BUILD_NUM
-            mkdir -p docker_cache/
             AUTH=$(echo -n ${DOCKER_USERNAME}:${DOCKER_PASSWORD} | base64)
             cat \<< EOF > config.json
             {
@@ -37,11 +37,11 @@ build_container: &build
                 }
             }
             EOF
-            docker run -it -v $(pwd)/config.json:/kaniko/.docker/config.json -v $(pwd):/build gcr.io/kaniko-project/executor:v1.6.0-debug --cache-copy-layers --cache=true --context=/build --cache-dir="docker_cache/<< parameters.cache_subdir >>" --dockerfile=<< parameters.dockerfile >> --destination "<< parameters.registry >>/<< parameters.image_name >>:$TAG"
+            docker run -it -v $(pwd)/config.json:/kaniko/.docker/config.json -v $(pwd):/build gcr.io/kaniko-project/executor:v1.6.0-debug --cache-copy-layers --cache=true --context=/build --cache-dir=<< parameters.cache_subdir >> --dockerfile=<< parameters.dockerfile >> --destination "<< parameters.registry >>/<< parameters.image_name >>:$TAG"
       - save_cache:
           key: kaniko-<< parameters.dockerfile >>
           paths:
-            - ~/project/docker_cache
+            - ~/project/cache
 
 version: 2.1
 executors:
@@ -112,13 +112,19 @@ workflows:
       - build-compose
       - build-app:
           dockerfile: "Dockerfile"
-          cache_subdir: "app"
           image_name: "${DOCKER_USERNAME}/app"
+          requires:
+            - test
+            - build-compose
       - build-mongo:
           dockerfile: "Dockerfile-mongo"
-          cache_subdir: "mongo"
           image_name: "${DOCKER_USERNAME}/mongo"
+          requires:
+            - test
+            - build-compose
       - build-mongoseed:
           dockerfile: "Dockerfile-mongoseed"
-          cache_subdir: "mongoseed"
           image_name: "${DOCKER_USERNAME}/mongoseed"
+          requires:
+            - test
+            - build-compose
