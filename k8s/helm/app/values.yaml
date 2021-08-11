@@ -34,13 +34,19 @@ ingress:
     - host: localhost
       paths:
         - path: /api/v1/restaurant
+          pathType: Prefix
           backend:
-            serviceName: restaurant
-            servicePort: 8080
+            service:
+              name: restaurant
+              port:
+                number: 8080
         - path: /api/v1/restaurant/*
+          pathType: Prefix
           backend:
-            serviceName: restaurant
-            servicePort: http
+            service:
+              name: restaurant
+              port:
+                number: 8080
 env: []
 
 env_secrets: 
