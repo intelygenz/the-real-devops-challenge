@@ -82,7 +82,7 @@ install-k8s-resources() {
         echo "Microk8s is stopped."
         exit 1
     fi
-    if ! helm diff; then
+    if ! helm diff version; then
         echo "Installing helm diff plugin..."
         helm plugin install https://github.com/databus23/helm-diff
     fi
