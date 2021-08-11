@@ -1,5 +1,6 @@
 kaniko: &kaniko
-    executor: builder
+    machine:
+      image: ubuntu-2004:202107-02
     parameters:
       image_name:
         type: string
