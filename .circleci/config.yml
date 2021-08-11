@@ -17,6 +17,8 @@ kaniko: &kaniko
 build_container: &build
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 20.10.6
       - restore_cache:
           keys:
             - kaniko-<< parameters.dockerfile >>
