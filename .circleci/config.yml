@@ -38,7 +38,6 @@ jobs:
     steps:
       - setup_remote_docker:
           version: 20.10.6
-          docker_layer_caching: true
       - checkout
       - run:
           name: Run compose
