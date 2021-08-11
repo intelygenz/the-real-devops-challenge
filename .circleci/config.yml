@@ -25,7 +25,7 @@ build_container: &build
           name: kaniko build
           command: |
             mkdir cache || true
-            TAG=0.0.$CIRCLE_BUILD_NUM
+            TAG=1.0.0
             AUTH=$(echo -n ${DOCKER_USERNAME}:${DOCKER_PASSWORD} | base64)
             cat \<< EOF > config.json
             {
