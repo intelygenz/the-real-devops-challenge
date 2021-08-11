@@ -5,3 +5,5 @@ LABEL maintainer "Borja Lopez <borja.lopez@xxxx.com>"
 COPY [ "./scripts/mongo-import.sh", "./data/restaurant.json", "/docker-entrypoint-initdb.d/" ]
 
 RUN chmod +x /docker-entrypoint-initdb.d/mongo-import.sh
+
+CMD [ "bash", "/docker-entrypoint-initdb.d/mongo-import.sh" ]
