@@ -1,5 +1,42 @@
 version: 2.1
 
+kaniko: &kaniko
+    docker:
+      - image: gcr.io/kaniko-project/executor:v1.6.0-debug
+    parameters:
+      image_name:
+        type: string
+        default: "test"
+      version:
+        type: string
+        default: "0.0.0"
+      cache_subdir:
+        type: string
+        default: "test"
+      dockerfile:
+        type: string
+        default: "Dockerfile"
+      registry:
+        type: string
+        default: "docker.io"
+
+build_container: &build
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - kaniko-<< parameters.dockerfile >>
+      - run:
+          name: kaniko build
+          command: |
+            mkdir -p docker_cache/
+            /kaniko/executor --cache-copy-layers --cache=true --cache-dir="docker_cache/<< parameters.cache_subdir >>" --dockerfile="<< parameters.dockerfile >>" "<< parameters.registry >>/<< parameters.image_name >>:<< paramaters.version >>"
+      - save_cache:
+          key: kaniko-<< parameters.dockerfile >>
+          paths:
+            - ~/project/docker_cache
+
+
 executors:
   builder:
     docker:
@@ -48,9 +85,35 @@ jobs:
             docker run --network project_app curlimages/curl:latest \
               curl -s http://app:8080/api/v1/restaurant/55f14312c7447c3da7051b26
 
+  build-app: 
+    <<: *kaniko
+    <<: *build
+  build-mongo: 
+    <<: *kaniko
+    <<: *build
+  build-mongoseed: 
+    <<: *kaniko
+    <<: *build
+
 
 workflows:
   test-and-build: 
     jobs:
       - test
       - build-compose
+      - build-app:
+          dockerfile: "Dockerfile"
+          cache_subdir: "app"
+          image_name: "blopezp007/app"
+          version: "0.0.1"
+      - build-mongo:
+          dockerfile: "Dockerfile-mongo"
+          cache_subdir: "mongo"
+          image_name: "blopezp007/mongo"
+          version: "0.0.1"
+      - build-mongoseed:
+          dockerfile: "Dockerfile-mongoseed"
+          cache_subdir: "mongoseed"
+          image_name: "blopezp007/mongoseed"
+          version: "0.0.1"
+
