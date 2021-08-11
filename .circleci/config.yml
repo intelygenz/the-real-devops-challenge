@@ -37,7 +37,7 @@ build_container: &build
                 }
             }
             EOF
-            docker run -it -v $(pwd):/kaniko/.docker/config.json gcr.io/kaniko-project/executor:v1.6.0-debug --cache-copy-layers --cache=true --cache-dir="docker_cache/<< parameters.cache_subdir >>" --dockerfile="<< parameters.dockerfile >>" "<< parameters.registry >>/<< parameters.image_name >>:$TAG"
+            docker run -it -v $(pwd):/kaniko/.docker/config.json -v $(pwd):/build gcr.io/kaniko-project/executor:v1.6.0-debug --cache-copy-layers --cache=true --context=/build --cache-dir="docker_cache/<< parameters.cache_subdir >>" --dockerfile="<< parameters.dockerfile >>" --destination "<< parameters.registry >>/<< parameters.image_name >>:$TAG"
       - save_cache:
           key: kaniko-<< parameters.dockerfile >>
           paths:
