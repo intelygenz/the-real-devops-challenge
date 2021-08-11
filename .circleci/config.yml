@@ -1,6 +1,5 @@
 kaniko: &kaniko
-    docker:
-      - image: gcr.io/kaniko-project/executor:v1.6.0-debug
+    executor: builder
     parameters:
       image_name:
         type: string
@@ -27,7 +26,7 @@ build_container: &build
             TAG=0.0.$CIRCLE_BUILD_NUM
             mkdir -p docker_cache/
             AUTH=$(echo -n ${DOCKER_USERNAME}:${DOCKER_PASSWORD} | base64)
-            cat \<< EOF > /kaniko/.docker/config.json
+            cat \<< EOF > config.json
             {
                 "auths": {
                     "https://index.docker.io/v1/": {
@@ -36,7 +35,7 @@ build_container: &build
                 }
             }
             EOF
-            /kaniko/executor --cache-copy-layers --cache=true --cache-dir="docker_cache/<< parameters.cache_subdir >>" --dockerfile="<< parameters.dockerfile >>" "<< parameters.registry >>/<< parameters.image_name >>:$TAG"
+            docker run -it -v $(pwd):/kaniko/.docker/config.json gcr.io/kaniko-project/executor:v1.6.0-debug --cache-copy-layers --cache=true --cache-dir="docker_cache/<< parameters.cache_subdir >>" --dockerfile="<< parameters.dockerfile >>" "<< parameters.registry >>/<< parameters.image_name >>:$TAG"
       - save_cache:
           key: kaniko-<< parameters.dockerfile >>
           paths:
