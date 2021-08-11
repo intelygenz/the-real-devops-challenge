@@ -40,7 +40,8 @@ check_helm() {
 
 start() {
     check_microk8s
-    if microk8s status | awk '/is not running/'; then
+    status=$(microk8s status | awk '/is not running/')
+    if [ -n "${status}" ]; then
         microk8s start
     else
         echo "Microk8s already started."
@@ -50,7 +51,8 @@ start() {
 
 stop() {
     check_microk8s
-    if microk8s status | awk '/is not running/'; then
+    status=$(microk8s status | awk '/is running/')
+    if [ -n "${status}" ]; then
         microk8s stop
     else
         echo "Microk8s already stopped."
@@ -60,7 +62,8 @@ stop() {
 
 enable-addons() {
     check_microk8s
-    if microk8s status | awk '/is running/'; then
+    status=$(microk8s status | awk '/is running/')
+    if [ -n "${status}" ]; then
         microk8s enable dns ingress host-access dashboard rbac
     else
         echo "Microk8s is stopped."
@@ -70,9 +73,11 @@ enable-addons() {
 install-k8s-resources() {
     check_helmfile
     check_helm
-    if microk8s status | awk '/is running/'; then
+    status=$(microk8s status | awk '/is running/')
+    if [ -n "${status}" ]; then
         mkdir ~/.kube/
         microk8s config > ~/.kube/config
+        chmod 600 ~/.kube/config
     else
         echo "Microk8s is stopped."
         exit 1
