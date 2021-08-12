@@ -59,6 +59,13 @@ spec:
             periodSeconds: 20
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: "/data/db"
+              name: mongo-data
+      volumes:
+       - name: mongo-data
+         persistentVolumeClaim:
+           claimName: mongo-pvc
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
