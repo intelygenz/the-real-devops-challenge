@@ -7,7 +7,7 @@ help() {
     echo "  start                           start microk8s server"
     echo "  help                            help usage"
     echo "  stop                            stop microk8s server"
-    echo "  enable-addons                   enable addons microk8s server [dns, dashboards, ingress, host-access, rbac]"
+    echo "  enable-addons                   enable addons microk8s server [dns, dashboards, ingress, storage, rbac]"
     echo "  install-k8s-resources           install the k8s resources for the challenge"
 }
 
@@ -64,7 +64,7 @@ enable-addons() {
     check_microk8s
     status=$(microk8s status | awk '/is running/')
     if [ -n "${status}" ]; then
-        microk8s enable dns ingress host-access dashboard rbac
+        microk8s enable dns ingress storage dashboard rbac
     else
         echo "Microk8s is stopped."
     fi

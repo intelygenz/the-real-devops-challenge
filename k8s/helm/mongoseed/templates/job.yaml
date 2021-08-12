@@ -5,6 +5,8 @@ metadata:
   labels:
     {{- include "mongoseed.labels" . | nindent 4 }}
 spec:
+  backoffLimit:  {{ .Values.backoffLimit }}
+  activeDeadlineSeconds: {{ .Values.activeDeadlineSeconds }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}

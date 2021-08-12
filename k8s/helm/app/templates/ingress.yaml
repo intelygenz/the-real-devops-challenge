@@ -1,8 +1,10 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "app.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- if semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1
+{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
 {{- else -}}
 apiVersion: extensions/v1beta1
 {{- end }}
@@ -22,13 +24,20 @@ spec:
       http:
         paths:
           {{- range .paths }}
-          - path: {{ . }}
+          {{- if semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion -}}
+          - path: {{ .path }}
             pathType: {{ .pathType }}
             backend:
               service: 
                 name: {{ $fullName }}
                 port: 
                   number: {{ $svcPort }}
+          {{- else -}}
+          - path: {{ .path }}
+            backend:
+              serviceName: {{ $fullName }}
+              servicePort: {{ $svcPort }}
+          {{- end }}
           {{- end }}
     {{- end }}
   {{- end }}

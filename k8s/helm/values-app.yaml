@@ -1,2 +1,2 @@
 secrets:
-  MONGO_URI: "mongodb://mongo:secret123@mongo.db:27017/restaurant&authMechanism=SCRAM-SHA-256"
+  MONGO_URI: "mongodb://mongo:secret123@mongo.db.svc.cluster.local:27017/restaurant?authSource=restaurant&authMechanism=SCRAM-SHA-256"
