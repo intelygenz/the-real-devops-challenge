@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/borjlp/the-real-devops-challenge/branch/master/graph/badge.svg?token=M95NXUJN0I)](https://codecov.io/gh/borjlp/the-real-devops-challenge)
+
 # MY PROPOSED SOLUTIONS TO THIS CHALLENGE
 
 Hi IGZ Team, let me introduce myself, my name is Borja and I am going to present the solutions for this challenge. First of all, here is the index for the challenge:
@@ -38,7 +40,7 @@ Another thing that I did is to remove the mock test to really test with a fresh 
 ```
 It implemented a exception too because the tests are in parallel in the same mongo, so I only need to execute once. 
 
-One more thing, I implemented some healhchecks for the [kubernetes section](#challenge-5).
+One more thing, I implemented some healhchecks for the [kubernetes section](#challenge-6).
 
 I think that I have explained the challenge in an easy way. So go with the next one.
 
