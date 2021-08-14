@@ -9,6 +9,7 @@ help() {
     echo "  stop                            stop microk8s server"
     echo "  enable-addons                   enable addons microk8s server [dns, dashboards, ingress, storage, rbac]"
     echo "  install-k8s-resources           install the k8s resources for the challenge"
+    echo "  uninstall-k8s-resources         uninstall the k8s resources for the challenge"
 }
 
 check_microk8s() {
@@ -79,7 +80,7 @@ install-k8s-resources() {
         microk8s config > ~/.kube/config
         chmod 600 ~/.kube/config
     else
-        echo "Microk8s is stopped."
+        echo "Microk8s is stopped. Please started."
         exit 1
     fi
     if ! helm diff version; then
@@ -87,6 +88,21 @@ install-k8s-resources() {
         helm plugin install https://github.com/databus23/helm-diff
     fi
     helmfile apply
+}
+
+uninstall-k8s-resources() {
+    check_helmfile
+    check_helm
+    status=$(microk8s status | awk '/is running/')
+    if [ -n "${status}" ]; then
+        mkdir ~/.kube/
+        microk8s config > ~/.kube/config
+        chmod 600 ~/.kube/config
+    else
+        echo "Microk8s is stopped. Please started."
+        exit 1
+    fi
+    helmfile delete
 }
 
 
@@ -103,6 +119,9 @@ case $1 in
         ;;
     install-k8s-resources)
         install-k8s-resources
+        ;;
+    uninstall-k8s-resources)
+        uninstall-k8s-resources
         ;;
     *)
         help
