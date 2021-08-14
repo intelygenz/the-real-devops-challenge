@@ -1,0 +1,48 @@
+image:
+  repository: blopezp007/mongoseed
+  pullPolicy: Always
+  tag: "1.0.0"
+
+restartPolicy: "OnFailure"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: "default"
+
+podAnnotations: {}
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+
+nodeSelector: {}
+
+backoffLimit: 5
+activeDeadlineSeconds: 300
+
+tolerations: []
+
+affinity: {}
+
+env:
+  - name: MONGO_DATABASE
+    value: restaurant
+  - name: MONGO_USERNAME
+    value: mongoadmin
+  - name: MONGO_HOST
+    value: mongo.db.svc.cluster.local
+
+env_secrets: 
+  - env: MONGO_PASSWORD
+    secret_name: mongo
+    secret_key: MONGO_INITDB_ROOT_PASSWORD

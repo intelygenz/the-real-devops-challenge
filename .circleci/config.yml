@@ -1,0 +1,129 @@
+kaniko: &kaniko
+    machine:
+      image: ubuntu-2004:202107-02
+    parameters:
+      image_name:
+        type: string
+        default: "test"
+      cache_subdir:
+        type: string
+        default: "cache"
+      dockerfile:
+        type: string
+        default: "Dockerfile"
+      registry:
+        type: string
+        default: "docker.io"
+
+build_container: &build
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - kaniko-<< parameters.dockerfile >>
+      - run:
+          name: kaniko build
+          command: |
+            mkdir cache || true
+            TAG=1.0.0
+            AUTH=$(echo -n ${DOCKER_USERNAME}:${DOCKER_PASSWORD} | base64)
+            cat \<< EOF > config.json
+            {
+                "auths": {
+                    "https://index.docker.io/v1/": {
+                        "auth": "${AUTH}"
+                    }
+                }
+            }
+            EOF
+            docker run -it -v $(pwd)/config.json:/kaniko/.docker/config.json -v $(pwd):/build gcr.io/kaniko-project/executor:v1.6.0-debug --cache-copy-layers --cache=true --context=/build --cache-dir=<< parameters.cache_subdir >> --dockerfile=<< parameters.dockerfile >> --destination "<< parameters.registry >>/<< parameters.image_name >>:$TAG"
+      - save_cache:
+          key: kaniko-<< parameters.dockerfile >>
+          paths:
+            - ~/project/cache
+
+version: 2.1
+executors:
+  builder:
+    docker:
+      - image: circleci/python
+  tester:
+    docker:
+      - image: painless/tox 
+        environment: 
+          MONGO_URI: "mongodb://localhost:27017/"
+      - image: mongo:4.4.8
+
+jobs:
+  test:  
+    executor: tester
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - tox-{{ checksum "src/requirements_dev.txt" }}-{{ checksum "src/requirements.txt" }}
+      - run:
+          name: Run tests
+          command: tox -p auto .
+      - run:
+          name: Install codecov
+          command: pip install codecov
+      - run:
+          name: Send coverage
+          command: codecov
+      - save_cache:
+          key: tox-{{ checksum "src/requirements_dev.txt" }}-{{ checksum "src/requirements.txt" }}
+          paths:
+            - ~/project/.tox
+
+  build-compose:
+    executor: builder
+    steps:
+      - setup_remote_docker:
+          version: 20.10.6
+      - checkout
+      - run:
+          name: Run compose
+          command: |
+            set -x
+            docker-compose build
+            docker-compose up -d 
+            docker run --network project_app curlimages/curl:latest \
+              curl -s http://app:8080/api/v1/restaurant/55f14312c7447c3da7051b26
+
+  build-app: 
+    <<: *kaniko
+    <<: *build
+
+  build-mongo: 
+    <<: *kaniko
+    <<: *build
+
+  build-mongoseed: 
+    <<: *kaniko
+    <<: *build
+
+
+workflows:
+  test-and-build: 
+    jobs:
+      - test
+      - build-compose
+      - build-app:
+          dockerfile: "Dockerfile"
+          image_name: "${DOCKER_USERNAME}/app"
+          requires:
+            - test
+            - build-compose
+      - build-mongo:
+          dockerfile: "Dockerfile-mongo"
+          image_name: "${DOCKER_USERNAME}/mongo"
+          requires:
+            - test
+            - build-compose
+      - build-mongoseed:
+          dockerfile: "Dockerfile-mongoseed"
+          image_name: "${DOCKER_USERNAME}/mongoseed"
+          requires:
+            - test
+            - build-compose
