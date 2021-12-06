@@ -1,0 +1,33 @@
+# Use root/example as user/password credentials
+version: '3'
+
+services:
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+    # volumes:
+    #   - './init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro'
+    #   - './mongo-volume:/data/db'
+    ports:
+      - '27017-27019:27017-27019'
+  
+  devopschallenge:
+    image: rbarrett/devopschallenge
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      MONGO_URI: mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongo/application?authSource=admin
+
+  mongo-init:
+    image: mongo
+    restart: on-failure
+    entrypoint: mongoimport --uri mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongo/application?authSource=admin --collection restaurant --username ${MONGODB_USERNAME} --password ${MONGODB_PASSWORD} --drop --file /init-tmp/restaurant.json
+    volumes:
+      - "./data/:/init-tmp"
+
+

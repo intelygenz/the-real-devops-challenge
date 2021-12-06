@@ -23,8 +23,9 @@ class ObjectIdConverter(BaseConverter):
     def to_url(self, value):
         return str(value)
 
-def find_restaurants(mongo, _id=None):
+def find_restaurants(mongo, _id=""):
     query = {}
-    if _id:
-        query["_id"] = ObjectId(id)
+    if _id != "":
+        print(_id)
+        query["_id"] = ObjectId(_id)
     return list(mongo.db.restaurant.find(query))

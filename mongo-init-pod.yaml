@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.24.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mongo-init
+  name: mongo-init
+spec:
+  containers:
+    - command:
+        - mongoimport
+        - --uri
+        - mongodb://hui:pizda@mongo/application?authSource=admin
+        - --collection
+        - restaurant
+        - --username
+        - hui
+        - --password
+        - pizda
+        - --drop
+        - --file
+        - /init-tmp/restaurant.json
+      image: mongo
+      name: mongo-init
+      resources: {}
+      volumeMounts:
+        - mountPath: /init-tmp
+          name: mongo-init-claim0
+  restartPolicy: OnFailure
+  volumes:
+    - name: mongo-init-claim0
+      persistentVolumeClaim:
+        claimName: mongo-init-claim0
+status: {}

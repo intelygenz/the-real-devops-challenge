@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.24.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: devopschallenge
+  name: devopschallenge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: devopschallenge
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.24.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: devopschallenge
+    spec:
+      containers:
+        - env:
+            - name: MONGO_URI
+              value: mongodb://hui:pizda@mongo/application?authSource=admin
+          image: rbarrett/devopschallenge
+          name: devopschallenge
+          ports:
+            - containerPort: 8080
+          resources: {}
+      restartPolicy: Always
+status: {}
