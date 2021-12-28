@@ -1,0 +1,42 @@
+version: '3.9'
+services:
+  app:
+    build:
+      context: .
+    container_name: flask-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    env_file:
+      - flask.env
+    networks:
+      - application
+
+  mongodb:
+    build:
+      context: mongo
+      dockerfile: Dockerfile
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - application
+    env_file:
+      - mongo.env
+
+  mongodbseed:
+    build:
+      context: mongo
+      dockerfile: Dockerfile-seed
+    container_name: mongodb-seed
+    networks:
+      - application
+    depends_on:
+      - mongodb
+    env_file:
+      - mongoseed.env
+
+networks:
+  application:
+    driver: bridge
