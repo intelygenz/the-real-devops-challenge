@@ -40,3 +40,5 @@ jobs:
       - name: Run tox
         # Run tox using the version of Python in `PATH`
         run: tox -e py
+        env:
+          MONGO_URI: "mongodb://localhost:27017/"
