@@ -42,7 +42,10 @@ def mock_find_restaurant(mongo, _id=None):
         }
     ]
 
-    return [restaurant for restaurant in data if restaurant.get('_id') == ObjectId(_id)]
+    if _id:
+        return [restaurant for restaurant in data if restaurant.get('_id') == ObjectId(_id)][0]
+    else:
+        return data
 
 
 class TestRestaurant(TestCase):
