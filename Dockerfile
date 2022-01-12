@@ -18,7 +18,6 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 COPY ./src $APP_DIR
 
 ENV PYTHONPATH $APP_DIR
-ENV MONGO_URI "mongodb://$MONGO_USER:$MONGO_PASSW@$MONGO_HOST:$MONGO_PORT/$MONGO_INITDB_DATABASE"
 
 EXPOSE 8080
 
