@@ -7,8 +7,6 @@ RUN apt-get update && apt-get upgrade -y
 
 RUN useradd --user-group -m -d /home/$USER --no-log-init -r $USER
 
-USER $USER
-
 WORKDIR $APP_DIR
 
 COPY requirements.txt .
@@ -18,6 +16,8 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 COPY ./src $APP_DIR
 
 ENV PYTHONPATH $APP_DIR
+
+USER $USER
 
 EXPOSE 8080
 
