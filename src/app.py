@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, Response
+from flask import Flask, jsonify
 from flask_pymongo import PyMongo
 from mongo_base import MONGO_URI
 
@@ -14,16 +14,16 @@ mongo = PyMongo(app)
 @app.route("/api/v1/restaurant")
 def list_restaurants():
     restaurants = find_restaurants(mongo)
-    return jsonify(restaurants)
+    return jsonify(restaurants), 200
 
 
 @app.route("/api/v1/restaurant/<restaurant_id>")
 def get_restaurant(restaurant_id):
     restaurant = find_restaurants(mongo, restaurant_id)
     if restaurant is not None:
-        return jsonify(restaurant)
+        return jsonify(restaurant), 200
     else:
-        return Response(f"No match found for {restaurant_id}", status=204, mimetype='application/text')
+        return jsonify(error=f"204: No match found for {restaurant_id}"), 204
 
 
 if __name__ == "__main__":
