@@ -73,8 +73,7 @@ jobs:
         id: docker_build_mongo
         uses: docker/build-push-action@v2
         with:
-          file: Dockerfile
-          context: mongo
+          context: {{defaultContext}}:mongo
           # platforms: linux/amd64,linux/arm64
           platforms: linux/amd64
           # push: true
@@ -86,7 +85,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           file: Dockerfile-seed
-          context: mongo
+          context: {{defaultContext}}:mongo
           # platforms: linux/amd64,linux/arm64
           platforms: linux/amd64
           # push: true
