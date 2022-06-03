@@ -1,0 +1,33 @@
+name: Testing restaurant API
+on:
+  pull_request:
+    branches:
+      - '*'
+  push:
+    branches:
+      - '*'
+
+env:
+  PYTHON_VERSION: '3.9'
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Upgrade pip
+      run: pip3 install --upgrade pip
+        
+    - name: Install tox
+      run: pip install tox
+
+
+    - name: Run unit-tests
+      run: tox
