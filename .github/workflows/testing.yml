@@ -16,4 +16,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Run unit-tests
-      run: docker run -it -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
+      run: docker run -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
