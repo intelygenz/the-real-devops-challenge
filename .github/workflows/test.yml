@@ -15,12 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["2.7", "3.4", "3.5", "3.6"]
+        python-version: ["2.7.18", "3.4.10", "3.5.10", "3.6.15"]
     
     steps:
     - uses: actions/checkout@v3
     
-    - name: Set up Python 3.9
+    - name: Set up Python version ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
