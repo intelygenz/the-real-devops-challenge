@@ -1,0 +1,19 @@
+name: Testing restaurant API
+on:
+  pull_request:
+    branches:
+      - '*'
+  push:
+    branches:
+      - '*'
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run unit-tests
+      run: docker run -it -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
