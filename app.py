@@ -22,8 +22,12 @@ def restaurants():
 
 @app.route("/api/v1/restaurant/<id>")
 def restaurant(id):
-    restaurants = find_restaurants(mongo, id)
-    return jsonify(restaurants)
+    try:
+        restaurants = find_restaurants(mongo, id)
+        if restaurants:
+            return jsonify(restaurants[0])
+    except:
+        return ('', 204)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=False, port=8080)
