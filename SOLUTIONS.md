@@ -66,9 +66,8 @@ The tests will be run in every pull request and push in any branch.
 
 [Back to index](#index)
 
-
 <a name="challenge-3"></a>
-## Challenge 3. Dockerize the APP
+## Challenge 3. Dockerize the APP
 
 It is created the Dockerfile `python-app.Dockerfile` for the python application:
 
