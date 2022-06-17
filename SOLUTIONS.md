@@ -167,7 +167,9 @@ ENV MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD:-password}
 ENV MONGO_INITDB_ROOT_DATABASE=${MONGO_INITDB_DATABASE:-test}
 ```
 
-As it can be seen, default values are set for the root username, root password and database name. So it is encouraged to provide different values at build time for security reasons when the image is built. For example the image can be built with the following command:
+As it can be seen, it is offered the possibility to provide the root username, root password and database at build time. Default values are set for the root username, root password and database name in environment variables. So in case the image is run without any environment variables values, the container could run. 
+
+The image could be built with the following command:
 
 ```sh
 docker build \
@@ -178,12 +180,17 @@ docker build \
     -f mongo.Dockerfile ./data
 ```
 
-and it can be run with:
+If the image built is publicly available, this values could be consulted by anyone since the image can be inspected.
+
+So the preferred way to run the image is setting the environment variables values when it is launched the container, as it can be seen here:
 
 ```sh
 docker run --rm \
     --name mongo \
     --network python-mongo-network \
+    -e MONGO_INITDB_ROOT_USERNAME=mongoadmin \
+    -e MONGO_INITDB_ROOT_PASSWORD=mongoadminpasswd \
+    -e MONGO_INITDB_DATABASE=intelygenz \
     -p 27017:27017 \
     mongo-intelygenz
 ```
@@ -250,49 +257,16 @@ docker push amoragon/restaurant-api:v0.1.0
 docker push amoragon/restaurant-mongo:v0.1.0
 ```
 
-After pushing the app and the database images to Docker Hub, the following k8s manifest is needed to make available the restaurant API in one deployment.
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: restaurant-api
-  name: restaurant-api
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: restaurant-api
-  template:
-    metadata:
-      labels:
-        app: restaurant-api
-    spec:
-      containers:
-      - image: amoragon/restaurant-api:v0.1.0
-        name: restaurant-api
-        ports:
-        - containerPort: 8080
-        env:
-          - name: MONGO_URI
-            value: mongodb://mongoadmin:mongoadminpasswd@localhost:27017/intelygenz?authSource=admin
-      - image: amoragon/restaurant-mongo:v0.1.0
-        name: mongo
-        ports:
-        - containerPort: 27017
-```
-
-We just need to apply the manifest to run the pod:
+After pushing the app and the database images to Docker Hub, it is needed to apply the kubernets manifests in the `k8s` directory.
 
 ```sh
-kubectl apply -f deployment-restaurat-api.yaml
+kubectl apply -f ./k8s
 ```
 
 To check the availavility of the service by means of curl or even the web browser, we make a port-forward like this:
 
 ```sh
-kubectl port-forward <pod-name> 8080:8080
+kubectl port-forward svc/restaurant-api 8080:8080
 ```
 
 Now it is possible to make a request to the restaurant api at the endpoints:

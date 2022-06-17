@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: restaurant-api
+  name: restaurant-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: restaurant-api
+  template:
+    metadata:
+      labels:
+        app: restaurant-api
+    spec:
+      containers:
+      - image: amoragon/restaurant-api:v0.1.0
+        name: restaurant-api
+        ports:
+        - containerPort: 8080
+        env:
+          - name: MONGO_URI
+            valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: mongo_uri
+                optional: false
+      - image: amoragon/restaurant-mongo:v0.1.0
+        name: mongo
+        ports:
+        - containerPort: 27017
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: root_username
+                optional: false
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: root_password
+                optional: false
+          - name: MONGO_INITDB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: mongodb-config
+                key: initdb_database
+                optional: false
