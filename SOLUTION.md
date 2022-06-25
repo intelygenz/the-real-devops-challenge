@@ -102,6 +102,8 @@ $ curl localhost:8080/api/v1/restaurant | jq
 $ curl localhost:8080/api/v1/restaurant/55f14313c7447c3da705224b | jq
 ```
 
+--------------------------------------------------------------------------------------------------------------------------
+
 <a name="challenge1"></a>
 ### Challenge 1. The API returns a list instead of an object
 
@@ -123,6 +125,8 @@ If it does not exit, it will return a code 204 for a successful query to the dat
 And fixed a minor error on src/mongoflask.py (line 30) to be able to search for restaurants by `_id`.
 
 [Back to top](#index)
+
+--------------------------------------------------------------------------------------------------------------------------
 
 <a name="challenge2"></a>
 ### Challenge 2. Test the application in any cicd system
@@ -153,22 +157,32 @@ jobs:
 
 [Back to top](#index)
 
+--------------------------------------------------------------------------------------------------------------------------
+
 <a name="challenge3"></a>
 ### Challenge 3. Dockerize the APP
 
 [Back to top](#index)
+
+--------------------------------------------------------------------------------------------------------------------------
 
 <a name="challenge4"></a>
 ### Challenge 4. Dockerize the database
 
 [Back to top](#index)
 
+--------------------------------------------------------------------------------------------------------------------------
+
 <a name="challenge5"></a>
 ### Challenge 5. Docker Compose it
 
 [Back to top](#index)
 
+--------------------------------------------------------------------------------------------------------------------------
+
 <a name="final_challenge"></a>
 ### Final Challenge. Deploy it on kubernetes
 
 [Back to top](#index)
+
+--------------------------------------------------------------------------------------------------------------------------
