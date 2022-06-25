@@ -27,5 +27,5 @@ class ObjectIdConverter(BaseConverter):
 def find_restaurants(mongo, _id=None):
     query = {}
     if _id:
-        query["_id"] = ObjectId(_id)
+        query["_id"] = ObjectId(_id)  # ObjectID(id) error fixed
     return list(mongo.db.restaurant.find(query))

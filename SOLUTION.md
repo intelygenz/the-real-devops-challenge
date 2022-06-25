@@ -3,6 +3,7 @@
 <a name="index"></a>
 ## Index
 
+  - [Working with MongDB](#mongo)
   - [Challenge 1. The API returns a list instead of an object](#challenge-1-the-api-returns-a-list-instead-of-an-object)
   - [Challenge 2. Test the application in any cicd system](#challenge-2-test-the-application-in-any-cicd-system)
   - [Challenge 3. Dockerize the APP](#challenge-3-dockerize-the-app)
@@ -11,6 +12,95 @@
   - [Final Challenge. Deploy it on kubernetes](#final-challenge-deploy-it-on-kubernetes)
 
 --------------------------------------------------------------------------------------------------------------------------
+
+<a name="mongo"></a>
+### Working with MongoDB
+
+Create a local Mongo DB with the restaurants database and restaurant collection.
+
+```bash
+$ sudo pip3 install 'mtools[all]'
+```
+
+```bash
+$ mlaunch init --single
+```
+
+```bash
+$ mongo --port 27017
+```
+
+Create admin user and password to use and turn off MongoDB's initial exception
+
+```bash
+> use admin
+```
+
+```bash
+> db.createUser({
+  user: "admin",
+  pwd: "admin",
+  roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+});
+```
+
+```bash
+> exit
+```
+
+Confirm login
+
+```bash
+$ mongo --port 27017 -u admin -p admin --authenticationDatabase admin
+```
+
+```bash
+> exit
+```
+
+Import restaurant collection
+
+```bash
+$ mongoimport --drop -u admin -p admin --authenticationDatabase admin -d restaurant -c restaurant ./data/restaurant.json
+```
+
+Confirm database and collection created
+
+```bash
+$ mongo --port 27017 -u admin -p admin --authenticationDatabase admin
+```
+
+```bash
+> use restaurant
+```
+
+```bash
+> db.restaurant.findOne()
+```
+
+```bash
+> exit
+```
+
+Export the MONGO_URI variable to be able to use the app locally
+
+```bash
+$ export MONGO_URI=mongodb://localhost:27017/restaurant
+```
+
+```bash
+$ python app.py
+```
+
+On a new shell:
+
+```bash
+$ curl localhost:8080/api/v1/restaurant | jq
+```
+
+```bash
+$ curl localhost:8080/api/v1/restaurant/55f14313c7447c3da705224b | jq
+```
 
 <a name="challenge1"></a>
 ### Challenge 1. The API returns a list instead of an object
@@ -30,6 +120,8 @@ If it does not exit, it will return a code 204 for a successful query to the dat
     except:
       return('Restaurant id does not exist', 204)
 ```
+
+And fixed a minor error on src/mongoflask.py (line 30) to be able to search for restaurants by `_id`.
 
 [Back to top](#index)
 
