@@ -1,0 +1,17 @@
+name: CI/CD | Flask-Mongo Restaurants API tests
+on:
+  pull_request:
+    branches:
+      - "*"
+  push:
+    branches:
+      - "*"
+
+jobs:
+  testing:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run unit-tests
+        run: docker run -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox

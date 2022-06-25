@@ -128,6 +128,28 @@ And fixed a minor error on src/mongoflask.py (line 30) to be able to search for 
 <a name="challenge2"></a>
 ### Challenge 2. Test the application in any cicd system
 
+The `CI/CD | Flask-Mongo Restaurants API tests` are run using GitHub Actions via `.github/workflows/cicd_test.yml`.
+
+```yaml
+name: CI/CD | Flask-Mongo Restaurants API
+on:
+  pull_request:
+    branches:
+      - "*"
+  push:
+    branches:
+      - "*"
+
+jobs:
+  testing:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run unit-tests
+        run: docker run -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
+```
+
 [Back to top](#index)
 
 <a name="challenge3"></a>
