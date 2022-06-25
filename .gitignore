@@ -1,3 +1,6 @@
+# MongoDB files
+data/db/
+data/.mlaunch*
 
 # Created by https://www.gitignore.io/api/code,venv,linux,python,virtualenv,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=code,venv,linux,python,virtualenv,visualstudiocode
