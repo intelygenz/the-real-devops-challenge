@@ -162,6 +162,12 @@ jobs:
 <a name="challenge3"></a>
 ### Challenge 3. Dockerize the APP
 
+I created `app.Dockerfile`to dockerize the Flask application with the following command:
+
+```bash
+$ docker build -f app.Dockerfile -t intelygenz-python-app:1.0.0 .
+```
+
 [Back to top](#index)
 
 --------------------------------------------------------------------------------------------------------------------------
