@@ -1,4 +1,4 @@
-# The real DevOps challenge solution, by Martín Vedani (martin.vedani@gmail.com)
+## The real DevOps challenge solution, by Martín Vedani (martin.vedani@gmail.com)
 
 <a name="index"></a>
 ## Index
