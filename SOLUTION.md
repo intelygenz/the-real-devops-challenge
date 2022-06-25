@@ -148,6 +148,7 @@ jobs:
       - name: Run unit-tests
         run: docker run -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
 ```
+
 ![image](https://user-images.githubusercontent.com/13549294/175773122-41e5d789-59ec-48b6-b746-b3481169d243.png)
 
 [Back to top](#index)
