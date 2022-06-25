@@ -1,7 +1,7 @@
 ## The real DevOps challenge solution, by Martín Vedani (martin.vedani@gmail.com)
 
 <a name="index"></a>
-## Index
+### Index
 
   - [Working with MongDB](#mongo)
   - [Challenge 1. The API returns a list instead of an object](#challenge-1-the-api-returns-a-list-instead-of-an-object)
