@@ -105,7 +105,6 @@ $ curl localhost:8080/api/v1/restaurant/55f14313c7447c3da705224b | jq
 <a name="challenge1"></a>
 ### Challenge 1. The API returns a list instead of an object
 
-
 To resolve this challenge, I slightly modified the definition for `restaurant(id)` by adding `try and except` to the app.py python code.
 
 If a restaurant id does exist, it will return the document.
@@ -149,6 +148,7 @@ jobs:
       - name: Run unit-tests
         run: docker run -v $(pwd):/tmp/app -w /tmp/app --rm painless/tox /bin/bash tox
 ```
+![image](https://user-images.githubusercontent.com/13549294/175773122-41e5d789-59ec-48b6-b746-b3481169d243.png)
 
 [Back to top](#index)
 
