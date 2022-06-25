@@ -85,7 +85,7 @@ $ mongo --port 27017 -u admin -p admin --authenticationDatabase admin
 Export the MONGO_URI variable to be able to use the app locally
 
 ```bash
-$ export MONGO_URI=mongodb://localhost:27017/restaurant
+$ export MONGO_URI=mongodb://admin:admin@localhost:27017/restaurant?authSource=admin
 ```
 
 ```bash
