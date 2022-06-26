@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Flask + MongoDB Stack | intelygenz/the-real-devops-challenge by Martín Vedani
+name: RestaurantAPI
+version: "1.0.0"

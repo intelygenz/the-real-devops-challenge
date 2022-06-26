@@ -1,0 +1,42 @@
+namespace: flask-mongo-api
+
+deploy:
+  version: "1.0.0"
+
+deployment:
+  flask:
+    replicaCount: 1
+    port: 8080
+    resources:
+      requests:
+        memory: "100Mi"
+        cpu: "100m"
+      limits:
+        memory: "200Mi"
+        cpu: "200m"
+    image:
+      repository: martinved/intelygenz-flask-app
+      tag: "1.0.0"
+  mongodb:
+    replicaCount: 1
+    port: 27017
+    resources:
+      requests:
+        memory: "100Mi"
+        cpu: "250m"
+      limits:
+        memory: "200Mi"
+        cpu: "500m"
+    image:
+      repository: martinved/intelygenz-mongo-ddbb
+      tag: "1.0.0"
+
+service:
+  flask:
+    type: ClusterIP
+    port: 8080
+
+secrets:
+  username: admin
+  password: admin
+  database: restaurant

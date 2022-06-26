@@ -6,6 +6,8 @@ services:
       context: .
       dockerfile: app.Dockerfile
     container_name: flask-app
+    environment:
+      MONGO_URI: mongodb://flask_user:flask_passwd@mongodb:27017/restaurant?authSource=restaurant
     ports:
       - 8080:8080
     networks: [ 'flask-mongo-network' ]

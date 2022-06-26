@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      role: mongo
+  serviceName: "mongo"
+  replicas: {{ .Values.deployment.mongodb.replicaCount }}
+  template:
+    metadata:
+      labels:
+        role: mongo
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: mongo
+          image: "{{ .Values.deployment.mongodb.image.repository }}:{{ .Values.deployment.mongodb.image.tag }}"
+          imagePullPolicy: Always
+          # command:
+          #   - mongod
+          #   - "--replSet"
+          #   - rs0
+          env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-secret
+                key: username
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-secret
+                key: password
+          - name: MONGO_INITDB_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-secret
+                key: database
+          ports:
+            - containerPort: {{ .Values.deployment.mongodb.port }}
+          resources:
+            requests:
+              memory: {{ .Values.deployment.mongodb.resources.requests.memory }}
+              cpu: {{ .Values.deployment.mongodb.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.deployment.mongodb.resources.limits.memory }}
+              cpu: {{ .Values.deployment.mongodb.resources.limits.cpu }}

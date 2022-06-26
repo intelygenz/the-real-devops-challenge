@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-flask
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Release.Name }}-flask
+spec:
+  replicas: {{ .Values.deployment.flask.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-flask
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-flask
+    spec:
+      containers:
+        - name: flask-app
+          image: "{{ .Values.deployment.flask.image.repository }}:{{ .Values.deployment.flask.image.tag }}"
+          imagePullPolicy: Always
+          env:
+          - name: MONGO_URI
+            # value: mongodb://flask_user:flask_passwd@mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017/restaurant?authSource=restaurant
+            value: mongodb://flask_user:flask_passwd@mongo-0.mongo:27017/restaurant?authSource=restaurant
+          ports:
+            - containerPort: {{ .Values.deployment.flask.port }}
+          resources:
+            requests:
+              memory: {{ .Values.deployment.flask.resources.requests.memory }}
+              cpu: {{ .Values.deployment.flask.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.deployment.flask.resources.limits.memory }}
+              cpu: {{ .Values.deployment.flask.resources.limits.cpu }}
