@@ -92,7 +92,7 @@ $ export MONGO_URI=mongodb://admin:admin@localhost:27017/restaurant?authSource=a
 $ python app.py
 ```
 
-On a new shell:
+Confirm working properly on a new shell:
 
 ```bash
 $ curl localhost:8080/api/v1/restaurant | jq
@@ -162,10 +162,10 @@ jobs:
 <a name="challenge3"></a>
 ### Challenge 3. Dockerize the APP
 
-I created `app.Dockerfile`to dockerize the Flask application with the following command:
+I created `app.Dockerfile` to dockerize the Flask application with the following command:
 
 ```bash
-$ docker build -f app.Dockerfile -t intelygenz-python-app:1.0.0 .
+$ docker build -f app.Dockerfile -t intelygenz-flask-app:1.0.0 .
 ```
 
 [Back to top](#index)
@@ -174,6 +174,52 @@ $ docker build -f app.Dockerfile -t intelygenz-python-app:1.0.0 .
 
 <a name="challenge4"></a>
 ### Challenge 4. Dockerize the database
+
+I created `mongodb.Dockerfile` to dockerize the Mongo database with the following command:
+
+```bash
+$ docker build -f mongodb.Dockerfile -t intelygenz-mongo-ddbb:1.0.0 .
+```
+
+Next need to create a network for the Flask App to reach the MongoDB
+
+```bash
+docker network create flask-mongo-network
+```
+
+Then we can run the MongoDB with the following command:
+
+```bash
+docker run -d --rm \
+    --name mongodb \
+    --network flask-mongo-network \
+    -e MONGO_INITDB_ROOT_USERNAME=admin \
+    -e MONGO_INITDB_ROOT_PASSWORD=admin \
+    -e MONGO_INITDB_DATABASE=restaurant \
+    -p 27017:27017 \
+    -v $(pwd)/data/:/docker-entrypoint-initdb.d/ \
+    intelygenz-mongo-ddbb:1.0.0
+```
+
+Finally we run the application with:
+
+```bash
+docker run -d --rm \
+    --name flask-app \
+    --network flask-mongo-network \
+    -p 8080:8080 \
+    intelygenz-flask-app:1.0.0
+```
+
+Confirm working properly on a new shell:
+
+```bash
+$ curl localhost:8080/api/v1/restaurant | jq
+```
+
+```bash
+$ curl localhost:8080/api/v1/restaurant/55f14313c7447c3da705224b | jq
+```
 
 [Back to top](#index)
 

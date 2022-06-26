@@ -4,13 +4,13 @@ FROM python:3.9.0-alpine3.12
 LABEL version=1.0.0
 
 # Versioning description
-LABEL description="intelygenz/the-real-devops-challenge by Martín Vedani"
+LABEL description="FLASK APP | intelygenz/the-real-devops-challenge by Martín Vedani"
 
 # Maintainer
 LABEL maintainer="Martín Vedani <martin.vedani@gmail.com>"
 
 # Make the working directory for subsequent commands
-WORKDIR /flask
+WORKDIR /opt/flask
 
 # Place the application components in a dir below the root dir
 ADD requirements.txt .
@@ -30,13 +30,16 @@ COPY ./src ./src/
 RUN addgroup flask && adduser -D flask -G flask
 
 # Hand everything over to the 'app' user
-RUN chown -R flask:flask /flask
+RUN chown -R flask:flask /opt/flask
 
 # Subsequent commands will run as user 'app'
 USER flask
 
 # Expose port
 EXPOSE 8080
+
+# Export variables
+ENV MONGO_URI=mongodb://admin:admin@mongodb:27017/restaurant?authSource=admin
 
 # Run the app
 CMD ["python3", "-u", "app.py"]
