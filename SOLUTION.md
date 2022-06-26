@@ -257,14 +257,14 @@ $ curl localhost:8080/api/v1/restaurant | jq
 $ curl localhost:8080/api/v1/restaurant/55f14313c7447c3da705224b | jq
 ```
 
-Turn everything off with the following commands:
+Turn everything off and delete containers and network with the following commands:
 
 ```bash
 $ CTRL + C
 ```
 
 ```bash
-$ docker rm mongodb flask-app
+$ docker compose down
 ```
 
 ```bash

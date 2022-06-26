@@ -27,4 +27,6 @@ services:
     networks: [ 'flask-mongo-network' ]
     restart: unless-stopped
 
-networks: { flask-mongo-network: {} }
+networks:
+  flask-mongo-network:
+    name: flask-mongo-network
