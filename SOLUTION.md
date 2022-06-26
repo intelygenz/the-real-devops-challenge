@@ -225,6 +225,16 @@ $ curl localhost:8080/api/v1/restaurant | jq
 $ curl localhost:8080/api/v1/restaurant/55f14313c7447c3da705224b | jq
 ```
 
+Turn off the containers with the following commands:
+
+```bash
+docker stop flask-app
+```
+
+```bash
+docker stop mongodb
+```
+
 [Back to top](#index)
 
 --------------------------------------------------------------------------------------------------------------------------
