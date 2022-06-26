@@ -39,7 +39,7 @@ USER flask
 EXPOSE 8080
 
 # Export variables
-ENV MONGO_URI=mongodb://admin:admin@mongodb:27017/restaurant?authSource=admin
+ENV MONGO_URI=mongodb://flask_user:flask_passwd@mongodb:27017/restaurant?authSource=restaurant
 
 # Run the app
 CMD ["python3", "-u", "app.py"]

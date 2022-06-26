@@ -175,19 +175,24 @@ $ docker build -f app.Dockerfile -t intelygenz-flask-app:1.0.0 .
 <a name="challenge4"></a>
 ### Challenge 4. Dockerize the database
 
-I created `mongodb.Dockerfile` to dockerize the Mongo database with the following command:
+I created `mongodb.Dockerfile` which includes two scripts:
+
+  1) `mongo-init.js` to remove super user privileges from the Flask App; and 
+  2) `import_restaurants.sh` to create the required database on first container initiation.
+
+To dockerize the MongoDB, use the following command:
 
 ```bash
 $ docker build -f mongodb.Dockerfile -t intelygenz-mongo-ddbb:1.0.0 .
 ```
 
-Next need to create a network for the Flask App to reach the MongoDB
+Next we need to create a network for the Flask App to reach the MongoDB
 
 ```bash
 docker network create flask-mongo-network
 ```
 
-Then we can run the MongoDB with the following command:
+Then we can initiate the MongoDB with the following command:
 
 ```bash
 docker run -d --rm \
@@ -197,11 +202,10 @@ docker run -d --rm \
     -e MONGO_INITDB_ROOT_PASSWORD=admin \
     -e MONGO_INITDB_DATABASE=restaurant \
     -p 27017:27017 \
-    -v $(pwd)/data/:/docker-entrypoint-initdb.d/ \
     intelygenz-mongo-ddbb:1.0.0
 ```
 
-Finally we run the application with:
+Finally we can run the application with:
 
 ```bash
 docker run -d --rm \
