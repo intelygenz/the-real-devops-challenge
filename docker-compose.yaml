@@ -1,0 +1,30 @@
+version: '2.3'
+services:
+  flask-app:
+    image: intelygenz-flask-app:1.0.0
+    build:
+      context: .
+      dockerfile: app.Dockerfile
+    container_name: flask-app
+    ports:
+      - 8080:8080
+    networks: [ 'flask-mongo-network' ]
+    restart: unless-stopped
+    depends_on: [ 'mongodb' ]
+    stdin_open: true
+    tty: true
+
+  mongodb:
+    image: intelygenz-mongo-ddbb:1.0.0
+    build:
+      context: .
+      dockerfile: mongodb.Dockerfile
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: restaurant
+    networks: [ 'flask-mongo-network' ]
+    restart: unless-stopped
+
+networks: { flask-mongo-network: {} }

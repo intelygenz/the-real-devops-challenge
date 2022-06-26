@@ -242,6 +242,35 @@ docker stop mongodb
 <a name="challenge5"></a>
 ### Challenge 5. Docker Compose it
 
+I created `docker-compose.yaml` to docker-compose the full stack (Flask App + MongoDB) with the following command:
+
+```bash
+$ docker compose up
+```
+Confirm working properly on a new shell:
+
+```bash
+$ curl localhost:8080/api/v1/restaurant | jq
+```
+
+```bash
+$ curl localhost:8080/api/v1/restaurant/55f14313c7447c3da705224b | jq
+```
+
+Turn everything off with the following commands:
+
+```bash
+$ CTRL + C
+```
+
+```bash
+$ docker rm mongodb flask-app
+```
+
+```bash
+$ docker rmi intelygenz-mongo-ddbb:1.0.0 intelygenz-flask-app:1.0.0
+```
+
 [Back to top](#index)
 
 --------------------------------------------------------------------------------------------------------------------------
