@@ -1,0 +1,4 @@
+loki:
+  config: |
+    auth_enabled: false
+

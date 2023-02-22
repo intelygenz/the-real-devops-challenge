@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-import-deployment
+  labels:
+    app: mongo-import
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-import
+  template:
+    metadata:
+      labels:
+        app: mongo-import
+    spec:      
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000         
+      containers:
+      - name: mongodb-import
+        image: localhost:5001/intellygenz-mongodb-import:latest
+        imagePullPolicy: Always
+        command: ["/bin/sh", "-c"]
+        args:
+          - sleep 1;
+            mongoimport --drop --legacy -c=restaurant --uri=$(MONGO_URI) -d=restaurants --file /restaurant.json;
+        env:
+        - name: MONGO_URI
+          valueFrom:
+            secretKeyRef:
+              name: mongouri
+              key: mongouri
+        securityContext:
+          allowPrivilegeEscalation: false
+
+      
+ 

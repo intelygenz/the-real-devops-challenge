@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  labels:
+    app: api
+  namespace: app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:   
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000   
+      containers:
+      - name: api
+        command: ["python" ,"/app/app.py"]
+        image: localhost:5001/intellygenz-api:latest
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+            scheme: HTTP
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+            scheme: HTTP
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MONGO_URI
+          valueFrom:
+            secretKeyRef:
+              name: mongouri
+              key: mongouri
+        securityContext:
+          allowPrivilegeEscalation: false
+        
+      
+     
+
+
+      
+ 

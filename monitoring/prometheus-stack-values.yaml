@@ -1,0 +1,15 @@
+grafana:
+  ingress:   
+    enabled: true 
+    hosts: 
+    - grafana.local
+    path: /
+  additionalDataSources:
+  - access: proxy
+    isDefault: false
+    name: loki
+    orgId: 1
+    type: loki
+    url: http://loki-distributed-gateway.monitoring.svc.cluster.local
+    version: 1
+  

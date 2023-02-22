@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    command: python -u //app/app.py
+    environment:
+      - MONGO_URI=mongodb://admin:password@local-mongodb:27017/restaurants?authSource=admin
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+    links:
+      - db
+  db:
+    image: mongo:6.0.3
+    hostname: local-mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    ports:
+      - 27017:27017
+
+  mongoimport:
+    image: mongo:6.0.3
+    container_name: mongo-import
+    volumes:
+      - ./data/restaurant.json:/restaurant.json
+    command: mongoimport --legacy --collection=restaurant --type json --host local-mongodb -u admin -p password --authenticationDatabase=admin --db=restaurants  --file /restaurant.json

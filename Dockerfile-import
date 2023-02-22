@@ -1,0 +1,3 @@
+FROM mongo:6.0.3
+
+COPY data/restaurant.json /restaurant.json
