@@ -8,10 +8,50 @@ version: 2
 jobs:
 
   # using tox
-  toxify:
+  toxify27:
 
       docker:
         - image: python:2.7
+
+      steps:
+
+        - checkout
+
+        - run: pip install tox && tox
+  toxify34:
+
+      docker:
+        - image: python:3.4
+
+      steps:
+
+        - checkout
+
+        - run: pip install tox && tox
+  toxify35:
+
+      docker:
+        - image: python:3.5
+
+      steps:
+
+        - checkout
+
+        - run: pip install tox && tox
+  toxify36:
+
+      docker:
+        - image: python:3.6
+
+      steps:
+
+        - checkout
+
+        - run: pip install tox && tox
+  toxify39:
+
+      docker:
+        - image: python:3.9
 
       steps:
 
@@ -24,4 +64,8 @@ workflows:
 
   myproj:
     jobs:
-      - toxify
+      - toxify27
+      - toxify34
+      - toxify35
+      - toxify36
+      - toxify39
