@@ -16,7 +16,11 @@ jobs:
       steps:
 
         - checkout
-
+        - run: 
+        echo "
+        [tox]
+        envlist = py27
+        skipsdist=True" >> tox.ini
         - run: pip install tox && tox
   toxify34:
 
@@ -26,7 +30,11 @@ jobs:
       steps:
 
         - checkout
-
+        - run: 
+        echo "
+        [tox]
+        envlist = py34
+        skipsdist=True" >> tox.ini
         - run: pip install tox && tox
   toxify35:
 
@@ -36,7 +44,11 @@ jobs:
       steps:
 
         - checkout
-
+        - run: 
+        echo "
+        [tox]
+        envlist = py35
+        skipsdist=True" >> tox.ini
         - run: pip install tox && tox
   toxify36:
 
@@ -46,7 +58,11 @@ jobs:
       steps:
 
         - checkout
-
+        - run: 
+        echo "
+        [tox]
+        envlist = py36
+        skipsdist=True" >> tox.ini
         - run: pip install tox && tox
   toxify39:
 
@@ -56,7 +72,11 @@ jobs:
       steps:
 
         - checkout
-
+        - run: 
+        echo "
+        [tox]
+        envlist = py39
+        skipsdist=True" >> tox.ini
         - run: pip install tox && tox
 
 workflows:

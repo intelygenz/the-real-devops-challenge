@@ -175,3 +175,4 @@ pip-selfcheck.json
 .history
 
 # End of https://www.gitignore.io/api/code,venv,linux,python,virtualenv,visualstudiocode
+mongo_dockerized/
