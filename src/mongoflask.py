@@ -28,6 +28,4 @@ def find_restaurants(mongo, _id=None):
     if _id:
         query["_id"] = ObjectId(_id)
     result = mongo.db.restaurant.find(query)
-    if _id == None:
-        result = list(result)        
-    return mongo.db.restaurant.find(query)
+    return result
