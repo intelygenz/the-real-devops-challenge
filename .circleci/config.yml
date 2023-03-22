@@ -16,12 +16,9 @@ jobs:
       steps:
 
         - checkout
-        - run:
-        echo "[tox]" >> tox.ini
-        - run: 
-        echo "envlist = py27" >> tox.ini
-        - run: 
-        echo "skipsdist=True" >> tox.ini
+        - run: echo "[tox]" >> tox.ini
+        - run: echo "envlist = py27" >> tox.ini
+        - run: echo "skipsdist=True" >> tox.ini
         - run: pip install tox && tox
   toxify34:
 
@@ -31,12 +28,9 @@ jobs:
       steps:
 
         - checkout
-        - run:
-        echo "[tox]" >> tox.ini
-        - run: 
-        echo "envlist = py34" >> tox.ini
-        - run: 
-        echo "skipsdist=True" >> tox.ini
+        - run: echo "[tox]" >> tox.ini
+        - run:  echo "envlist = py34" >> tox.ini
+        - run:  echo "skipsdist=True" >> tox.ini
         - run: pip install tox && tox
   toxify35:
 
@@ -46,12 +40,9 @@ jobs:
       steps:
 
         - checkout
-        - run:
-        echo "[tox]" >> tox.ini
-        - run: 
-        echo "envlist = py35" >> tox.ini
-        - run: 
-        echo "skipsdist=True" >> tox.ini
+        - run: echo "[tox]" >> tox.ini
+        - run: echo "envlist = py35" >> tox.ini
+        - run: echo "skipsdist=True" >> tox.ini
         - run: pip install tox && tox
   toxify36:
 
@@ -61,12 +52,9 @@ jobs:
       steps:
 
         - checkout
-        - run:
-        echo "[tox]" >> tox.ini
-        - run: 
-        echo "envlist = py36" >> tox.ini
-        - run: 
-        echo "skipsdist=True" >> tox.ini
+        - run: echo "[tox]" >> tox.ini
+        - run: echo "envlist = py36" >> tox.ini
+        - run: echo "skipsdist=True" >> tox.ini
         - run: pip install tox && tox
   toxify39:
 
@@ -76,12 +64,9 @@ jobs:
       steps:
 
         - checkout
-        - run: 
-        echo "[tox]" >> tox.ini
-        - run: 
-        echo "envlist = py39" >> tox.ini
-        - run: 
-        echo "skipsdist=True" >> tox.ini
+        - run: echo "[tox]" >> tox.ini
+        - run: echo "envlist = py39" >> tox.ini
+        - run: echo "skipsdist=True" >> tox.ini
         - run: pip install tox && tox
 
 workflows:
