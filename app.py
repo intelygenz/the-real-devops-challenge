@@ -16,14 +16,18 @@ mongo = PyMongo(app)
 
 @app.route("/api/v1/restaurant")
 def restaurants():
-    restaurants = find_restaurants(mongo)
-    return jsonify(json_util.dumps(restaurants))
+    restaurants = json_util.dumps(find_restaurants(mongo))
+    return jsonify(restaurants)
 
 
 @app.route("/api/v1/restaurant/<id>")
 def restaurant(id):
-    restaurants = find_restaurants(mongo, id)
-    return jsonify(restaurants)
+    restaurants = json_util.dumps(find_restaurants(mongo, id))
+    if restaurants == "[]":
+        return jsonify(restaurants), 204
+    else:
+        return jsonify(restaurants)
+        
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=False, port=8080)
