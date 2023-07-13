@@ -17,7 +17,7 @@ mongo = PyMongo(app)
 @app.route("/api/v1/restaurant")
 def restaurants():
     restaurants = find_restaurants(mongo)
-    return jsonify(restaurants)
+    return jsonify(json_util.dumps(restaurants))
 
 
 @app.route("/api/v1/restaurant/<id>")
