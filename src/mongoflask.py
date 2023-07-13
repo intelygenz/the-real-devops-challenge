@@ -2,7 +2,7 @@ from datetime import date, datetime
 
 import isodate as iso
 from bson import ObjectId
-from flask.json import JSONEncoder
+from json import JSONEncoder
 from werkzeug.routing import BaseConverter
 
 
