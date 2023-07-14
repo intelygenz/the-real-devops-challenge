@@ -17,8 +17,6 @@ jobs:
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - run: echo "Running unit tests"
       - run: python3 -m unittest tests/test_restaurant.py
-      - run: echo "Running tox"
-      - run: tox
       # we could have a deployment like:
       # - uses: akhileshns/heroku-deploy@v3.12.12
       #   with:
