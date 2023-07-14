@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: database
+spec:
+  selector:
+    app: mongodb
+  ports:
+    - name: db-endpoint
+      port: 27017
+      targetPort: process
+  type: ClusterIP # accessible in k8s cluster only

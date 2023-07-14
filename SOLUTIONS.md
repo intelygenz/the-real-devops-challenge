@@ -126,3 +126,29 @@ I checked that it works by connecting to it using MongoDB Compass.
 I had to do a `flask-app:v2` image so it would not pass the environment variable as it did before. Other than that, there is not much to comment about it.
 
 ## Final Challenge
+
+I am going to use `kind` for this challenge. I have never used it before, but I have heard good things about it and I was looking for an excuse to try it. 😁 I'll be using the [Quick start](https://kind.sigs.k8s.io/docs/user/quick-start) documentation.
+
+Kind requires Docker and Go. I will also need kubectl. Once those are installed, these are the setup commands:
+```
+[ $(uname -m) = x86_64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+chmod +x kind
+sudo mv kind /usr/bin/
+```
+Then I can create a cluster:
+```
+kind create cluster
+```
+Then I can load my docker images:
+```
+kind load docker-image natgarea/flask-app:v2
+kind load docker-image natgarea/mongo:v1
+```
+
+I had to retag the docker image for mongodb, because `kind` seems to have some issue with the tag being 'latest'.
+
+Then run all of the k8s manifests with `kubectl apply -f` and test the API.
+
+![Testing final challenge](img/Captura desde 2023-07-14 20-51-04.png)
+
+![Testing final challenge](img/Captura desde 2023-07-14 20-51-46.png)
