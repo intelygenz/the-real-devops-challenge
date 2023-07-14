@@ -95,6 +95,18 @@ The executions can be seen [here](https://github.com/natgarea/the-real-devops-ch
 
 ## Challenge 3
 
+From the root of the project run:
+```
+docker build --no-cache -t natgarea/flask-app:v1 --file app.Dockerfile .
+```
+
+Then:
+```
+docker run docker run flask-app:v4
+```
+
+I have pushed it to my dockerhub profile: [natgarea/flask-app](https://hub.docker.com/repository/docker/natgarea/flask-app/general)
+
 ## Challenge 4
 
 ## Challenge 5
