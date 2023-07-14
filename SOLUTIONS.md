@@ -94,6 +94,7 @@ I included deployment steps for Heroku as an example, but it requires adding cre
 The executions can be seen [here](https://github.com/natgarea/the-real-devops-challenge/actions/workflows/github-actions.yml).
 
 ## Challenge 3
+I choose the smallest official Python / Alpine docker image.
 
 From the root of the project run:
 ```
@@ -108,6 +109,12 @@ docker run docker run flask-app:v4
 I have pushed it to my dockerhub profile: [natgarea/flask-app](https://hub.docker.com/repository/docker/natgarea/flask-app/general)
 
 ## Challenge 4
+
+I had to create a script that gets executed when the container is initialized: `mongo_import.sh`, which only does a mongoimport command.
+
+Then I had to use an existing [MongoDB official image](https://hub.docker.com/_/mongo) and copy the file we want to import and the `.sh` file into the `/docker-entrypoint-initdb.d/` path.
+
+Although it seems simple, it took me a while to arrive to this. This [thread at StackOverflow](https://stackoverflow.com/questions/39348478/initialize-data-on-dockerized-mongo) helped me.
 
 ## Challenge 5
 
