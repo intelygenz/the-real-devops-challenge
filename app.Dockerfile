@@ -10,6 +10,6 @@ COPY ./src/* ./src/
 # expose port where app runs
 EXPOSE 5000
 # pass MONGO_URI
-ENV MONGO_URI="mongodb+srv://[USER]:[PASSWORD]@cluster0.26oiqds.mongodb.net/restaurant"
+# ENV MONGO_URI="mongodb+srv://[USER]:[PASSWORD]@cluster0.26oiqds.mongodb.net/restaurant"
 
 CMD ["flask", "run", "--host", "0.0.0.0"]

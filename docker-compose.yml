@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+
+  app:
+    container_name: flask-app
+    image: natgarea/flask-app:v2
+    restart: unless-stopped
+    environment:
+        MONGO_URI: "mongodb://mongodb:27017/restaurant"
+    expose:
+      - 5000
+    depends_on:
+      - mongodb
+    networks:
+      - node-network
+
+  mongodb:
+    container_name: mongodb
+    image: natgarea/mongo
+    restart: unless-stopped
+    networks:
+      - node-network
+
+networks:
+  node-network:
+    driver: bridge

@@ -103,10 +103,8 @@ docker build --no-cache -t natgarea/flask-app:v1 --file app.Dockerfile .
 
 Then:
 ```
-docker run docker run flask-app:v4
+docker run docker run flask-app:v1
 ```
-
-I have pushed it to my dockerhub profile: [natgarea/flask-app](https://hub.docker.com/repository/docker/natgarea/flask-app/general)
 
 ## Challenge 4
 
@@ -116,6 +114,15 @@ Then I had to use an existing [MongoDB official image](https://hub.docker.com/_/
 
 Although it seems simple, it took me a while to arrive to this. This [thread at StackOverflow](https://stackoverflow.com/questions/39348478/initialize-data-on-dockerized-mongo) helped me.
 
+```
+docker build --no-cache -t natgarea/mongo --file database.Dockerfile .
+docker run -p 8081:27017 natgarea/mongo
+```
+
+I checked that it works by connecting to it using MongoDB Compass.
+
 ## Challenge 5
+
+I had to do a `flask-app:v2` image so it would not pass the environment variable as it did before. Other than that, there is not much to comment about it.
 
 ## Final Challenge
