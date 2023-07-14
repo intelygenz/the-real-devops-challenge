@@ -91,7 +91,7 @@ In my first attempt, I added the tox test, but it failed. So I ended up removing
 
 I included deployment steps for Heroku as an example, but it requires adding credentials, and I'd rather not do that for now.
 
-The execution can be seen [here](https://github.com/natgarea/the-real-devops-challenge/actions/workflows/github-actions.yml).
+The executions can be seen [here](https://github.com/natgarea/the-real-devops-challenge/actions/workflows/github-actions.yml).
 
 ## Challenge 3
 
