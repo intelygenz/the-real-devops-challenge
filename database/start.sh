@@ -2,6 +2,17 @@
 
 sleep 10
 
-mongoimport --drop --host mongodb --username root --password changeme --authenticationDatabase admin --db intelygenz_db --collection restaurant --type json --file ./collections/restaurant.json
+mongoimport --drop --host $MONGO_HOST --port $MONGO_PORT --username $ROOT_USERNAME --password $ROOT_PASSWORD --authenticationDatabase $AUTH_DB --db $APP_DB --collection restaurant --type json --file ./collections/restaurant.json
 
-mongosh --host mongodb --port 27017 --username root --password changeme --authenticationDatabase admin -f setupUsers.js
+mongosh --host $MONGO_HOST --port $MONGO_PORT --username $ROOT_USERNAME --password $ROOT_PASSWORD --authenticationDatabase $AUTH_DB << EOF
+    db = db.getSiblingDB( '$APP_DB' );
+    db.createUser(
+        {
+            user: '$MONGO_USERNAME',
+            pwd: '$MONGO_USERNAME_PASS', 
+            roles: [
+                { role: "readWrite", db: '$APP_DB' }
+            ]
+        }
+    );
+EOF
