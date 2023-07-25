@@ -8,7 +8,7 @@ from flask_pymongo import PyMongo
 from src.mongoflask  import MongoJSONEncoder, ObjectIdConverter, find_restaurants
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = environ.get("MONGO_URI")
+app.config["MONGO_URI"] = "mongodb://intelygenz:intelygenz_password@mongodb:27017/intelygenz_db?retryWrites=true"
 app.json_encoder = MongoJSONEncoder
 app.url_map.converters["objectid"] = ObjectIdConverter
 mongo = PyMongo(app)
