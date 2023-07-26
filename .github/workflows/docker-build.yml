@@ -1,0 +1,29 @@
+name: Docker build
+on:
+    push:
+        branches:
+            - main
+env:
+    DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+    DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
+jobs:
+    build:
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+            - name: Login to Docker hub
+              uses: docker/login-action@v2
+              with:
+                username: ${{ env.DOCKER_USERNAME }}
+                password: ${{ env.DOCKER_PASSWORD }}
+            - name: Build Docker image
+              run: |
+                docker build -t intelygenz:latest ./app/
+                docker build -t mongodb:latest    ./database/
+            - name: Push Docker image
+              run: |
+                docker tag intelygenz:latest ${{ env.DOCKER_USERNAME }}/intelygenz:latest
+                docker push ${{ env.DOCKER_USERNAME }}/intelygenz:latest
+                docker tag mongodb:latest ${{ env.DOCKER_USERNAME }}/mongodb:latest
+                docker push ${{ env.DOCKER_USERNAME }}/mongodb:latest
