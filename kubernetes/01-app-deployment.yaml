@@ -28,8 +28,8 @@ spec:
     spec:
       containers:
       - name: intelygenz
-        image: intelygenz
-        imagePullPolicy: Never
+        image: lmgsaenz96/intelygenz
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             memory: "50Mi"
