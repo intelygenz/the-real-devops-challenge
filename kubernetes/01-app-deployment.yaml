@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: intelygenz-svc
+  namespace: intelygenz
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: intelygenz
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intelygenz
+  namespace: intelygenz
+spec:
+  selector:
+    matchLabels:
+      app: intelygenz
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: intelygenz
+    spec:
+      containers:
+      - name: intelygenz
+        image: intelygenz
+        imagePullPolicy: Never
+        resources:
+          requests:
+            memory: "50Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - name: http
+          protocol: TCP
+          containerPort: 8080
+        env:
+        - name: MONGO_PREFIX
+          value: mongodb
+        - name: MONGO_HOST
+          value: mongodb-service
+        - name: MONGO_PORT
+          value: '27017'
+        - name: APP_DB
+          value: intelygenz_db
+        - name: MONGO_USERNAME
+          value: intelygenz
+        - name: MONGO_USERNAME_PASS
+          valueFrom:
+            secretKeyRef:
+              name: mongo-user-pass-secret
+              key: MONGO_USERNAME_PASS
+          
