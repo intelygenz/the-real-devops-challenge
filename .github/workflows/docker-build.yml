@@ -2,7 +2,7 @@ name: Docker build
 on:
     push:
         branches:
-            - main
+            - master
 env:
     DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
     DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
