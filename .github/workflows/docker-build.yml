@@ -29,7 +29,7 @@ jobs:
               python -m pip install tox tox-gh-actions
 
           - name: Test with tox
-            run: tox
+            run: tox -c ./App/tox.ini 
           - name: Login to Docker hub
             uses: docker/login-action@v2
             with:
