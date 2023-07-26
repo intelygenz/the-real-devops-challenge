@@ -6,6 +6,7 @@ services:
     ports:
       - 8080:8080
     environment:
+      MONGO_PREFIX: mongodb
       MONGO_USERNAME: intelygenz
       MONGO_USERNAME_PASS: intelygenz_changeme
       MONGO_HOST: mongodb

@@ -9,7 +9,7 @@ from pymongo import MongoClient
 from src.mongoflask  import MongoJSONEncoder, ObjectIdConverter, find_restaurants
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = 'mongodb://' + environ.get('MONGO_USERNAME') + ':' + environ.get('MONGO_USERNAME_PASS') + '@' + environ.get('MONGO_HOST') + ':' + environ.get('MONGO_PORT') + '/' + environ.get('APP_DB')
+app.config["MONGO_URI"] = environ.get('MONGO_PREFIX') + '://' + environ.get('MONGO_USERNAME') + ':' + environ.get('MONGO_USERNAME_PASS') + '@' + environ.get('MONGO_HOST') + '/' + environ.get('APP_DB')
 app.json_encoder = MongoJSONEncoder
 app.url_map.converters["objectid"] = ObjectIdConverter
 mongo = PyMongo(app)

@@ -1,6 +1,7 @@
 FROM python:3.6.15
 
-ENV MONGO_USERNAME      \
+ENV MONGO_PREFIX        \
+    MONGO_USERNAME      \
     MONGO_USERNAME_PASS \
     MONGO_HOST          \
     MONGO_PORT          \
@@ -9,5 +10,7 @@ ENV MONGO_USERNAME      \
 WORKDIR /App
 
 COPY --chmod=755 ./ ./
+
+EXPOSE 8080
 
 ENTRYPOINT ["./start.sh"]
