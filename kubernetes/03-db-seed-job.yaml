@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongoseed
+  namespace: intelygenz
+  labels:
+    name: mongoseed
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      containers:
+      - name: mongo-seed
+        image: lmgsaenz96/mongodb
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: "50Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        env:
+        - name: MONGO_PREFIX
+          value: mongodb
+        - name: MONGO_HOST
+          value: mongodb-service
+        - name: MONGO_PORT
+          value: '27017'
+        - name: ROOT_USERNAME
+          value: root
+        - name: AUTH_DB
+          value: admin
+        - name: APP_DB
+          value: intelygenz_db
+        - name: MONGO_USERNAME
+          value: intelygenz
+        - name: ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-pass-secret
+              key: MONGO_INITDB_ROOT_PASSWORD   
+        - name: MONGO_USERNAME_PASS
+          valueFrom:
+            secretKeyRef:
+              name: mongo-user-pass-secret
+              key: MONGO_USERNAME_PASS
+      restartPolicy: OnFailure
