@@ -4,11 +4,12 @@ from bson import json_util
 from bson.objectid import ObjectId
 from flask import Flask, jsonify, make_response
 from flask_pymongo import PyMongo
+from pymongo import MongoClient
 
 from src.mongoflask  import MongoJSONEncoder, ObjectIdConverter, find_restaurants
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb://intelygenz:intelygenz_password@mongodb:27017/intelygenz_db?retryWrites=true"
+app.config["MONGO_URI"] = 'mongodb://' + environ.get('MONGO_USERNAME') + ':' + environ.get('MONGO_USERNAME_PASS') + '@' + environ.get('MONGO_HOST') + ':' + environ.get('MONGO_PORT') + '/' + environ.get('APP_DB')
 app.json_encoder = MongoJSONEncoder
 app.url_map.converters["objectid"] = ObjectIdConverter
 mongo = PyMongo(app)
