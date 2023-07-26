@@ -10,18 +10,37 @@ env:
 jobs:
     build:
         runs-on: ubuntu-22.04
-        steps:
+        strategy:
+          matrix:
+            python-version: ['3.6']
+
+            steps:
             - name: Checkout code
               uses: actions/checkout@v3
+
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v4
+              with:
+                python-version: ${{ matrix.python-version }}
+            
+            - name: Install dependecies
+              run: |
+                python -m pip install --upgrade pip
+                python -m pip install tox tox-gh-actions
+
+            - name: Test with tox
+              run: tox
             - name: Login to Docker hub
               uses: docker/login-action@v2
               with:
                 username: ${{ env.DOCKER_USERNAME }}
                 password: ${{ env.DOCKER_PASSWORD }}
+
             - name: Build Docker image
               run: |
                 docker build -t intelygenz:latest ./app/
                 docker build -t mongodb:latest    ./database/
+
             - name: Push Docker image
               run: |
                 docker tag intelygenz:latest ${{ env.DOCKER_USERNAME }}/intelygenz:latest
