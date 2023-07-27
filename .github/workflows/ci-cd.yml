@@ -52,7 +52,7 @@ jobs:
       - name: Print new build number
         run: |
           pwd
-          ls -lrth ./*
+          ls -lrth ./
       
       - name: Build and push the Intelygenz Docker image
         uses: docker/build-push-action@v4
