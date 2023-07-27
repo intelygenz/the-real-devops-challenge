@@ -48,16 +48,11 @@ jobs:
       #   run: |
       #     docker build -t intelygenz:latest ./app/
       #     docker build -t mongodb:latest    ./database/
-
-      - name: Print new build number
-        run: |
-          pwd
-          ls -lrth ./
       
       - name: Build and push the Intelygenz Docker image
         uses: docker/build-push-action@v4
         with:
-          context: app
+          context: $PWD/app
           push: true
           tags: |
             ${{ env.DOCKER_USERNAME }}/intelygenz:latest
