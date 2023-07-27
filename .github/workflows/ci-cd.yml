@@ -31,6 +31,13 @@ jobs:
         - name: Run tests with tox
           run: tox -c ./app/tox.ini
   build:
+    strategy:
+      matrix:
+        include:
+          - dockerfile: ./app/Dockerfile
+            name: intelygenz
+          - dockerfile: ./database/Dockerfile
+            name: mongodb
     name: Build
     needs: test
     runs-on: ubuntu-20.04
@@ -43,33 +50,13 @@ jobs:
         with:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD }}
-
-      # - name: Build Docker image
-      #   run: |
-      #     docker build -t intelygenz:latest ./app/
-      #     docker build -t mongodb:latest    ./database/
       
       - name: Build and push the Intelygenz Docker image
         uses: docker/build-push-action@v4
         with:
-          file: app/Dockerfile
+          context: .
+          file: ${{ matrix.dockerfile }}
           push: true
           tags: |
-            ${{ env.DOCKER_USERNAME }}/intelygenz:latest
-            ${{ env.DOCKER_USERNAME }}/intelygenz:${{ github.sha }}
-
-      - name: Build and push the mongodb Docker image
-        uses: docker/build-push-action@v4
-        with:
-          file: database/Dockerfile
-          push: true
-          tags: |
-            ${{ env.DOCKER_USERNAME }}/mongodb:latest
-            ${{ env.DOCKER_USERNAME }}/mongodb:${{ github.sha }}
-
-      # - name: Push Docker image
-      #   run: |
-      #     docker tag intelygenz:latest ${{ env.DOCKER_USERNAME }}/intelygenz:latest
-      #     docker push ${{ env.DOCKER_USERNAME }}/intelygenz:latest
-      #     docker tag mongodb:latest ${{ env.DOCKER_USERNAME }}/mongodb:latest
-      #     docker push ${{ env.DOCKER_USERNAME }}/mongodb:latest
+            ${{ env.DOCKER_USERNAME }}/${{ matrix.name }}:latest
+            ${{ env.DOCKER_USERNAME }}/${{ matrix.name }}:${{ github.sha }}
