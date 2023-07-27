@@ -57,8 +57,6 @@ jobs:
           tags: |
             ${{ env.DOCKER_USERNAME }}/intelygenz:latest
             ${{ env.DOCKER_USERNAME }}/intelygenz:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Build and push the mongodb Docker image
         uses: docker/build-push-action@v4
