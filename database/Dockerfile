@@ -9,7 +9,7 @@ ENV MONGO_HOST      \
 
 COPY ./collections/restaurant.json ./collections/restaurant.json
 
-COPY ./entrypoint.sh ./
+COPY ./entrypoint.sh /
 
 RUN chmod +x /entrypoint.sh
 
