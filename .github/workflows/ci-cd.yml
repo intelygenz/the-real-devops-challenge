@@ -57,7 +57,7 @@ jobs:
       - name: Build and push the Intelygenz Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./app/
+          context: app
           push: true
           tags: |
             ${{ env.DOCKER_USERNAME }}/intelygenz:latest
@@ -68,7 +68,7 @@ jobs:
       - name: Build and push the mongodb Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./database/
+          context: database
           push: true
           tags: |
             ${{ env.DOCKER_USERNAME }}/mongodb:latest
