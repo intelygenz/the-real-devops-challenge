@@ -54,7 +54,6 @@ jobs:
       - name: Build and push the Intelygenz Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .
           file: ${{ matrix.dockerfile }}
           push: true
           tags: |
