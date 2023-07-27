@@ -9,8 +9,8 @@ ENV MONGO_HOST      \
 
 WORKDIR /data
 
-COPY ./collections/restaurant.json collections/restaurant.json
-
 COPY --chmod=755 ./entrypoint.sh ./
 
-CMD ["/entrypoint.sh"]
+COPY ./collections/restaurant.json collections/restaurant.json
+
+ENTRYPOINT ["./entrypoint.sh"]
