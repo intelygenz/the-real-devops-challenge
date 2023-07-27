@@ -63,7 +63,7 @@ jobs:
       - name: Build and push the mongodb Docker image
         uses: docker/build-push-action@v4
         with:
-          context: database
+          file: database/Dockerfile
           push: true
           tags: |
             ${{ env.DOCKER_USERNAME }}/mongodb:latest
