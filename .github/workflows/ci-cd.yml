@@ -50,7 +50,9 @@ jobs:
       #     docker build -t mongodb:latest    ./database/
 
       - name: Print new build number
-        run: pwd
+        run: |
+          pwd
+          ls -lrth ./*
       
       - name: Build and push the Intelygenz Docker image
         uses: docker/build-push-action@v4
