@@ -68,8 +68,6 @@ jobs:
           tags: |
             ${{ env.DOCKER_USERNAME }}/mongodb:latest
             ${{ env.DOCKER_USERNAME }}/mongodb:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       # - name: Push Docker image
       #   run: |
