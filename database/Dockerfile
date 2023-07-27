@@ -7,10 +7,8 @@ ENV MONGO_HOST      \
     AUTH_DB         \
     APP_DB
 
-COPY ./collections/restaurant.json ./collections/restaurant.json
+WORKDIR /data
 
-COPY ./start.sh ./
+COPY --chmod=755 ./ ./
 
-RUN chmod +x /start.sh
-
-CMD ["/start.sh"]
+ENTRYPOINT ["./entrypoint.sh"]

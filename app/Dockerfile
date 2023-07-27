@@ -9,9 +9,7 @@ ENV MONGO_PREFIX        \
 
 WORKDIR /App
 
-COPY ./ ./
-
-RUN chmod +x ./start.sh
+COPY --chmod=755 ./ ./
 
 EXPOSE 8080
 
