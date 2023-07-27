@@ -9,8 +9,8 @@ ENV MONGO_HOST      \
 
 COPY ./collections/restaurant.json ./collections/restaurant.json
 
-COPY ./start.sh ./
+COPY ./entrypoint.sh ./
 
-RUN chmod +x /start.sh
+RUN chmod +x /entrypoint.sh
 
-CMD ["/start.sh"]
+CMD ["/entrypoint.sh"]
