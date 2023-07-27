@@ -52,7 +52,7 @@ jobs:
       - name: Build and push the Intelygenz Docker image
         uses: docker/build-push-action@v4
         with:
-          context: $PWD/app
+          file: app/Dockerfile
           push: true
           tags: |
             ${{ env.DOCKER_USERNAME }}/intelygenz:latest
