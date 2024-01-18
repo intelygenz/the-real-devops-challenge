@@ -1,0 +1,3 @@
+---
+exclude:
+- aws-ec2-no-public-ip-subnet
