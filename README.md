@@ -2,23 +2,31 @@
 
 This challenge was designed to look for your DevOps skills with some tasks that we could find in our day in day. You have to fork this repository to complete the following challenges in your own Github account. Feel free to solve the challenge you want.
 
-Once completed, upload all files to reproduce the challenges and if you think is necessary create `SOLUTION.md` file to add some explanation.
+Once completed, upload all files to reproduce the challenges and if you think is necessary create `SOLUTION.md` file to add some explanation in each challenge directory.
 
 In each challenge you can reach some tasks, some are mandatory and others optionals. If you want to do it and prove your knowledge, go for the optional ones! ;). If you have any doubt, don't hesitate to open an issue to ask any question about any challenge.
 
 ## Pre-requisites
 
 - GitHub account: <https://github.com/signup>
-- IaC Test account:
+- IaC Test account (choose one):
   - AWS Free Tier account: <https://aws.amazon.com/free/>
   - Localstack API: <https://localstack.cloud>
 - Docker Hub account: <https://hub.docker.com>
 - `Docker`: <https://www.docker.com>
 - `Terraform`: <https://www.terraform.io>
-- Kubernetes:
+- Kubernetes (choose one):
   - `KinD`: <https://kind.sigs.k8s.io>
   - `Minikube`: <https://minikube.sigs.k8s.io/docs/start/>
   - `k3s`: <https://k3s.io>
+
+## First step!
+
+Clone repository
+
+```bash
+git clone https://github.com/intelygenz/the-real-devops-challenge.git
+```
 
 ## Challenge 1. Docker / CI/CD
 
