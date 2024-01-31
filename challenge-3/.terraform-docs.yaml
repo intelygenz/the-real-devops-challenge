@@ -1,0 +1,20 @@
+# see: https://terraform-docs.io/user-guide/configuration/#formatters
+formatter: markdown table
+
+# see: https://terraform-docs.io/user-guide/configuration/#output
+output:
+  file: README.md
+  mode: replace
+
+# see: https://terraform-docs.io/user-guide/configuration/#sort
+sort:
+  enabled: true
+  by: required
+
+settings:
+  indent: 2
+  escape: false
+  default: true
+  required: true
+  type: true
+  description: true

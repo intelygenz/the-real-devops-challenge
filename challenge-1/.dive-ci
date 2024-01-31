@@ -1,0 +1,4 @@
+rules:
+  lowestEfficiency: 0.98
+  highestWastedBytes: 5MB
+  highestUserWastedPercent: 0.20
