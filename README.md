@@ -28,7 +28,7 @@ Clone repository
 git clone https://github.com/intelygenz/the-real-devops-challenge.git
 ```
 
-## Challenge 1. Docker / CI/CD
+## Challenge 1. Docker and CI/CD
 
 > Estimated time: 30 minutes
 
@@ -64,9 +64,9 @@ Result:PASS [Total:3] [Passed:3] [Failed:0] [Warn:0] [Skipped:0]
 
 > Estimated time: 45 minutes
 
-Finally, you deploy your Challenge 2 application on Kubernetes. Can you develop a Helm chart and deploy your image? The application will be exposed with an Ingress (choose the one you want: Nginx, Traefik…).
+Finally, deploy your Challenge 1 application on Kubernetes. Can you develop a Helm chart and deploy your image? The application will be exposed with an Ingress (choose the one you want: Nginx, Traefik…).
 
-> Note: if you couldn’t complete Challenge 2, you can use the latest version of the `httpd` image on Helm chart.
+> Note: if you couldn’t complete Challenge 1, you can use the latest version of the `httpd` image on Helm chart.
 
 Helpers:
 
