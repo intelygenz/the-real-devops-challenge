@@ -1,4 +1,4 @@
-# The Real Devops Challenge
+# The Real DevOps Challenge
 
 This challenge was designed to look for your DevOps skills with some tasks that we could find in our day in day. You have to fork this repository to complete the following challenges in your own Github account. Feel free to solve the challenge you want.
 
