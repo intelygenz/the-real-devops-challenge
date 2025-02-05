@@ -1,0 +1,51 @@
+name: Test Terraform
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform-lint-security:
+    name: Terraform Lint & Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.4.0 # Specify your Terraform version here
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1 # Specify your AWS region here
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: challenge-3/
+
+      - name: Run Terraform Validate
+        run: terraform validate
+        working-directory: challenge-3/
+
+      # TFLint - Best Practices & Linting
+      - name: Install TFLint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: Run TFLint
+        run: |
+          tflint --init
+          tflint --format compact --disable-rule=terraform_standard_module_structure --disable-rule=terraform_documented_variables --disable-rule=terraform_unused_required_providers
+        working-directory: challenge-3/
+
+      # Checkov - Security Scan
+      - name: Run Checkov Security Scan
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: challenge-3/
+          soft_fail: true # Set to true if you want warnings instead of failures

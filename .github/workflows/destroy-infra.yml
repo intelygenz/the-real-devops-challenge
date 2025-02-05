@@ -1,0 +1,68 @@
+# This workflow will setup terraform and destroy AWS infrastructure, mainly network resources.
+# It will first destroy security groups, then target groups, listeners and for last the load balancer.
+
+name: Destroy Infrastructure
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.4.0 # Specify your Terraform version here
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1 # Specify your AWS region here
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: challenge-3/
+      
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: challenge-3/
+        
+      - name: Terraform Destroy sg-ingress
+        run: terraform destroy -auto-approve -target module.nlb.aws_vpc_security_group_ingress_rule.asg-nlb-ingress
+        working-directory: challenge-3/
+
+      - name: Terraform Destroy sg-egress
+        run: terraform destroy -auto-approve -target module.nlb.aws_vpc_security_group_egress_rule.asg-nlb-egress
+        working-directory: challenge-3/
+
+      - name: Terraform Destroy nlb-sg
+        run: terraform destroy -auto-approve -target module.nlb.aws_security_group.nlb-sg
+        working-directory: challenge-3/
+
+      - name: Terraform Destroy tg
+        run: terraform destroy -auto-approve -target module.nlb.aws_lb_target_group.this
+        working-directory: challenge-3/
+        
+      - name: Terraform Destroy lb listener
+        run: terraform destroy -auto-approve -target module.nlb.aws_lb_listener.this
+        working-directory: challenge-3/
+
+      - name: Terraform Destroy lb 
+        run: terraform destroy -auto-approve -target module.nlb.aws_lb.this
+        working-directory: challenge-3/
+      
+      - name: Terraform Plan Destroy ASG & VPC
+        run: terraform plan -destroy -out=tfplan
+        working-directory: challenge-3/
+
+      - name: Terraform Destroy asg vpc
+        run: terraform destroy -auto-approve -target module.asg -target module.vpc
+        working-directory: challenge-3/

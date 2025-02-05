@@ -1,0 +1,31 @@
+# Use the official Node.js 14 image as the base image
+FROM node:14
+
+# Set the working directory inside the container
+WORKDIR /usr/src/hello-challenge
+
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
+
+# Install the dependencies
+RUN npm install --production && \
+    npm cache clean --force
+
+# Run the application as non-root user
+RUN groupadd -r elnode && \
+    useradd -m -r -g elnode elnode
+
+# Copy the rest of the application code to the working directory
+COPY . .
+
+# Change the ownership of the application directory to elnode user
+RUN chown -R elnode:elnode /usr/src/hello-challenge
+
+# Switch to the elnode user
+USER elnode
+
+# Expose port 8000 to the outside world
+EXPOSE 8000
+
+# Define the command to run the application
+ENTRYPOINT ["node", "hello-challenge.js"]

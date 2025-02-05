@@ -1,0 +1,55 @@
+# This workflow will setup terraform and build, plan and apply AWS infrastructure, mainly network resources. 
+
+name: Deploy Infrastructure
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    types:
+      - labeled
+
+jobs:
+  terraform:
+    name: Terraform
+    if: > 
+      github.event_name == 'workflow_dispatch' || 
+      contains(github.event.pull_request.labels.*.name, 'deploy')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.4.0 # Specify your Terraform version here
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1 # Specify your AWS region here
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: challenge-3/
+        
+      - name: Run Terraform Validate
+        run: terraform validate
+        working-directory: challenge-3/
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan -target module.vpc -target module.asg
+        working-directory: challenge-3/
+        
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -target module.vpc -target module.asg
+        working-directory: challenge-3/
+        
+      - name: Terraform Apply nlb
+        run: terraform apply -auto-approve -target module.nlb
+        working-directory: challenge-3/
